@@ -211,7 +211,7 @@ export default ({
                   flex: 1,
                 }}
               >
-                {token?.collection?.name || '#' + token?.tokenID}{' '}
+                {token?.name || '#' + token?.tokenID}{' '}
               </Text>
               {token?.isFlagged && (
                 <Tooltip
