@@ -9,6 +9,7 @@ import {
   FormatCurrency,
   FormatCryptoCurrency,
   Loader,
+  FormatCrypto,
 } from 'components/primitives'
 import Popover from 'components/primitives/Popover'
 import { Modal } from '../Modal/Modal'
@@ -28,6 +29,7 @@ import ProgressBar from '../Modal/ProgressBar'
 import QuantitySelector from '../Modal/QuantitySelector'
 import { formatNumber } from 'utils/numbers'
 import useCopyToClipboard from '../hooks/useCopyToClipboard'
+import { ethers } from 'ethers'
 
 type PurchaseData = {
   tokenId?: string
@@ -98,7 +100,9 @@ export function BuyModal({
         setBuyStep,
         buyToken,
         requestUserStep,
-        txHash
+        txHash,
+        currencyBalance,
+        ethBalance
       }) => {
         const title = titleForStep(buyStep)
         useEffect(() => {
@@ -140,7 +144,7 @@ export function BuyModal({
                   collection={collection}
                   usdConversion={0}
                   isUnavailable={true}
-                  price={+(listing?.price || 0)}
+                  price={+ethers.utils.formatUnits(listing?.price || 0, currency?.decimals)}
                   currency={currency}
                   priceSubtitle={quantity > 1 ? 'Average Price' : undefined}
                   showRoyalties={true}
@@ -182,7 +186,7 @@ export function BuyModal({
                   tokenDetails={token}
                   collection={collection}
                   usdConversion={0}
-                  price={+(listing?.price || 0)}
+                  price={+ethers.utils.formatUnits(listing?.price || 0, currency?.decimals)}
                   currency={currency}
                   css={{ border: 0 }}
                   priceSubtitle={quantity > 1 ? 'Average Price' : undefined}
@@ -196,7 +200,7 @@ export function BuyModal({
                   <Text style="h6">Total</Text>
                   <FormatCryptoCurrency
                     textStyle="h6"
-                    amount={+(listing?.price || 0)}
+                    amount={listing?.price}
                     address={currency?.contract}
                     decimals={currency?.decimals}
                   />
@@ -208,7 +212,16 @@ export function BuyModal({
                     css={{ mr: '$4' }}
                   />
                 </Flex>
-
+                <Flex justify="end" css={{ mr: '$4' }}>
+                  <Text style="body2" css={{ mr: '$4' }}>Your balance</Text>
+                  <FormatCryptoCurrency
+                    address={currency?.contract}
+                    amount={currencyBalance?.value}
+                    textColor="subtle"
+                    decimals={currencyBalance?.decimals}
+                  />
+                </Flex>
+              
                 <Box css={{ p: '$4', width: '100%' }}>
                   {hasEnoughCurrency ? (
                     <Button
@@ -226,7 +239,7 @@ export function BuyModal({
                         </Text>
 
                         <FormatCryptoCurrency
-                          amount={10}
+                          amount={listing?.price}
                           address={currency?.contract}
                           decimals={currency?.decimals}
                           textStyle="body2"
@@ -253,7 +266,7 @@ export function BuyModal({
                   tokenDetails={token}
                   collection={collection}
                   usdConversion={0}
-                  price={+(listing?.price || 0)}
+                  price={+ethers.utils.formatUnits(listing?.price || 0, currency?.decimals)}
                   currency={currency}
                   priceSubtitle={quantity > 1 ? 'Average Price' : undefined}
                   quantity={quantity}

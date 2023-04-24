@@ -50,6 +50,8 @@ type ChildrenProps = {
   buyToken: () => void
   requestUserStep: "APPROVAL_ERC20" | "BUY"
   txHash?: string
+  ethBalance?: ReturnType<typeof useBalance>['data']
+  currencyBalance?: ReturnType<typeof useBalance>['data']
 }
 
 type Props = {
@@ -165,7 +167,8 @@ export const BuyModalRenderer: FC<Props> = ({
   }, [
     tokenId,
     collectionId,
-    mixedCurrencies
+    mixedCurrencies,
+    looksRareSdk
   ])
 
   useEffect(() => {
@@ -189,6 +192,7 @@ export const BuyModalRenderer: FC<Props> = ({
 
   useEffect(() => {
     const totalBalance = mixedCurrencies ? currencyBalance?.value.add(ethBalance?.value || 0) : currencyBalance?.value
+
     if (!totalBalance) {
       setHasEnoughCurrency(false)
     } else if (totalBalance.lt(utils.parseUnits(listing?.price || "0", 0))) {
@@ -225,7 +229,9 @@ export const BuyModalRenderer: FC<Props> = ({
         buyToken,
         quantity: 1,
         requestUserStep,
-        txHash
+        txHash,
+        ethBalance,
+        currencyBalance
       })}
     </>
   )

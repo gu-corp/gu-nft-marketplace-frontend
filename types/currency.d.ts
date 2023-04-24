@@ -3,4 +3,5 @@ export type Currency = {
   symbol: string
   decimals?: number
   coinGeckoId?: string
+  logo?: string
 }

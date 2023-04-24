@@ -3,6 +3,7 @@ import { constants } from 'ethers'
 import { styled } from '../../stitches.config'
 import { StyledComponent } from '@stitches/react/types/styled-component'
 import { useTheme } from 'next-themes'
+import { useCurrency } from 'hooks'
 
 type Props = {
   address: string
@@ -17,9 +18,11 @@ const CryptoCurrencyIcon: FC<Props> = ({
   css,
 }) => {
   const { theme } = useTheme()
+  const currency = useCurrency(address)
+  const ethLogo = theme === 'dark' ? `/icons/eth-icon-light.svg`: `/icons/eth-icon-dark.svg`
   return (
     <StyledImg
-      src={theme === 'dark' ? `/icons/eth-icon-light.svg`: `/icons/eth-icon-dark.svg`}
+      src={currency.logo ? currency.logo : ethLogo }
       css={css}
     />
   )

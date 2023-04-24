@@ -11,7 +11,8 @@ const currencyOptions: Currency[] = [
     // TO-DO: import from sdk
     contract: "0x1559b550a5b35d3d5a76d7d7e4d07fd31ee96c00",
     symbol: "USDT",
-    decimals: 18
+    decimals: 18,
+    logo: '/icons/currency/usdt.png'
   },
 ]
 
