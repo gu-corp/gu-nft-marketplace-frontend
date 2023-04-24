@@ -24,3 +24,17 @@ query GetOrderListings($first: Int, $skip: Int, $orderDirection: OrderDirection,
     }
   }
 `);
+
+export const GET_ORDER_BY_HASH = gql(/* GraphQL */`
+query GetOrderByHash($hash: ID!) {
+    order(hash: $hash) {
+      hash
+      collectionAddress
+      tokenId
+      price
+      startTime
+      endTime
+      nonce
+    }
+  }
+`);

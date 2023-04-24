@@ -47,13 +47,33 @@ export default styled('span', {
         fontWeight: 400,
         fontSize: 12,
       },
+      tiny: {
+        fontWeight: 500,
+        fontSize: 10,
+        color: '$neutralSolidHover',
+      },
     },
     color: {
+      base: {
+        color: '$textColor',
+      },
       subtle: {
-        color: '$gray11',
+        color: '$neutralText',
       },
       error: {
-        color: '$red11',
+        color: '$errorAccent',
+      },
+      errorLight: {
+        color: '$errorText',
+      },
+      accent: {
+        color: '$accentText',
+      },
+      success: {
+        color: '$successAccent',
+      },
+      button: {
+        color: '$buttonTextColor',
       },
     },
     italic: {

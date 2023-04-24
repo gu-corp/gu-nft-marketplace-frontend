@@ -237,7 +237,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               Token Standard
             </Text>
             <Text style="subtitle1" css={{ textTransform: 'uppercase' }}>
-              {token?.kind}
+              ERC721
             </Text>
           </Flex>
           <Flex justify="between" css={{ width: '100%' }}>

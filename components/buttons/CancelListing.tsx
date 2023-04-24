@@ -1,13 +1,11 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import {
-  CancelListingModal,
-  CancelListingStep,
-} from '@reservoir0x/reservoir-kit-ui'
 import { FC, ReactElement, useContext, cloneElement } from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { CancelListingModal } from 'components/@reservoir0x/reservoir-kit-ui/CancelListing/CancelListingModal'
+import { CancelStep } from 'components/@reservoir0x/reservoir-kit-ui/CancelListing/CancelListingModalRenderer'
 
 type Props = {
   listingId: string
@@ -58,21 +56,21 @@ const CancelListing: FC<Props> = ({
       listingId={listingId}
       openState={openState}
       trigger={trigger}
-      onCancelComplete={(data: any) => {
+      onCancelComplete={() => {
         addToast?.({
           title: 'User canceled listing',
           description: 'You have canceled the listing.',
         })
       }}
-      onCancelError={(error: any, data: any) => {
-        console.log('Listing Cancel Error', error, data)
+      onCancelError={(error: any) => {
+        console.log('Listing Cancel Error', error)
         addToast?.({
           title: 'Could not cancel listing',
           description: 'The transaction was not completed.',
         })
       }}
-      onClose={(data, currentStep) => {
-        if (mutate && currentStep == CancelListingStep.Complete) mutate()
+      onClose={(currentStep) => {
+        if (mutate && currentStep == CancelStep.Complete) mutate()
       }}
     />
   )
