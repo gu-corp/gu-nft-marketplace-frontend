@@ -9,6 +9,7 @@ type Props = {
   decimals?: number
   css?: Parameters<typeof Text>['0']['css']
   textStyle?: Parameters<typeof Text>['0']['style']
+  textColor?: Parameters<typeof Text>['0']['color']
   children?: React.ReactNode
 }
 
@@ -19,12 +20,13 @@ const FormatCrypto: FC<Props> = ({
   css,
   textStyle = 'subtitle3',
   children,
+  textColor = 'base',
 }) => {
   const value = formatBN(amount, maximumFractionDigits, decimals)
   return (
     <Flex align="center" css={{ gap: '$1', minWidth: 'max-content' }}>
       {value !== '-' ? children : null}
-      <Text style={textStyle} css={css} as="p">
+      <Text style={textStyle} color={textColor} css={css} as="p">
         {value}
       </Text>
     </Flex>

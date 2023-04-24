@@ -18,6 +18,7 @@ const FormatCryptoCurrency: FC<Props> = ({
   textStyle,
   css,
   decimals,
+  textColor
 }) => {
   return (
     <FormatCrypto
@@ -26,6 +27,7 @@ const FormatCryptoCurrency: FC<Props> = ({
       amount={amount}
       maximumFractionDigits={maximumFractionDigits}
       decimals={decimals}
+      textColor={textColor}
     >
       <CryptoCurrencyIcon css={{ height: logoHeight }} address={address} />
     </FormatCrypto>
