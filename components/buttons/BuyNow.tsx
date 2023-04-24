@@ -1,21 +1,24 @@
 import React, { ComponentProps, FC } from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner } from 'wagmi'
-import { BuyModal, BuyStep, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
 import { useMarketplaceChain } from 'hooks'
+import { Token } from 'types/workaround'
+import { BuyModal } from 'components/@reservoir0x/reservoir-kit-ui/Buy/BuyModal'
+import { BuyStep } from 'components/@reservoir0x/reservoir-kit-ui/Buy/BuyModalRenderer'
 
 type Props = {
-  token?: ReturnType<typeof useTokens>['data'][0]
+  token?: Token
+  orderId?: string
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
   mutate?: SWRResponse['mutate']
 }
 
-const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
+const BuyNow: FC<Props> = ({ token, orderId, mutate, buttonCss, buttonProps = {} }) => {
   const { data: signer } = useSigner()
   const { openConnectModal } = useConnectModal()
   const { chain: activeChain } = useNetwork()
@@ -27,13 +30,6 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
     signer && activeChain?.id !== marketplaceChain.id
   )
 
-  if (
-    token?.market?.floorAsk?.price?.amount === null ||
-    token?.market?.floorAsk?.price?.amount === undefined
-  ) {
-    return null
-  }
-
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
       Buy Now
@@ -41,8 +37,8 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
   )
   const canBuy =
     signer &&
-    token?.token?.tokenId &&
-    token?.token?.collection?.id &&
+    token?.tokenID &&
+    token?.collection?.id &&
     !isInTheWrongNetwork
 
   return !canBuy ? (
@@ -69,9 +65,10 @@ const BuyNow: FC<Props> = ({ token, mutate, buttonCss, buttonProps = {} }) => {
   ) : (
     <BuyModal
       trigger={trigger}
-      tokenId={token?.token?.tokenId}
-      collectionId={token?.token?.collection?.id}
-      onClose={(data, stepData, currentStep) => {
+      tokenId={token?.tokenID}
+      orderId={orderId}
+      collectionId={token?.collection?.id}
+      onClose={(currentStep) => {
         if (mutate && currentStep == BuyStep.Complete) mutate()
       }}
     />

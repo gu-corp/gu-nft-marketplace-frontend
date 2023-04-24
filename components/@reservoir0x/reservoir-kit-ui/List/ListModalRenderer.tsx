@@ -106,6 +106,7 @@ export const ListModalRenderer: FC<Props> = ({
     }
     
     setCurrencyOption(currencyOptions[0])
+    setRequestUserStep("APPROVAL")
   }, [open])
 
   const listToken = useCallback(async () => {
@@ -145,7 +146,8 @@ export const ListModalRenderer: FC<Props> = ({
       setListingData(maker)
   
       if (!isCollectionApproved) {
-        await looksRareSdk.approveAllCollectionItems(collectionId, true)
+        const tx = await looksRareSdk.approveAllCollectionItems(collectionId, true)
+        await tx.wait()
       }
   
       setRequestUserStep("SIGN")
@@ -171,6 +173,7 @@ export const ListModalRenderer: FC<Props> = ({
       setListingStep(ListingStep.Complete)
     } catch (error: any) {
       setTransactionError(error)
+      setRequestUserStep("APPROVAL")
     }
   
   }, [

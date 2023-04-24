@@ -85,8 +85,6 @@ export const TokenActions: FC<Props> = ({
     }
   })
 
-  console.log(data)
-
   const listing = data?.orders?.[0];
   const isListed = token && listing
 
@@ -115,17 +113,18 @@ export const TokenActions: FC<Props> = ({
           }
         />
       )}
-      {/* {(!isOwner || is1155) && isListed && (
+      {(!isOwner || is1155) && isListed && (
         <Flex
           css={{ ...buttonCss, borderRadius: 8, overflow: 'hidden', gap: 1 }}
         >
           <BuyNow
+            orderId={listing.hash}
             token={token}
             buttonCss={{ flex: 1, justifyContent: 'center' }}
             buttonProps={{ corners: 'square' }}
             mutate={mutate}
           />
-          <AddToCart
+          {/* <AddToCart
             token={token}
             buttonCss={{
               width: 52,
@@ -133,9 +132,9 @@ export const TokenActions: FC<Props> = ({
               justifyContent: 'center',
             }}
             buttonProps={{ corners: 'square' }}
-          />
+          /> */}
         </Flex>
-      )} */}
+      )}
       {/* {showAcceptOffer && (
         <AcceptBid
           token={token}

@@ -35,6 +35,14 @@ query GetOrderByHash($hash: ID!) {
       startTime
       endTime
       nonce
+      currencyAddress
+      amount
+      isOrderAsk
+      signer
+      strategy
+      minPercentageToAsk
+      params
+      signature
     }
   }
 `);
