@@ -1,9 +1,7 @@
 import React, { FC } from 'react'
-import { useChainCurrency } from '../../hooks'
 import { constants } from 'ethers'
 import { styled } from '../../stitches.config'
 import { StyledComponent } from '@stitches/react/types/styled-component'
-import { useReservoirClient } from '@reservoir0x/reservoir-kit-ui'
 import { useTheme } from 'next-themes'
 
 type Props = {

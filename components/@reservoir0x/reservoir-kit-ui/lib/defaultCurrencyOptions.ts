@@ -3,7 +3,7 @@ import { Currency } from "types/currency"
 const currencyOptions: Currency[] = [
   {
     // description: pay by ETH that mean can pay by WETH
-    contract: "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+    contract: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
     symbol: "ETH/WETH",
     decimals: 18
   },
