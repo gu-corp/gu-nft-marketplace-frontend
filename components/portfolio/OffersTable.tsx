@@ -24,50 +24,52 @@ import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGasPump, faHand } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import { ChainContext } from 'context/ChainContextProvider'
+import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
+import { Order, OrderDirection, Order_OrderBy } from '__generated__/graphql'
+import { useQuery } from '@apollo/client'
+import { GET_TOKEN_BY_ID } from 'graphql/queries/tokens'
+import { useNft } from 'use-nft'
 
 type Props = {
   address: Address | undefined
 }
 
 const desktopTemplateColumns = '1.25fr .75fr repeat(3, 1fr)'
-const zoneAddresses = [
-  '0xaa0e012d35cf7d6ecb6c2bf861e71248501d3226', // Ethereum - 0xaa...26
-  '0x49b91d1d7b9896d28d370b75b92c2c78c1ac984a', // Goerli Address - 0x49...4a
-]
 
 export const OffersTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  let bidsQuery: Parameters<typeof useBids>['0'] = {
-    maker: address,
-    includeCriteriaMetadata: true,
-    includeRawData: true,
-  }
+  const { data, loading, fetchMore } = useQuery(GET_ORDER_LISTINGS, {
+    variables: { 
+      first: 10,
+      skip: 0,
+      order_OrderBy: Order_OrderBy.CreatedAt,
+      orderDirection: OrderDirection.Desc,
+      where: {
+        signer: address,
+        isOrderAsk: false
+      }
+    }
+  })
 
-  const { chain } = useContext(ChainContext)
+  const offers = data?.orders || [] 
 
-  if (chain.community) bidsQuery.community = chain.community
-
-  const {
-    data: offers,
-    fetchNextPage,
-    mutate,
-    isValidating,
-    isFetchingPage,
-  } = useBids(bidsQuery)
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchNextPage()
+      fetchMore({ 
+        variables: {
+          skip: offers.length
+        }
+      })
     }
   }, [loadMoreObserver?.isIntersecting])
 
   return (
     <>
-      {!isValidating && !isFetchingPage && offers && offers.length === 0 ? (
+      {!loading && offers && offers.length === 0 ? (
         <Flex
           direction="column"
           align="center"
@@ -84,16 +86,15 @@ export const OffersTable: FC<Props> = ({ address }) => {
           {offers.map((offer, i) => {
             return (
               <OfferTableRow
-                key={`${offer?.id}-${i}`}
-                offer={offer}
-                mutate={mutate}
+                key={`${offer.hash}-${i}`}
+                offer={offer as Order}
               />
             )
           })}
           <Box ref={loadMoreRef} css={{ height: 20 }}></Box>
         </Flex>
       )}
-      {isValidating && (
+      {loading && (
         <Flex align="center" justify="center" css={{ py: '$5' }}>
           <LoadingSpinner />
         </Flex>
@@ -103,33 +104,32 @@ export const OffersTable: FC<Props> = ({ address }) => {
 }
 
 type OfferTableRowProps = {
-  offer: ReturnType<typeof useBids>['data'][0]
+  offer: Order
   mutate?: MutatorCallback
 }
 
 const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const { routePrefix } = useMarketplaceChain()
-  const expiration = useTimeSince(offer?.expiration)
+  const expiration = useTimeSince(
+    offer?.endTime ? Number(offer.endTime) : 0
+  )
 
-  const orderZone = offer?.rawData?.zone
-  const orderKind = offer?.kind
+  const { data: tokenData } = useQuery(GET_TOKEN_BY_ID, {
+    variables: { id: `${offer.collectionAddress}-${offer.tokenId}`}
+  })
+  const token = tokenData?.token
 
-  const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
-
-  let criteriaData = offer?.criteria?.data
-
+  // TO-DO: remove later, should using token.image
+  const { nft } = useNft(offer.collectionAddress, offer.tokenId)
+  
   let imageSrc: string = (
-    criteriaData?.token?.tokenId
-      ? criteriaData?.token?.image || criteriaData?.collection?.image
-      : criteriaData?.collection?.image
+    nft?.image
   ) as string
 
   if (isSmallDevice) {
     return (
       <Flex
-        key={offer?.id}
+        key={offer?.hash}
         direction="column"
         align="start"
         css={{
@@ -143,7 +143,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
       >
         <Flex justify="between" css={{ width: '100%' }}>
           <Link
-            href={`/collection/${offer?.contract}/${criteriaData?.token?.tokenId}`}
+            href={`/collection/${offer?.collectionAddress}/${offer?.tokenId}`}
           >
             <Flex align="center">
               {imageSrc && (
@@ -155,7 +155,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                   }}
                   loader={({ src }) => src}
                   src={imageSrc}
-                  alt={`${offer?.id}`}
+                  alt={`${offer?.hash}`}
                   width={36}
                   height={36}
                 />
@@ -169,75 +169,55 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                 }}
               >
                 <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                  {criteriaData?.collection?.name}
+                  {token?.collection?.name}
                 </Text>
                 <Text style="subtitle2" ellipsify>
-                  #{criteriaData?.token?.tokenId}
+                  #{token?.tokenID}
                 </Text>
               </Flex>
             </Flex>
           </Link>
           <FormatCryptoCurrency
-            amount={offer?.price?.amount?.native}
-            address={offer?.price?.currency?.contract}
+            amount={offer?.price}
+            address={offer?.currencyAddress}
             textStyle="subtitle2"
             logoHeight={14}
           />
         </Flex>
         <Flex justify="between" align="center" css={{ width: '100%' }}>
-          <a href={`https://${offer?.source?.domain}`} target="_blank">
-            <Flex align="center" css={{ gap: '$2' }}>
-              <img
-                width="20px"
-                height="20px"
-                src={(offer?.source?.icon as string) || ''}
-                alt={`${offer?.source?.name}`}
-              />
-              <Text style="subtitle2">{expiration}</Text>
-            </Flex>
-          </a>
+          <Flex align="center" css={{ gap: '$2' }}>
+            <Text style="subtitle2">{expiration}</Text>
+          </Flex>
           <CancelBid
-            bidId={offer?.id as string}
+            bidId={offer?.hash as string}
             mutate={mutate}
             trigger={
               <Flex>
-                {!isOracleOrder ? (
-                  <Tooltip
-                    content={
-                      <Text style="body2" as="p">
-                        Cancelling this order requires gas.
-                      </Text>
-                    }
-                  >
-                    <Button
-                      css={{
-                        color: '$red11',
-                        minWidth: '150px',
-                        justifyContent: 'center',
-                      }}
-                      color="gray3"
-                    >
-                      <FontAwesomeIcon
-                        color="#697177"
-                        icon={faGasPump}
-                        width="16"
-                        height="16"
-                      />
-                      Cancel
-                    </Button>
-                  </Tooltip>
-                ) : (
+                <Tooltip
+                  content={
+                    <Text style="body2" as="p">
+                      Cancelling this order requires gas.
+                    </Text>
+                  }
+                >
                   <Button
                     css={{
                       color: '$red11',
                       minWidth: '150px',
                       justifyContent: 'center',
+                      backgroundColor: '$gray6'
                     }}
                     color="gray3"
                   >
+                    <FontAwesomeIcon
+                      color="#697177"
+                      icon={faGasPump}
+                      width="16"
+                      height="16"
+                    />
                     Cancel
                   </Button>
-                )}
+                </Tooltip>
               </Flex>
             }
           />
@@ -248,12 +228,12 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
 
   return (
     <TableRow
-      key={offer?.id}
+      key={offer?.hash}
       css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link
-          href={`/collection/${offer?.contract}/${criteriaData?.token?.tokenId}`}
+          href={`/collection/${offer?.collectionAddress}/${offer?.tokenId}`}
         >
           <Flex align="center">
             {imageSrc && (
@@ -265,7 +245,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                 }}
                 loader={({ src }) => src}
                 src={imageSrc}
-                alt={`${criteriaData?.token?.name}`}
+                alt={`${token?.collection?.name}`}
                 width={48}
                 height={48}
               />
@@ -278,10 +258,10 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
               }}
             >
               <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                {criteriaData?.collection?.name}
+                {token?.collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
-                #{criteriaData?.token?.tokenId}
+                #{token?.tokenID}
               </Text>
             </Flex>
           </Flex>
@@ -289,8 +269,8 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
-          amount={offer?.price?.amount?.native}
-          address={offer?.price?.currency?.contract}
+          amount={offer?.price}
+          address={offer?.currencyAddress}
           textStyle="subtitle2"
           logoHeight={14}
         />
@@ -298,33 +278,15 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
       <TableCell>
         <Text style="subtitle2">{expiration}</Text>
       </TableCell>
-      <TableCell>
-        <Flex align="center" css={{ gap: '$2' }}>
-          <img
-            width="20px"
-            height="20px"
-            src={(offer?.source?.icon as string) || ''}
-            alt={`${offer?.source?.name}`}
-          />
-          <Anchor
-            href={`https://${offer?.source?.domain as string}`}
-            target="_blank"
-            color="primary"
-            weight="normal"
-          >
-            {offer?.source?.name as string}
-          </Anchor>
-        </Flex>
-      </TableCell>
+
       <TableCell>
         <Flex justify="end">
           <CancelBid
-            bidId={offer?.id as string}
+            bidId={offer?.hash as string}
             mutate={mutate}
             trigger={
               <Flex>
-                {!isOracleOrder ? (
-                  <Tooltip
+                 <Tooltip
                     content={
                       <Text style="body2" as="p">
                         Cancelling this order requires gas.
@@ -336,6 +298,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                         color: '$red11',
                         minWidth: '150px',
                         justifyContent: 'center',
+                        backgroundColor: '$gray6'
                       }}
                       color="gray3"
                     >
@@ -348,18 +311,6 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                       Cancel
                     </Button>
                   </Tooltip>
-                ) : (
-                  <Button
-                    css={{
-                      color: '$red11',
-                      minWidth: '150px',
-                      justifyContent: 'center',
-                    }}
-                    color="gray3"
-                  >
-                    Cancel
-                  </Button>
-                )}
               </Flex>
             }
           />
@@ -369,7 +320,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   )
 }
 
-const headings = ['Items', 'Offer Amount', 'Expiration', 'Marketplace', '']
+const headings = ['Items', 'Offer Amount', 'Expiration', '']
 
 const TableHeading = () => (
   <HeaderRow
