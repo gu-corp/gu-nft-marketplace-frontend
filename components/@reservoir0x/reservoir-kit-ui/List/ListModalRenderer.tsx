@@ -110,6 +110,12 @@ export const ListModalRenderer: FC<Props> = ({
 
   const listToken = useCallback(async () => {
     try {
+      if (!looksRareSdk.signer) {
+        const error = new Error('Missing a signer')
+        setTransactionError(error)
+        throw error
+      }
+      
       if (!collectionId) {
         const error = new Error('Missing collection id')
         setTransactionError(error)

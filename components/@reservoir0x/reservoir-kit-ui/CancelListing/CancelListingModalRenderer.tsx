@@ -41,7 +41,6 @@ export const CancelListingModalRenderer: FC<Props> = ({
   listingId,
   children,
 }) => {
-  const { data: signer } = useSigner()
   const [cancelStep, setCancelStep] = useState<CancelStep>(CancelStep.Cancel)
   const [transactionError, setTransactionError] = useState<Error | null>()
   const [steps, setSteps] = useState<Execute['steps'] | null>(null)
@@ -65,7 +64,7 @@ export const CancelListingModalRenderer: FC<Props> = ({
   const token = {...tokenData?.token, image: nft?.image} as Token
 
   const cancelOrder = useCallback(async () => {
-    if (!signer) {
+    if (!looksRareSdk.signer) {
       const error = new Error('Missing a signer')
       setTransactionError(error)
       throw error
@@ -100,7 +99,7 @@ export const CancelListingModalRenderer: FC<Props> = ({
         setTxHash(null);
         setSteps(null)
     }
-  }, [listingId, signer])
+  }, [listing, looksRareSdk])
 
   useEffect(() => {
     if (!open) {

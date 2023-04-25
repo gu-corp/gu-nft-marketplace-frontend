@@ -172,7 +172,7 @@ export function CancelListingModal({
                     />
                   </>
                 )}
-                <Button disabled={true} css={{ m: '$4' }}>
+                <Button disabled={true} css={{ m: '$4', justifyContent: "center" }}>
                   <Loader />
                   {txHash
                     ? 'Waiting for transaction to be validated'

@@ -110,7 +110,7 @@ export const TokenActions: FC<Props> = ({
           buttonCss={buttonCss}
           buttonChildren={
             isListed
-              ? 'Edit Listing'
+              ? 'Create New Listing'
               : 'List for Sale'
           }
         />
