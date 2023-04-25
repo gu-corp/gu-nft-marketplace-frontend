@@ -75,7 +75,6 @@ const Bid: FC<Props> = ({
           if (mutate && currentStep == BidStep.Complete) mutate()
         }}
         onBidError={(error) => {
-          console.log(error)
           if (error) {
             if (
               (error as any).code &&

@@ -166,7 +166,6 @@ export const BuyModalRenderer: FC<Props> = ({
   
       setBuyStep(BuyStep.Complete)
     } catch (error: any) {
-      console.log(error)
       setTransactionError(error)
       setRequestUserStep("APPROVAL_ERC20")
     }

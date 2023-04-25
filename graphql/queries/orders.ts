@@ -21,6 +21,15 @@ query GetOrderListings($first: Int, $skip: Int, $orderDirection: OrderDirection,
       price
       startTime
       endTime
+      nonce
+      currencyAddress
+      amount
+      isOrderAsk
+      signer
+      strategy
+      minPercentageToAsk
+      params
+      signature
     }
   }
 `);
