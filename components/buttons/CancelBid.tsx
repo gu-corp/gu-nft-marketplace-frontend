@@ -1,10 +1,11 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { CancelBidModal, CancelBidStep } from '@reservoir0x/reservoir-kit-ui'
 import { FC, ReactElement, cloneElement, useContext } from 'react'
 import { SWRResponse } from 'swr'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { CancelBidModal } from 'components/@reservoir0x/reservoir-kit-ui/CancleBid/CancelBidModal'
+import { CancelStep } from 'components/@reservoir0x/reservoir-kit-ui/CancleBid/CancelBidModalRenderer'
 
 type Props = {
   bidId: string
@@ -50,21 +51,21 @@ const CancelBid: FC<Props> = ({ bidId, openState, trigger, mutate }) => {
       bidId={bidId}
       trigger={trigger}
       openState={openState}
-      onCancelComplete={(data: any) => {
+      onCancelComplete={() => {
         addToast?.({
           title: 'User canceled bid',
           description: 'You have canceled the bid.',
         })
       }}
-      onCancelError={(error: any, data: any) => {
-        console.log('Bid Cancel Error', error, data)
+      onCancelError={(error: any) => {
+        console.log('Bid Cancel Error', error)
         addToast?.({
           title: 'Could not cancel bid',
           description: 'The transaction was not completed.',
         })
       }}
-      onClose={(data, currentStep) => {
-        if (mutate && currentStep == CancelBidStep.Complete) mutate()
+      onClose={(currentStep) => {
+        if (mutate && currentStep == CancelStep.Complete) mutate()
       }}
     />
   )

@@ -16,7 +16,7 @@ type Props = {
   collection: string
   currencyContract?: string
   currencyDecimals?: number
-  price?: number
+  price?: string
   usdPrice?: number | string
   expires?: string
   warning?: string

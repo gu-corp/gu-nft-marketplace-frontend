@@ -60,7 +60,7 @@ const TokenLineItem: FC<TokenLineItemProps> = ({
       <TokenPrimitive
         img={img}
         name={name}
-        price={price}
+        price={price.toString()}
         usdPrice={usdPrice}
         collection={collectionName}
         currencyContract={currency?.contract}

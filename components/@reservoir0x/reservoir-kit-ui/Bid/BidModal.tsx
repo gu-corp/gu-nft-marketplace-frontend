@@ -391,7 +391,7 @@ export function BidModal({
                           `We'll ask your approval for the exchange to access your token. This is a one-time only operation per exchange.`}
                       </Text>
                   {!transactionError && (
-                    <Button css={{ width: '100%', mt: 'auto' }} disabled={true}>
+                    <Button css={{ width: '100%', mt: 'auto', justifyContent: "center" }} disabled={true}>
                       <Loader />
                       Waiting for Approval
                     </Button>
