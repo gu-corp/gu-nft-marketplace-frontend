@@ -1,14 +1,14 @@
-import React, { FC, useEffect, useState, useCallback, ReactNode } from 'react'
-import { useSigner, useNetwork } from 'wagmi'
-import { Token } from 'types/workaround'
-import { Order } from '__generated__/graphql'
 import { useQuery } from '@apollo/client'
-import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
+import { Order } from '__generated__/graphql'
 import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
+import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
 import { GET_TOKEN_BY_ID } from 'graphql/queries/tokens'
-import { useNft } from 'use-nft'
 import { useCurrency } from 'hooks'
+import React, { FC, useEffect, useState, useCallback, ReactNode } from 'react'
 import { Currency } from 'types/currency'
+import { Token } from 'types/workaround'
+import { useNft } from 'use-nft'
+import { useSigner, useNetwork } from 'wagmi'
 
 export enum CancelStep {
   Cancel,
@@ -18,7 +18,7 @@ export enum CancelStep {
 
 type ChildrenProps = {
   loading: boolean
-  listing?: Order
+  bid?: Order
   token?: Token
   cancelStep: CancelStep
   transactionError?: Error | null
@@ -32,13 +32,13 @@ type ChildrenProps = {
 
 type Props = {
   open: boolean
-  listingId?: string
+  bidId?: string
   children: (props: ChildrenProps) => ReactNode
 }
 
-export const CancelListingModalRenderer: FC<Props> = ({
+export const CancelBidModalRenderer: FC<Props> = ({
   open,
-  listingId,
+  bidId,
   children,
 }) => {
   const [cancelStep, setCancelStep] = useState<CancelStep>(CancelStep.Cancel)
@@ -47,21 +47,21 @@ export const CancelListingModalRenderer: FC<Props> = ({
   const { chain: activeChain } = useNetwork()
   const blockExplorerBaseUrl =
     activeChain?.blockExplorers?.default.url || 'https://etherscan.io'
-
   const looksRareSdk = useLooksRareSDK()
+
   const { data, loading } = useQuery(GET_ORDER_BY_HASH, {
-    variables: { hash: listingId as string }
+    variables: { hash: bidId as string }
   })
 
-  const listing = data?.order as Order
+  const bid = data?.order as Order
 
-  const currency = useCurrency(listing.currencyAddress)
+  const currency = useCurrency(bid.currencyAddress)
 
   const { data: tokenData } = useQuery(GET_TOKEN_BY_ID, {
-    variables: { id: `${listing?.collectionAddress}-${listing?.tokenId}` },
+    variables: { id: `${bid?.collectionAddress}-${bid?.tokenId}` },
   })
   // TO-DO: remove later, should using token.image
-  const { nft } = useNft(listing?.collectionAddress, listing?.tokenId)
+  const { nft } = useNft(bid?.collectionAddress, bid?.tokenId)
   const token = {...tokenData?.token, image: nft?.image} as Token
 
   const cancelOrder = useCallback(async () => {
@@ -72,21 +72,21 @@ export const CancelListingModalRenderer: FC<Props> = ({
         throw error
       }
   
-      if (!listing) {
-        const error = new Error('Missing list id to cancel')
+      if (!bid) {
+        const error = new Error('Missing bid id to cancel')
         setTransactionError(error)
         throw error
       }
-
+  
       setCancelStep(CancelStep.Approving)
-
-      const tx = await looksRareSdk.cancelMultipleMakerOrders([listing?.nonce]).call()
+      
+      const tx = await looksRareSdk.cancelMultipleMakerOrders([bid?.nonce]).call()
       setTxHash(tx.hash);
       await tx.wait()
   
       setCancelStep(CancelStep.Complete)
     } catch (error: any) {
-        const errorStatus = (error)?.statusCode
+      const errorStatus = (error)?.statusCode
         let message = 'Oops, something went wrong. Please try again.'
         if (errorStatus >= 400 && errorStatus < 500) {
           message = error.message
@@ -99,7 +99,7 @@ export const CancelListingModalRenderer: FC<Props> = ({
         setCancelStep(CancelStep.Cancel)
         setTxHash(null);
     }
-  }, [listing, looksRareSdk])
+  }, [bid, looksRareSdk])
 
   useEffect(() => {
     if (!open) {
@@ -109,12 +109,11 @@ export const CancelListingModalRenderer: FC<Props> = ({
     }
   }, [open])
 
-
   return (
     <>
       {children({
         loading,
-        listing,
+        bid,
         cancelStep,
         transactionError,
         blockExplorerBaseUrl,

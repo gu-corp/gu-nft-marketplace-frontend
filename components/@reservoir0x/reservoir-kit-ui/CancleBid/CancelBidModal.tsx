@@ -1,34 +1,31 @@
 import React, { ReactElement, Dispatch, SetStateAction, useEffect } from 'react'
 import { Flex, Text, Box, Button, Loader, Anchor } from 'components/primitives'
-import {
-  CancelListingModalRenderer,
-  CancelStep,
-} from './CancelListingModalRenderer'
+import { CancelBidModalRenderer, CancelStep } from './CancelBidModalRenderer'
 import { Modal } from '../Modal/Modal'
 import TokenPrimitive from '../Modal/TokenPrimitive'
+import Progress from '../Modal/Progress'
 import { useNetwork } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCircleExclamation,
   faGasPump,
 } from '@fortawesome/free-solid-svg-icons'
-import useFallbackState from '../hooks/useFallbackState'
 import useTimeSince from '../hooks/useTimeSince'
-import Progress from '../Modal/Progress'
-import currencyOptions from '../lib/defaultCurrencyOptions'
+import useFallbackState from '../hooks/useFallbackState'
 import { parseUnits } from '@ethersproject/units'
+import currencyOptions from '../lib/defaultCurrencyOptions'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
-  listingId?: string
+  bidId?: string
   onClose?: (currentStep: CancelStep) => void
   onCancelComplete?: () => void
-  onCancelError?: (error: Error) => void
+  onCancelError?: (data: any) => void
 }
 
-export function CancelListingModal({
+export function CancelBidModal({
   openState,
-  listingId,
+  bidId,
   trigger,
   onClose,
   onCancelComplete,
@@ -41,13 +38,13 @@ export function CancelListingModal({
   const { chain: activeChain } = useNetwork()
 
   return (
-    <CancelListingModalRenderer
-      listingId={listingId}
+    <CancelBidModalRenderer
+      bidId={bidId}
       open={open}
     >
       {({
         loading,
-        listing,
+        bid,
         token,
         txHash,
         cancelStep,
@@ -58,8 +55,9 @@ export function CancelListingModal({
         currency
       }) => {
         const expires = useTimeSince(
-          listing?.endTime ? Number(listing.endTime) : 0
+          bid?.endTime ? Number(bid.endTime) : 0
         )
+
         useEffect(() => {
           if (cancelStep === CancelStep.Complete && onCancelComplete) {
             onCancelComplete()
@@ -72,13 +70,12 @@ export function CancelListingModal({
           }
         }, [transactionError])
 
-        const isListingAvailable =
-          listing && !loading
+        const isBidAvailable = bid && !loading
 
         return (
           <Modal
             trigger={trigger}
-            title="Cancel Listing"
+            title="Cancel Offer"
             open={open}
             onOpenChange={(open) => {
               if (!open && onClose) {
@@ -88,18 +85,18 @@ export function CancelListingModal({
             }}
             loading={loading}
           >
-            {!isListingAvailable && !loading && (
+            {!isBidAvailable && !loading && (
               <Flex
                 direction="column"
                 justify="center"
                 css={{ px: '$4', py: '$6' }}
               >
                 <Text style="h6" css={{ textAlign: 'center' }}>
-                  Selected listing is no longer available
+                  Selected bid is no longer available
                 </Text>
               </Flex>
             )}
-            {isListingAvailable && cancelStep === CancelStep.Cancel && (
+            {isBidAvailable && cancelStep === CancelStep.Cancel && (
               <Flex direction="column">
                 {transactionError && (
                   <Flex
@@ -125,12 +122,13 @@ export function CancelListingModal({
                   <TokenPrimitive
                     img={token?.image}
                     name={token?.tokenID}
-                    price={parseUnits(listing?.price, 0).toString()}
+                    price={parseUnits(bid?.price, 0).toString()}
                     usdPrice={totalUsd}
                     collection={token?.collection?.name || ''}
                     currencyContract={currency?.contract}
                     currencyDecimals={currency?.decimals}
                     expires={expires}
+                    priceSubtitle="Offer"
                   />
                 </Box>
                 <Text
@@ -138,7 +136,7 @@ export function CancelListingModal({
                   color="subtle"
                   css={{ mt: '$3', mr: '$3', ml: '$3', textAlign: 'center' }}
                 >
-                  This action will cancel your listing. You will be prompted to confirm this cancellation from your wallet. A gas fee is required.
+                  This will cancel your offer for free. You will be prompted to confirm this cancellation from your wallet.
                 </Text>
                 <Button onClick={cancelOrder} css={{ m: '$4', display: 'inline' }}>
                   <FontAwesomeIcon icon={faGasPump} width="16" height="16" />
@@ -152,12 +150,13 @@ export function CancelListingModal({
                   <TokenPrimitive
                     img={token?.image}
                     name={token?.tokenID}
-                    price={parseUnits(listing?.price || "0", 0).toString()}
+                    price={parseUnits(bid?.price || "0", 0).toString()}
                     usdPrice={totalUsd}
                     collection={token?.collection?.name || ''}
                     currencyContract={currency?.contract}
                     currencyDecimals={currency?.decimals}
                     expires={expires}
+                    priceSubtitle="Offer"
                   />
                 </Box>
                 {!txHash && <Loader css={{ height: 206 }} />}
@@ -194,16 +193,19 @@ export function CancelListingModal({
                   }}
                 >
                   <Text style="h5" css={{ mb: '$2' }}>
-                    Listing Canceled!
+                    Offer Canceled!
                   </Text>
                   <Text style="body2" color="subtle" css={{ mb: 24 }}>
                     <>
                       Your{' '}
-                      listing for{' '}
+                      <Text style="body2" color="accent">
+                        {token?.collection?.name}
+                      </Text>{' '}
+                      offer for{' '}
                       <Text style="body2" color="accent">
                         {token?.collection?.name}{' '}
                       </Text>
-                      at {listing?.price}{' '}
+                      at {bid?.price}{' '}
                       {currency?.symbol} has been canceled.
                     </>
                   </Text>
@@ -232,8 +234,8 @@ export function CancelListingModal({
           </Modal>
         )
       }}
-    </CancelListingModalRenderer>
+    </CancelBidModalRenderer>
   )
 }
 
-CancelListingModal.Custom = CancelListingModalRenderer
+CancelBidModal.Custom = CancelBidModalRenderer
