@@ -50,7 +50,8 @@ export type Collection = {
   volumeChange?: any
   topBidValue?: any
   floorAskPrice?: any
-  floorAsk?:any
+  floorAsk?: any
+  topBid? :any
 }
 
 export type Marketplace = {
