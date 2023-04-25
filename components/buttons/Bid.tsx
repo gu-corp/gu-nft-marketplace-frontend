@@ -1,4 +1,3 @@
-import { BidModal, BidStep } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { cloneElement, ComponentProps, FC, useContext } from 'react'
 import { CSS } from '@stitches/react'
@@ -7,6 +6,8 @@ import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { BidModal } from 'components/@reservoir0x/reservoir-kit-ui/Bid/BidModal'
+import { BidStep } from 'components/@reservoir0x/reservoir-kit-ui/Bid/BidModalRenderer'
 
 type Props = {
   tokenId?: string | undefined
@@ -43,7 +44,7 @@ const Bid: FC<Props> = ({
   )
 
   const trigger = (
-    <Button css={buttonCss} disabled={disabled} {...buttonProps} color="gray3">
+    <Button css={buttonCss} disabled={disabled} {...buttonProps} color="gray4">
       Make Offer
     </Button>
   )
@@ -70,14 +71,15 @@ const Bid: FC<Props> = ({
         collectionId={collectionId}
         trigger={trigger}
         openState={openState}
-        onClose={(data, stepData, currentStep) => {
+        onClose={(currentStep) => {
           if (mutate && currentStep == BidStep.Complete) mutate()
         }}
         onBidError={(error) => {
+          console.log(error)
           if (error) {
             if (
-              (error as any).cause.code &&
-              (error as any).cause.code === 4001
+              (error as any).code &&
+              (error as any).code === 4001
             ) {
               addToast?.({
                 title: 'User canceled transaction',

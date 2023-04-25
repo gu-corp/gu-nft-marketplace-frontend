@@ -151,14 +151,14 @@ export const TokenActions: FC<Props> = ({
         />
       )} */}
 
-      {/* {(!isOwner || is1155) && (
+      {(!isOwner || is1155) && (
         <Bid
           tokenId={token?.tokenID}
           collectionId={token?.collection?.id}
           mutate={mutate}
           buttonCss={buttonCss}
         />
-      )} */}
+      )}
 {/* 
       {isTopBidder && !is1155 && (
         <CancelBid

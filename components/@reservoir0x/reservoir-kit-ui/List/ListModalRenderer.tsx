@@ -37,20 +37,16 @@ export enum ListingStep {
 type ChildrenProps = {
   token?: Token
   collection?: Collection
-  // listingStep
   listingStep: ListingStep
   setListingStep: React.Dispatch<React.SetStateAction<ListingStep>>
-  // expirationOptions
   expirationOptions: ExpirationOption[]
   setExpirationOption: React.Dispatch<React.SetStateAction<ExpirationOption>>
   expirationOption: ExpirationOption
   listingData: ListingData
   transactionError?: Error | null
   listToken: () => void
-  // price
   price: string
   setPrice: (price: string) => void
-  // currency options
   currencyOptions: Currency[]
   currencyOption: Currency
   setCurrencyOption: (currency: Currency) => void

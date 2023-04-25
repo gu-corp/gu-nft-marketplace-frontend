@@ -358,7 +358,7 @@ export function BuyModal({
                     p: '$4',
                     flexDirection: 'column',
                     gap: '$3',
-                    '@bp1': {
+                    '@bp600': {
                       flexDirection: 'row',
                     },
                   }}
