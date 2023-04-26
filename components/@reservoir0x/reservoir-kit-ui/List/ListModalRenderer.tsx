@@ -24,8 +24,16 @@ import { MakerOrder } from "@cuonghx.gu-tech/looksrare-sdk"
 import { CREATE_ORDER } from 'graphql/queries/orders'
 import { parseUnits } from 'ethers/lib/utils.js'
 import { GET_NONCE, GET_TOKEN_BY_ID } from 'graphql/queries/tokens'
+import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
+import { OrderDirection, Order_OrderBy } from '__generated__/graphql'
 
 export type ListingData = MakerOrder | null
+
+export enum RequestUserStep {
+  APPROVAL,
+  CANCEL_LIST,
+  SIGN  
+}
 
 export enum ListingStep {
   SelectMarkets,
@@ -53,7 +61,7 @@ type ChildrenProps = {
   loading: boolean,
   royaltyFee: number,
   protocolFee: number,
-  requestUserStep: "APPROVAL" | "SIGN"
+  requestUserStep: RequestUserStep
 }
 
 type Props = {
@@ -85,12 +93,29 @@ export const ListModalRenderer: FC<Props> = ({
   const strategy = looksRareSdk.addresses.STRATEGY_STANDARD_SALE_DEPRECATED;
   const [createOrderMutation] = useMutation(CREATE_ORDER);
 
-  const [requestUserStep, setRequestUserStep] = useState<"APPROVAL" | "SIGN">("APPROVAL")
+  const [requestUserStep, setRequestUserStep] = useState<RequestUserStep>(RequestUserStep.APPROVAL)
 
-  const { data: dataNonce } = useQuery(GET_NONCE, {
+  const { data: dataNonce, refetch: refetchNonce } = useQuery(GET_NONCE, {
     variables: { signer: account.address as string },
   })
+
   const nonce = dataNonce?.nonce?.nonce
+
+  const { data: orderData, refetch: refetchListed } = useQuery(GET_ORDER_LISTINGS, {
+    variables: { 
+      first: 1,
+      skip: 0,
+      order_OrderBy: Order_OrderBy.CreatedAt,
+      orderDirection: OrderDirection.Desc,
+      where: {
+        collectionAddress: collectionId,
+        tokenId: `${tokenId}`,
+        isOrderAsk: true
+      }
+    }
+  })
+
+  const existListing = orderData?.orders?.[0];
 
   useEffect(() => {
     if (!open) {
@@ -102,7 +127,11 @@ export const ListModalRenderer: FC<Props> = ({
     }
     
     setCurrencyOption(currencyOptions[0])
-    setRequestUserStep("APPROVAL")
+    setRequestUserStep(RequestUserStep.APPROVAL)
+
+    refetchListed()
+    refetchNonce()
+    refetchToken()
   }, [open])
 
   const listToken = useCallback(async () => {
@@ -148,11 +177,18 @@ export const ListModalRenderer: FC<Props> = ({
       setListingData(maker)
   
       if (!isCollectionApproved) {
+        setRequestUserStep(RequestUserStep.APPROVAL)
         const tx = await looksRareSdk.approveAllCollectionItems(collectionId, true)
         await tx.wait()
       }
+
+      if (existListing) {
+        setRequestUserStep(RequestUserStep.CANCEL_LIST)
+        const tx = await looksRareSdk.cancelMultipleMakerOrders([existListing?.nonce]).call()
+        await tx.wait()
+      }
   
-      setRequestUserStep("SIGN")
+      setRequestUserStep(RequestUserStep.SIGN)
       const signature = await looksRareSdk.signMakerOrder(maker)
 
       await createOrderMutation({ variables: { createOrderInput: {
@@ -175,7 +211,7 @@ export const ListModalRenderer: FC<Props> = ({
       setListingStep(ListingStep.Complete)
     } catch (error: any) {
       setTransactionError(error)
-      setRequestUserStep("APPROVAL")
+      setRequestUserStep(RequestUserStep.APPROVAL)
     }
   
   }, [
@@ -185,11 +221,12 @@ export const ListModalRenderer: FC<Props> = ({
     currencyOption,
     price,
     strategy,
-    nonce
+    nonce,
+    existListing
   ])
 
 
-  const { data: tokenData, loading } = useQuery(GET_TOKEN_BY_ID, {
+  const { data: tokenData, loading, refetch: refetchToken } = useQuery(GET_TOKEN_BY_ID, {
     variables: { id: `${collectionId}-${tokenId}`}
   })
   // TO-DO: remove later, should using token.image

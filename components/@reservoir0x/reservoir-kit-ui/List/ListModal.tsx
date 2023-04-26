@@ -23,6 +23,7 @@ import {
   ListingData,
   ListModalRenderer,
   ListingStep,
+  RequestUserStep,
 } from './ListModalRenderer'
 import { ModalSize } from '../Modal/Modal'
 import { faChevronLeft, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
@@ -119,7 +120,6 @@ export function ListModal({
             onListingError(transactionError)
           }
         }, [transactionError])
-
 
         return (
           <Modal
@@ -325,17 +325,17 @@ export function ListModal({
                 <MainContainer css={{ p: '$4' }}>
                   {transactionError && <ErrorWell css={{ mt: 24 }} />}
                   <ProgressBar
-                    value={requestUserStep === "APPROVAL" ? 1 : 2}
-                    max={2}
+                    value={requestUserStep + 1}
+                    max={3}
                   />
                     <>
                       <Text
                         css={{ textAlign: 'center', mt: 48, mb: 28 }}
                         style="subtitle1"
                       >
-                        {requestUserStep === "APPROVAL"
-                          ? 'Approve access to items\nin your wallet'
-                          : 'Confirm listing in your wallet'}
+                        {requestUserStep === RequestUserStep.APPROVAL && 'Approve access to items\nin your wallet'}
+                        {requestUserStep === RequestUserStep.CANCEL_LIST && 'Cancel exist listing in your wallet'}
+                        {requestUserStep === RequestUserStep.SIGN && 'Confirm listing in your wallet'}
                       </Text>
                       <TransactionProgress
                         justify="center"
@@ -395,8 +395,8 @@ export function ListModal({
                 />
                 <MainContainer css={{ p: '$4' }}>
                   <ProgressBar
-                    value={requestUserStep === "APPROVAL" ? 1 : 2}
-                    max={2}
+                    value={requestUserStep + 1}
+                    max={3}
                   />
                   <Flex
                     align="center"
