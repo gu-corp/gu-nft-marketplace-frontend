@@ -40,16 +40,8 @@ export const TokenActions: FC<Props> = ({
 
   const queryBidId = router.query.bidId as string
   const deeplinkToAcceptBid = router.query.acceptBid === 'true'
+  
   const is1155 = token?.kind === 'erc1155'
-
-  const showAcceptOffer =
-    !is1155 &&
-    token?.market?.topBid?.id !== null &&
-    token?.market?.topBid?.id !== undefined &&
-    isOwner &&
-    token?.owner?.id
-      ? true
-      : false
 
   const isTopBidder =
     account.isConnected &&
@@ -73,7 +65,7 @@ export const TokenActions: FC<Props> = ({
 
   const { data } = useQuery(GET_ORDER_LISTINGS, {
     variables: { 
-      first: 10,
+      first: 1,
       skip: 0,
       order_OrderBy: Order_OrderBy.CreatedAt,
       orderDirection: OrderDirection.Desc,
@@ -87,6 +79,30 @@ export const TokenActions: FC<Props> = ({
 
   const listing = data?.orders?.[0];
   const isListed = token && listing
+
+  const { data: bidData } = useQuery(GET_ORDER_LISTINGS, {
+    variables: { 
+      first: 1,
+      skip: 0,
+      order_OrderBy: Order_OrderBy.Price,
+      orderDirection: OrderDirection.Desc,
+      where: {
+        collectionAddress: token.collection.id,
+        tokenId: `${token.tokenID}`,
+        isOrderAsk: false
+      }
+    }
+  })
+
+  const topBid = bidData?.orders?.[0]
+
+  const showAcceptOffer =
+  !is1155 &&
+  topBid &&
+  isOwner &&
+  token?.owner?.id
+    ? true
+    : false
 
   return (
     <Grid
@@ -135,10 +151,10 @@ export const TokenActions: FC<Props> = ({
           /> */}
         </Flex>
       )}
-      {/* {showAcceptOffer && (
+      {showAcceptOffer && (
         <AcceptBid
           token={token}
-          bidId={queryBidId}
+          bidId={topBid?.hash}
           collectionId={token?.collection.id}
           openState={
             isOwner && (queryBidId || deeplinkToAcceptBid)
@@ -149,7 +165,7 @@ export const TokenActions: FC<Props> = ({
           buttonCss={buttonCss}
           buttonChildren="Accept Offer"
         />
-      )} */}
+      )}
 
       {(!isOwner || is1155) && (
         <Bid

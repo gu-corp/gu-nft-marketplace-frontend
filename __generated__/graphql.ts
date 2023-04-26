@@ -160,7 +160,8 @@ export type Order_FilterArgs = {
 };
 
 export enum Order_OrderBy {
-  CreatedAt = 'CreatedAt'
+  CreatedAt = 'CreatedAt',
+  Price = 'Price'
 }
 
 export type Query = {
