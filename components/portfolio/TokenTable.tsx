@@ -225,7 +225,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
               textStyle="subtitle2"
               logoHeight={14}
             />
-            {token?.topBid?.price?.amount?.decimal && (
+            {/* {token?.topBid?.price?.amount?.decimal && (
               <AcceptBid
                 token={token as ReturnType<typeof useTokens>['data'][0]}
                 collectionId={token?.collection?.id}
@@ -248,7 +248,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
                   </Flex>
                 }
               />
-            )}
+            )} */}
           </Flex>
         </Flex>
       </Flex>
@@ -348,7 +348,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
       </TableCell>
       <TableCell>
         <Flex justify="end" css={{ gap: '$3' }}>
-          {token?.topBid?.price?.amount?.decimal && (
+          {/* {token?.topBid?.price?.amount?.decimal && (
             <AcceptBid
               token={token as ReturnType<typeof useTokens>['data'][0]}
               collectionId={token?.collection?.id}
@@ -367,7 +367,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
                 </Flex>
               }
             />
-          )}
+          )} */}
           <List
             token={token}
             buttonCss={{
