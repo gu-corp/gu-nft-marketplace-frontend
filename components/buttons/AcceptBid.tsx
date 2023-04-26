@@ -1,8 +1,3 @@
-import {
-  AcceptBidModal,
-  AcceptBidStep,
-  useTokens,
-} from '@reservoir0x/reservoir-kit-ui'
 import { cloneElement, ComponentProps, FC, ReactNode, useContext } from 'react'
 import { CSS } from '@stitches/react'
 import { SWRResponse } from 'swr'
@@ -11,9 +6,12 @@ import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { AcceptBidModal } from 'components/@reservoir0x/reservoir-kit-ui/AcceptBid/AcceptBidModal'
+import { Token } from 'types/workaround'
+import { AcceptBidStep } from 'components/@reservoir0x/reservoir-kit-ui/AcceptBid/AcceptBidModalRenderer'
 
 type Props = {
-  token?: ReturnType<typeof useTokens>['data'][0]
+  token?: Token
   bidId?: string | undefined
   collectionId?: string | undefined
   disabled?: boolean
@@ -52,7 +50,7 @@ const AcceptBid: FC<Props> = ({
   )
 
   const trigger = (
-    <Button css={buttonCss} color="gray3" disabled={disabled} {...buttonProps}>
+    <Button css={buttonCss} color="gray6" disabled={disabled} {...buttonProps}>
       {buttonChildren}
     </Button>
   )
@@ -79,8 +77,8 @@ const AcceptBid: FC<Props> = ({
         openState={openState}
         bidId={bidId}
         collectionId={collectionId}
-        tokenId={token?.token?.tokenId}
-        onClose={(data, stepData, currentStep) => {
+        tokenId={token?.tokenID}
+        onClose={(currentStep) => {
           if (mutate && currentStep == AcceptBidStep.Complete) mutate()
         }}
         onBidAcceptError={(error: any) => {
