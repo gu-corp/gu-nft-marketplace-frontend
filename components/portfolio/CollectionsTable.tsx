@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -14,8 +14,7 @@ import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import Link from 'next/link'
 import { Address } from 'wagmi'
-import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
-import { useMarketplaceChain, useMounted } from 'hooks'
+import { useMounted } from 'hooks'
 import CollectionsTableTimeToggle, {
   CollectionsTableSortingOption,
 } from './CollectionsTableTimeToggle'
@@ -23,11 +22,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { PercentChange } from 'components/primitives/PercentChange'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import { ChainContext } from 'context/ChainContextProvider'
-import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
 import { Collection_OrderBy } from '__generated__/graphql'
 import { Collection } from 'types/workaround'
+import { GET_USER_COLLECTIONS } from 'graphql/queries/collections'
 
 type Props = {
   address: Address | undefined
@@ -44,15 +42,6 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const GET_USER_COLLECTIONS = gql(/* GraphQL */`
-  query GetUserCollections($first: Int, $skip: Int $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy, $where: Collection_FilterArgs) {
-    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy, where: $where) {
-      id
-      name
-      totalTokens
-    }
-  }
-`);
   const { data, loading, fetchMore } = useQuery(GET_USER_COLLECTIONS, {
     variables: {
       first: 10,
@@ -61,6 +50,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
       where: { owner: address?.toLocaleLowerCase() }
     }
   })
+
   const collections = data?.collections || []
 
   useEffect(() => {
@@ -126,7 +116,6 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
   sortByTime,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
-  const { routePrefix } = useMarketplaceChain()
 
   if (isSmallDevice) {
     return (

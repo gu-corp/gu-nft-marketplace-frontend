@@ -25,3 +25,18 @@ query GetTokenById($id: ID!) {
     }
   }
 `);
+
+export const GET_USER_TOKENS = gql(/* GraphQL */`
+  query GetUserTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {
+    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {
+      id
+      tokenID
+      tokenURI
+      collection {
+        id
+        name
+        totalTokens
+      }
+    }
+  }
+`);

@@ -26,6 +26,7 @@ import PortfolioSortDropdown, {
 import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
 import { Collection_OrderBy } from '__generated__/graphql'
+import { GET_USER_COLLECTIONS } from 'graphql/queries/collections'
 
 const IndexPage: NextPage = () => {
   const { address, isConnected } = useAccount()
@@ -38,20 +39,10 @@ const IndexPage: NextPage = () => {
   const isSmallDevice = useMediaQuery({ maxWidth: 905 })
   const isMounted = useMounted()
   
-  const GET_USER_COLLECTIONS = gql(/* GraphQL */`
-  query GetUserCollections($first: Int, $skip: Int $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy, $where: Collection_FilterArgs) {
-    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy, where: $where) {
-      id
-      name
-      totalTokens
-    }
-  }
-`);
-  
   const { data, loading } = useQuery(GET_USER_COLLECTIONS, {
     variables: {
       first: 100,
-      collection_orderBy: Collection_OrderBy.TotalTokens,
+      collection_orderBy: Collection_OrderBy.TotalTokens, // TO-DO: order by volume
       where: { owner: address?.toLocaleLowerCase() }
     }
   })

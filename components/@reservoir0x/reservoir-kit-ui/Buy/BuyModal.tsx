@@ -226,7 +226,7 @@ export function BuyModal({
                   {hasEnoughCurrency ? (
                     <Button
                       onClick={buyToken}
-                      css={{ width: '100%', display: 'inline' }}
+                      css={{ width: '100%', justifyContent: 'center' }}
                       color="primary"
                     >
                       Checkout
@@ -250,7 +250,7 @@ export function BuyModal({
                         onClick={() => {
                           setBuyStep(BuyStep.AddFunds)
                         }}
-                        css={{ width: '100%', display: 'inline' }}
+                        css={{ width: '100%', justifyContent: 'center' }}
                       >
                         Add Funds
                       </Button>
@@ -367,7 +367,7 @@ export function BuyModal({
                     onClick={() => {
                       setOpen(false)
                     }}
-                    style={{ flex: 1, display: 'inline' }}
+                    style={{ flex: 1, justifyContent: 'center' }}
                     color="primary"
                   >
                     Close
@@ -474,7 +474,7 @@ export function BuyModal({
                   </Box>
                 </Flex>
                 <Button
-                  css={{ m: '$4', display: 'inline' }}
+                  css={{ m: '$4', justifyContent: 'center' }}
                   color="primary"
                   onClick={() => copyToClipboard(address as string)}
                 >

@@ -79,7 +79,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
     overflow: 'hidden',
     verticalAlign: 'top',
     '*': {
-      display: 'inline',
+      justifyContent: 'center',
     },
   }
 

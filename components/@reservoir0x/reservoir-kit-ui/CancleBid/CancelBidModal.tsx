@@ -138,7 +138,7 @@ export function CancelBidModal({
                 >
                   This will cancel your offer for free. You will be prompted to confirm this cancellation from your wallet.
                 </Text>
-                <Button onClick={cancelOrder} css={{ m: '$4', display: 'inline' }}>
+                <Button onClick={cancelOrder} css={{ m: '$4', justifyContent: 'center' }}>
                   <FontAwesomeIcon icon={faGasPump} width="16" height="16" />
                   Continue to Cancel
                 </Button>
@@ -225,7 +225,7 @@ export function CancelBidModal({
                   onClick={() => {
                     setOpen(false)
                   }}
-                  css={{ m: '$4', display: 'inline' }}
+                  css={{ m: '$4', justifyContent: 'center' }}
                 >
                   Close
                 </Button>

@@ -181,7 +181,7 @@ export function ListModal({
                   <Box css={{ p: '$4', width: '100%' }}>
                     <Button
                       onClick={() => setListingStep(ListingStep.SetPrice)}
-                      css={{ width: '100%', display: 'inline'}}
+                      css={{ width: '100%', justifyContent: 'center'}}
                     >
                       Set your price
                     </Button>
@@ -456,7 +456,7 @@ export function ListModal({
                         onClick={() => {
                           setOpen(false)
                         }}
-                        style={{ flex: 1, display: 'inline' }}
+                        style={{ flex: 1, justifyContent: 'center' }}
                         color="primary"
                       >
                         Close

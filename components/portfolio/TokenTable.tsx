@@ -13,7 +13,6 @@ import { List, AcceptBid } from 'components/buttons'
 import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
-import { useTokens, useUserTokens } from '@reservoir0x/reservoir-kit-ui'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faBolt,
@@ -32,6 +31,7 @@ import { useQuery } from '@apollo/client'
 import { Token_OrderBy } from '__generated__/graphql'
 import { Token } from 'types/workaround'
 import { useNft } from 'use-nft'
+import { GET_USER_TOKENS } from 'graphql/queries/tokens'
 
 type Props = {
   address: Address | undefined
@@ -51,25 +51,14 @@ export const TokenTable: FC<Props> = ({
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const GET_USER_TOKENS = gql(/* GraphQL */`
-  query GetUserTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {
-    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {
-      id
-      tokenID
-      tokenURI
-      collection {
-        id
-        name
-        totalTokens
-      }
-    }
-  }
-`);
   const { data, loading, fetchMore } = useQuery(GET_USER_TOKENS, {
     variables: {
       first: 10,
       token_OrderBy: Token_OrderBy.TotalTransactions,
-      where: { owner: address?.toLocaleLowerCase(), collection: filterCollection }
+      where: {
+        owner: address?.toLocaleLowerCase(),
+        collection: filterCollection
+      }
     }
   })
   const tokens = data?.tokens || []
@@ -124,7 +113,6 @@ type TokenTableRowProps = {
 }
 
 const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
-  const { routePrefix } = useMarketplaceChain()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   // TO-DO: remove later, should using token.image
@@ -274,9 +262,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
                 }}
                 loader={({ src }) => src}
                 src={imageSrc}
-                // TO-DO: token name
-                // alt={`${token?.token?.name}`}
-                alt={`${token.collection.name}-${token?.tokenID}`}
+                alt={`${token?.name}`}
                 width={48}
                 height={48}
               />

@@ -163,7 +163,7 @@ export function AcceptBidModal({
                   expires={expires}
                   priceSubtitle="Offer"
                 />
-                <Button onClick={() => setOpen(false)} css={{ m: '$4', display: 'inline' }}>
+                <Button onClick={() => setOpen(false)} css={{ m: '$4', justifyContent: 'center' }}>
                   Close
                 </Button>
               </Flex>
@@ -232,7 +232,7 @@ export function AcceptBidModal({
                     marginTop: 16,
                     marginRight: 16,
                     marginLeft: 16,
-                    display: 'inline'
+                    justifyContent: 'center'
                   }}
                   color="primary"
                   onClick={acceptBid}
@@ -342,7 +342,7 @@ export function AcceptBidModal({
                   }}
                 >
                   <Button
-                    css={{ width: '100%', display: 'inline' }}
+                    css={{ width: '100%', justifyContent: 'center' }}
                     onClick={() => {
                       setOpen(false)
                     }}

@@ -312,12 +312,12 @@ export function BidModal({
 
                   <Box css={{ width: '100%', mt: 'auto' }}>
                     {bidAmount === '' && (
-                      <Button disabled={true} css={{ width: '100%', display: 'inline' }}>
+                      <Button disabled={true} css={{ width: '100%', justifyContent: 'center' }}>
                         Enter a Price
                       </Button>
                     )}
                     {bidAmount !== '' && hasEnoughCurrency && (
-                      <Button onClick={placeBid} css={{ width: '100%', display: 'inline' }}>
+                      <Button onClick={placeBid} css={{ width: '100%', justifyContent: 'center' }}>
                         Make an Offer
                       </Button>
                     )}
@@ -436,7 +436,7 @@ export function BidModal({
                   </Button>
                 ) : (
                   <Button
-                    css={{ width: '100%', display: 'inline' }}
+                    css={{ width: '100%', justifyContent: 'center' }}
                     onClick={() => {
                       setOpen(false)
                     }}
