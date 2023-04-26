@@ -55,7 +55,7 @@ export const CancelBidModalRenderer: FC<Props> = ({
 
   const bid = data?.order as Order
 
-  const currency = useCurrency(bid.currencyAddress)
+  const currency = useCurrency(bid?.currencyAddress)
 
   const { data: tokenData } = useQuery(GET_TOKEN_BY_ID, {
     variables: { id: `${bid?.collectionAddress}-${bid?.tokenId}` },

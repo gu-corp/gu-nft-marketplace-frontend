@@ -55,7 +55,7 @@ export const CancelListingModalRenderer: FC<Props> = ({
 
   const listing = data?.order as Order
 
-  const currency = useCurrency(listing.currencyAddress)
+  const currency = useCurrency(listing?.currencyAddress)
 
   const { data: tokenData } = useQuery(GET_TOKEN_BY_ID, {
     variables: { id: `${listing?.collectionAddress}-${listing?.tokenId}` },
