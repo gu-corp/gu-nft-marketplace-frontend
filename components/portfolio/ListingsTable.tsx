@@ -46,7 +46,7 @@ export const ListingsTable: FC<Props> = ({ address }) => {
       order_OrderBy: Order_OrderBy.CreatedAt,
       orderDirection: OrderDirection.Desc,
       where: {
-        signer: address,
+        signer: address?.toLowerCase(),
         isOrderAsk: true
       }
     }
