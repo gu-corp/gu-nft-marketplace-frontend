@@ -179,10 +179,10 @@ export const BuyModalRenderer: FC<Props> = ({
   useEffect(() => {
     if (listing) {
       const currency = currencyOptions.find(currency => currency.contract === listing.currencyAddress)
-      const wethOpt = currencyOptions[0];
 
       setCurrency(currency)
-      setMixedCurrencies(listing.currencyAddress === wethOpt.contract)
+      // TO-DO: support WETH later
+      // setMixedCurrencies(listing.currencyAddress === wethOpt.contract)
 
     } else if (!listing && !loading && token) {
       setBuyStep(BuyStep.Unavailable)
