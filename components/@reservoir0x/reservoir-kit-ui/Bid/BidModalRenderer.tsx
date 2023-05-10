@@ -88,7 +88,7 @@ export const BidModalRenderer: FC<Props> = ({
   // TO-DO: strategyOptions
   const strategy = looksRareSdk.addresses.STRATEGY_STANDARD_SALE_DEPRECATED;
 
-  const { data: tokenData } = useQuery(GET_TOKEN_BY_ID, {
+  const { data: tokenData, refetch: refetchToken } = useQuery(GET_TOKEN_BY_ID, {
     variables: { id: `${collectionId}-${tokenId}`}
   })
 
@@ -106,7 +106,7 @@ export const BidModalRenderer: FC<Props> = ({
     watch: open,
   })
 
-  const { data: dataNonce } = useQuery(GET_NONCE, {
+  const { data: dataNonce, refetch: refetchNonce } = useQuery(GET_NONCE, {
     variables: { signer: address as string },
   })
   const nonce = dataNonce?.nonce?.nonce
@@ -134,6 +134,9 @@ export const BidModalRenderer: FC<Props> = ({
       setBidAmount('')
       setTransactionError(null)
     }
+
+    refetchNonce()
+    refetchToken()
   }, [open])
 
   useEffect(() => {
