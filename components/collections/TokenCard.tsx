@@ -1,11 +1,7 @@
 import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import TokenMedia from 'components/@reservoir0x/reservoir-kit-ui/TokenMedia'
-// import {
-//   extractMediaType,
-//   TokenMedia,
-//   useDynamicTokens,
-// } from '@reservoir0x/reservoir-kit-ui'
+
 import AddToCart from 'components/buttons/AddToCart'
 import BuyNow from 'components/buttons/BuyNow'
 import {
@@ -56,7 +52,7 @@ export default ({
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
   const tokenIsInCart = token && token?.isInCart
-  const isOwner = token?.owner?.id?.toLowerCase() !== address?.toLowerCase()
+  const isOwner = token?.owner?.id?.toLowerCase() === address?.toLowerCase()
 
   // TO-DO: remove later, should using token.image
   const { nft } = useNft(token.collection.id, token.tokenID)

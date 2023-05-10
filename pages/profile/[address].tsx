@@ -41,6 +41,11 @@ import CopyText from 'components/common/CopyText'
 import { Address, useAccount } from 'wagmi'
 import ChainToggle from 'components/common/ChainToggle'
 import { ChainContext } from 'context/ChainContextProvider'
+import { GET_USER_COLLECTIONS } from 'graphql/queries/collections'
+import { useQuery } from '@apollo/client'
+import { Collection_OrderBy, Token_OrderBy } from '__generated__/graphql'
+import { GET_USER_TOKENS } from 'graphql/queries/tokens'
+import { Token, Collection } from 'types/workaround'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -53,7 +58,7 @@ type ActivityTypes = Exclude<
   string
 >
 
-const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
+const IndexPage: NextPage<Props> = ({ address, ensName }) => {
   const {
     avatar: ensAvatar,
     name: resolvedEnsName,
@@ -85,53 +90,32 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const tokenQuery: Parameters<typeof useUserTokens>['1'] = {
-    limit: 20,
-    collection: filterCollection,
-    includeLastSale: true,
-  }
-
-  const collectionQuery: Parameters<typeof useUserCollections>['1'] = {
-    limit: 100,
-  }
-
-  const { chain } = useContext(ChainContext)
-
-  if (chain.collectionSetId) {
-    collectionQuery.collectionsSetId = chain.collectionSetId
-    tokenQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    collectionQuery.community = chain.community
-    tokenQuery.community = chain.community
-  }
-
-  const ssrTokens = ssr.tokens[marketplaceChain.id]
-    ? [ssr.tokens[marketplaceChain.id]]
-    : undefined
-  const {
-    data: tokens,
-    mutate,
-    fetchNextPage,
-    isFetchingInitialData,
-    hasNextPage,
-    isFetchingPage,
-  } = useUserTokens(address || '', tokenQuery, {
-    fallbackData: filterCollection ? undefined : ssrTokens,
+  const { data: collectionData, loading: collectionLoading } = useQuery(GET_USER_COLLECTIONS, {
+    variables: {
+      first: 100,
+      collection_orderBy: Collection_OrderBy.TotalTokens,
+      where: { owner: address?.toLocaleLowerCase() }
+    }
   })
 
-  const ssrCollections = ssr.collections[marketplaceChain.id]
-    ? [ssr.collections[marketplaceChain.id]]
-    : undefined
+  const { data: tokenData, loading: tokenLoading, fetchMore } = useQuery(GET_USER_TOKENS, {
+    variables: {
+      first: 10,
+      token_OrderBy: Token_OrderBy.TotalTransactions,
+      where: {
+        owner: address?.toLocaleLowerCase(),
+        collection: filterCollection
+      }
+    }
+  })
 
-  const { data: collections, isLoading: collectionsLoading } =
-    useUserCollections(address, collectionQuery, {
-      fallbackData: filterCollection ? undefined : ssrCollections,
-    })
+  const tokens = (tokenData?.tokens || []) as Token[]
+  const collections = (collectionData?.collections || []) as Collection[]
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchNextPage()
+      fetchMore({ variables: { skip: tokens.length }})
     }
   }, [loadMoreObserver?.isIntersecting])
 
@@ -209,7 +193,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 />
               ) : (
                 <TokenFilters
-                  isLoading={collectionsLoading}
+                  isLoading={collectionLoading}
                   open={tokenFiltersOpen}
                   setOpen={setTokenFiltersOpen}
                   collections={collections  as any}
@@ -224,7 +208,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 }}
               >
                 <Flex justify="between" css={{ marginBottom: '$4' }}>
-                  {!collectionsLoading &&
+                  {!collectionLoading &&
                     collections &&
                     collections.length > 0 &&
                     !isSmallDevice && (
@@ -247,7 +231,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                     },
                   }}
                 >
-                  {isFetchingInitialData || collectionsLoading
+                  {collectionLoading
                     ? Array(10)
                         .fill(null)
                         .map((_, index) => (
@@ -255,27 +239,12 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                         ))
                     : tokens.map((token, i) => {
                         if (token) {
-                          let dynamicToken = token as ReturnType<
-                            typeof useDynamicTokens
-                          >['data'][0]
-
-                          if (dynamicToken.token) {
-                            dynamicToken.token.owner = address
-                          }
-                          dynamicToken.market = {
-                            floorAsk: token?.ownership?.floorAsk,
-                          }
+                          
                           return (
                             <TokenCard
                               key={i}
-                              token={dynamicToken  as any}
+                              token={token}
                               address={account.address as Address}
-                              tokenCount={
-                                token?.token?.kind === 'erc1155'
-                                  ? token.ownership?.tokenCount
-                                  : undefined
-                              }
-                              mutate={mutate}
                               rarityEnabled={false}
                               addToCartEnabled={false}
                               onMediaPlayed={(e) => {
@@ -296,26 +265,8 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                           )
                         }
                       })}
-                  <Box
-                    ref={loadMoreRef}
-                    css={{
-                      display: isFetchingPage ? 'none' : 'block',
-                    }}
-                  >
-                    {hasNextPage && !isFetchingInitialData && <LoadingCard />}
-                  </Box>
-                  {(hasNextPage || isFetchingPage) &&
-                    !isFetchingInitialData && (
-                      <>
-                        {Array(6)
-                          .fill(null)
-                          .map((_, index) => (
-                            <LoadingCard key={`loading-card-${index}`} />
-                          ))}
-                      </>
-                    )}
                 </Grid>
-                {tokens.length === 0 && !isFetchingPage && (
+                {tokens.length === 0 && !tokenLoading && (
                   <Flex
                     direction="column"
                     align="center"
@@ -330,7 +281,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
               </Box>
             </Flex>
           </TabsContent>
-          <TabsContent value="activity">
+          {/* <TabsContent value="activity">
             <Flex
               css={{
                 gap: activityFiltersOpen ? '$5' : '',
@@ -369,7 +320,7 @@ const IndexPage: NextPage<Props> = ({ address, ssr, ensName }) => {
                 />
               </Box>
             </Flex>
-          </TabsContent>
+          </TabsContent> */}
         </Tabs.Root>
       </Flex>
     </Layout>
@@ -383,16 +334,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-type UserTokensSchema =
-  paths['/users/{user}/tokens/v7']['get']['responses']['200']['schema']
-type UserCollectionsSchema =
-  paths['/users/{user}/collections/v2']['get']['responses']['200']['schema']
-
 export const getStaticProps: GetStaticProps<{
-  ssr: {
-    tokens: Record<number, UserTokensSchema>
-    collections: Record<number, UserCollectionsSchema>
-  }
   address: string | undefined
   ensName: string | null
 }> = async ({ params }) => {
@@ -415,62 +357,8 @@ export const getStaticProps: GetStaticProps<{
     }
   }
 
-  const tokensQuery: paths['/users/{user}/tokens/v7']['get']['parameters']['query'] =
-    {
-      limit: 20,
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      includeLastSale: true,
-    }
-
-  const collectionsQuery: paths['/users/{user}/collections/v2']['get']['parameters']['query'] =
-    {
-      limit: 100,
-    }
-
-  if (DefaultChain.collectionSetId) {
-    tokensQuery.collectionsSetId = DefaultChain.collectionSetId
-    collectionsQuery.collectionsSetId = DefaultChain.collectionSetId
-  } else if (DefaultChain.community) {
-    tokensQuery.community = DefaultChain.community
-    collectionsQuery.community = DefaultChain.community
-  }
-
-  const promises: ReturnType<typeof fetcher>[] = []
-
-  const headers = {
-    headers: {
-      'x-api-key': DefaultChain.apiKey || '',
-    },
-  }
-  const tokensPromise = fetcher(
-    `${DefaultChain.reservoirBaseUrl}/users/${address}/tokens/v7`,
-    tokensQuery,
-    headers
-  )
-  const collectionsPromise = fetcher(
-    `${DefaultChain.reservoirBaseUrl}/users/${address}/collections/v2`,
-    collectionsQuery,
-    headers
-  )
-  promises.push(tokensPromise)
-  promises.push(collectionsPromise)
-
-  const responses = await Promise.allSettled(promises)
-  const collections: Record<number, any> = {}
-  const tokens: Record<number, any> = {}
-  responses.forEach((response) => {
-    if (response.status === 'fulfilled') {
-      const url = new URL(response.value.response.url)
-      if (url.pathname.includes('collections')) {
-        collections[DefaultChain.id] = response.value.data
-      } else if (url.pathname.includes('tokens')) {
-        tokens[DefaultChain.id] = response.value.data
-      }
-    }
-  })
-
   return {
-    props: { ssr: { tokens, collections }, address, ensName },
+    props: { address, ensName },
     revalidate: 5,
   }
 }
