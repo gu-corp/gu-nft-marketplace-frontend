@@ -40,7 +40,7 @@ export const OffersTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const { data, loading, fetchMore } = useQuery(GET_ORDER_LISTINGS, {
+  const { data, loading, fetchMore, refetch } = useQuery(GET_ORDER_LISTINGS, {
     variables: { 
       first: 10,
       skip: 0,
@@ -66,6 +66,10 @@ export const OffersTable: FC<Props> = ({ address }) => {
       })
     }
   }, [loadMoreObserver?.isIntersecting])
+
+  useEffect(() => {
+    refetch()
+  }, [])
 
   return (
     <>
