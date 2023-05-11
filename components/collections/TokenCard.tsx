@@ -40,7 +40,7 @@ export default ({
   token,
   address,
   rarityEnabled = true,
-  addToCartEnabled = true,
+  addToCartEnabled = false,
   mutate,
   onMediaPlayed,
   orderQuantity,
