@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { Anchor, Button, Flex, Text, Loader, Box } from 'components/primitives'
 import { Dialog } from 'components/primitives/Dialog'
-import ReservoirLogoWhiteText from '../img/ReservoirLogoWhiteText'
+import ReservoirLogoWhiteText from '../../img/ReservoirLogoWhiteText'
 import { styled } from 'stitches.config'
 import { DialogListing } from 'components/primitives/DialogListing'
 

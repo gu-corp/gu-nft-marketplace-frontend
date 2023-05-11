@@ -12,13 +12,12 @@ import {
 } from 'components/primitives'
 
 import { Progress } from './Progress'
-import { Modal } from '../Modal/Modal'
+import { Modal } from '../Modal'
 import {
   faCircleExclamation,
   faCheckCircle,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import TokenLineItem from '../Modal/TokenLineItem'
 import {
   AcceptBidStep,
   AcceptBidModalRenderer,
@@ -26,9 +25,10 @@ import {
 } from './AcceptBidModalRenderer'
 import Fees from './Fees'
 import { useNetwork } from 'wagmi'
-import useFallbackState from '../hooks/useFallbackState'
-import useTimeSince from '../hooks/useTimeSince'
+import useFallbackState from '../../../hooks/useFallbackState'
+import useTimeSince from '../../../hooks/useTimeSince'
 import { formatUnits } from 'ethers/lib/utils.js'
+import TokenLineItem from '../TokenLineItem'
 
 type BidData = {
   tokenId?: string

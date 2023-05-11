@@ -18,26 +18,26 @@ import {
 } from 'components/primitives'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Modal } from '../Modal/Modal'
+import { Modal } from '../Modal'
 import {
   ListingData,
   ListModalRenderer,
   ListingStep,
   RequestUserStep,
 } from './ListModalRenderer'
-import { ModalSize } from '../Modal/Modal'
+import { ModalSize } from '../Modal'
 import { faChevronLeft, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 import TokenStats from './TokenStats'
 import TokenListingDetails from './TokenListingDetails'
-import useFallbackState from '../hooks/useFallbackState'
-import TransactionProgress from '../Modal/TransactionProgress'
-import ProgressBar from '../Modal/ProgressBar'
+import useFallbackState from '../../../hooks/useFallbackState'
 import InfoTooltip from 'components/primitives/InfoTooltip'
 import { constants } from 'ethers'
 import { styled } from 'stitches.config'
 import { Currency } from 'types/currency'
 import MarketplacePriceInput from './MarketplacePriceInput'
 import { marketplaceInfo } from 'constants/common'
+import ProgressBar from '../ProgressBar'
+import TransactionProgress from '../TransactionProgress'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]

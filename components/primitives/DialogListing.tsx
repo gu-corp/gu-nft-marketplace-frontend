@@ -10,7 +10,7 @@ import React, {
 } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useMediaQuery } from 'usehooks-ts'
-import { ModalSize } from 'components/@reservoir0x/reservoir-kit-ui/Modal/Modal'
+import { ModalSize } from 'components/@reservoir0x/components/Modal/Modal'
 
 const Overlay = styled(DialogPrimitive.Overlay, {
   backgroundColor: '$overlayBackground',

@@ -10,8 +10,8 @@ import { useAccount, useSigner } from 'wagmi'
 
 import dayjs from 'dayjs'
 import { ExpirationOption } from 'types/ExpirationOption'
-import expirationOptions from '../lib/defaultExpirationOptions'
-import currencyOptions from '../lib/defaultCurrencyOptions'
+import expirationOptions from '../../../lib/defaultExpirationOptions'
+import currencyOptions from '../../../lib/defaultCurrencyOptions'
 
 import { Collection, Marketplace, Token } from 'types/workaround'
 import { Currency } from 'types/currency'

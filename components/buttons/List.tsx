@@ -14,7 +14,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import { Token } from 'types/workaround'
-import { ListModal } from 'components/@reservoir0x/reservoir-kit-ui/List/ListModal'
+import { ListModal } from 'components/@reservoir0x/components/Modal/List/ListModal'
 
 type Props = {
   token?: Token

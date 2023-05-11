@@ -9,10 +9,9 @@ import {
   FormatCurrency,
   FormatCryptoCurrency,
   Loader,
-  FormatCrypto,
 } from 'components/primitives'
 import Popover from 'components/primitives/Popover'
-import { Modal } from '../Modal/Modal'
+import { Modal } from '../Modal'
 import {
   faCopy,
   faCircleExclamation,
@@ -22,14 +21,11 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { BuyModalRenderer, BuyStep } from './BuyModalRenderer'
 import { useNetwork } from 'wagmi'
-import useFallbackState from '../hooks/useFallbackState'
-import Progress from '../Modal/Progress'
-import TokenLineItem from '../Modal/TokenLineItem'
-import ProgressBar from '../Modal/ProgressBar'
-import QuantitySelector from '../Modal/QuantitySelector'
-import { formatNumber } from 'utils/numbers'
-import useCopyToClipboard from '../hooks/useCopyToClipboard'
-import { ethers } from 'ethers'
+import useFallbackState from '../../../hooks/useFallbackState'
+import useCopyToClipboard from '../../../hooks/useCopyToClipboard'
+import ProgressBar from '../ProgressBar'
+import TokenLineItem from '../TokenLineItem'
+import Progress from '../Progress'
 
 type PurchaseData = {
   tokenId?: string

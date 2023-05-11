@@ -6,8 +6,8 @@ import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-import { BidModal } from 'components/@reservoir0x/reservoir-kit-ui/Bid/BidModal'
-import { BidStep } from 'components/@reservoir0x/reservoir-kit-ui/Bid/BidModalRenderer'
+import { BidModal } from 'components/@reservoir0x/components/Modal/Bid/BidModal'
+import { BidStep } from 'components/@reservoir0x/components/Modal/Bid/BidModalRenderer'
 
 type Props = {
   tokenId?: string | undefined

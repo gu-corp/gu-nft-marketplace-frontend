@@ -8,7 +8,7 @@ import React, { FC, useEffect, useState, useCallback, ReactNode } from 'react'
 import { Currency } from 'types/currency'
 import { Token } from 'types/workaround'
 import { useNft } from 'use-nft'
-import { useSigner, useNetwork } from 'wagmi'
+import { useNetwork } from 'wagmi'
 
 export enum CancelStep {
   Cancel,

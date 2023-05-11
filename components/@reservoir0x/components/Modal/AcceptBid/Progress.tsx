@@ -5,7 +5,7 @@ import { AcceptBidStep } from './AcceptBidModalRenderer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCube, faWallet } from '@fortawesome/free-solid-svg-icons'
 import { useNetwork } from 'wagmi'
-import TransactionProgress from '../Modal/TransactionProgress'
+import TransactionProgress from '../TransactionProgress'
 
 type Props = {
   acceptBidStep: AcceptBidStep

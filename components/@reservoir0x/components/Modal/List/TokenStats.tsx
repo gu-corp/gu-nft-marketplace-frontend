@@ -1,9 +1,9 @@
 import React, { FC } from 'react'
 import { Flex, Box, Text } from 'components/primitives'
 import Token from './Token'
-import Stat from '../Modal/Stat'
 import InfoTooltip from 'components/primitives/InfoTooltip'
 import { Token as TokenType, Collection as CollectionType } from 'types/workaround'
+import Stat from '../Stat'
 
 type Props = {
   token?: TokenType

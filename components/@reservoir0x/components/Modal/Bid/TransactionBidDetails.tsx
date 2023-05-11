@@ -3,7 +3,7 @@ import { Flex, Box, FormatWrappedCurrency, Text } from 'components/primitives'
 import TokenStatsHeader from './TokenStatsHeader'
 import { BidData } from './BidModalRenderer'
 import { formatEther } from 'ethers/lib/utils.js'
-import useTimeSince from '../hooks/useTimeSince'
+import useTimeSince from '../../../hooks/useTimeSince'
 import { Collection, Token } from 'types/workaround'
 
 type Props = {

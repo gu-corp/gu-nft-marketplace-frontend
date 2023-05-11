@@ -16,7 +16,7 @@ import {
 } from '@reservoir0x/reservoir-kit-ui'
 import { motion } from 'framer-motion'
 import { Token } from 'types/workaround'
-import TokenMedia from 'components/@reservoir0x/reservoir-kit-ui/TokenMedia'
+import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
 
 
 type Props = {

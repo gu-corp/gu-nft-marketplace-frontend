@@ -6,9 +6,9 @@ import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-import { AcceptBidModal } from 'components/@reservoir0x/reservoir-kit-ui/AcceptBid/AcceptBidModal'
+import { AcceptBidModal } from 'components/@reservoir0x/components/Modal/AcceptBid/AcceptBidModal'
 import { Token } from 'types/workaround'
-import { AcceptBidStep } from 'components/@reservoir0x/reservoir-kit-ui/AcceptBid/AcceptBidModalRenderer'
+import { AcceptBidStep } from 'components/@reservoir0x/components/Modal/AcceptBid/AcceptBidModalRenderer'
 
 type Props = {
   token?: Token

@@ -11,7 +11,7 @@ import {
 } from 'wagmi'
 
 import { BigNumber, constants } from 'ethers'
-import defaultExpirationOptions from '../lib/defaultExpirationOptions'
+import defaultExpirationOptions from '../../../lib/defaultExpirationOptions'
 import { parseUnits } from 'ethers/lib/utils.js'
 import dayjs from 'dayjs'
 import { ExpirationOption } from 'types/ExpirationOption'
@@ -24,7 +24,7 @@ import { useMutation, useQuery } from '@apollo/client'
 import { MakerOrder } from '@cuonghx.gu-tech/looksrare-sdk'
 import { CREATE_ORDER } from 'graphql/queries/orders'
 import { useNft } from 'use-nft'
-import currencyOptions from '../lib/defaultCurrencyOptions'
+import currencyOptions from '../../../lib/defaultCurrencyOptions'
 
 export type BidData = MakerOrder | null
 

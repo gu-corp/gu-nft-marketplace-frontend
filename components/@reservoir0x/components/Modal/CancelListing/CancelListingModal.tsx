@@ -4,19 +4,20 @@ import {
   CancelListingModalRenderer,
   CancelStep,
 } from './CancelListingModalRenderer'
-import { Modal } from '../Modal/Modal'
-import TokenPrimitive from '../Modal/TokenPrimitive'
+import { Modal } from '../Modal'
+
 import { useNetwork } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faCircleExclamation,
   faGasPump,
 } from '@fortawesome/free-solid-svg-icons'
-import useFallbackState from '../hooks/useFallbackState'
-import useTimeSince from '../hooks/useTimeSince'
-import Progress from '../Modal/Progress'
-import currencyOptions from '../lib/defaultCurrencyOptions'
+import useFallbackState from '../../../hooks/useFallbackState'
+import useTimeSince from '../../../hooks/useTimeSince'
+import currencyOptions from '../../../lib/defaultCurrencyOptions'
 import { parseUnits } from '@ethersproject/units'
+import TokenPrimitive from '../TokenPrimitive'
+import Progress from '../Progress'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]

@@ -1,6 +1,6 @@
 import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import TokenMedia from 'components/@reservoir0x/reservoir-kit-ui/TokenMedia'
+import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
 
 import AddToCart from 'components/buttons/AddToCart'
 import BuyNow from 'components/buttons/BuyNow'

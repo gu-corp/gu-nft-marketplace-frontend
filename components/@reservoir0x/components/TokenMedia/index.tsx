@@ -11,7 +11,7 @@ import React, {
   AudioHTMLAttributes,
   IframeHTMLAttributes,
 } from 'react'
-import useModelViewer from '../hooks/useModelViewer'
+import useModelViewer from '../../hooks/useModelViewer'
 import MediaPlayButton from './MediaPlayButton'
 import { useMeasure } from '@react-hookz/web'
 import TokenFallback from './TokenFallback'

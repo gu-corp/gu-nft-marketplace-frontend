@@ -20,7 +20,7 @@ import {
   CryptoCurrencyIcon,
 } from 'components/primitives'
 
-import { Modal, ModalSize } from '../Modal/Modal'
+import { Modal, ModalSize } from '../Modal'
 import {
   BidModalRenderer,
   BidStep,
@@ -36,10 +36,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import TransactionBidDetails from './TransactionBidDetails'
 import { styled } from 'stitches.config'
-import TransactionProgress from '../Modal/TransactionProgress'
-import ProgressBar from '../Modal/ProgressBar'
-import useFallbackState from '../hooks/useFallbackState'
+import useFallbackState from '../../../hooks/useFallbackState'
 import { Currency } from 'types/currency'
+import ProgressBar from '../ProgressBar'
+import TransactionProgress from '../TransactionProgress'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]

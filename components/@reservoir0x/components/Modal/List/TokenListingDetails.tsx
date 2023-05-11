@@ -1,12 +1,12 @@
 import React, { FC } from 'react'
 import { Flex, Box } from 'components/primitives'
 import Token from './Token'
-import Stat from '../Modal/Stat'
 import ListingStat from './ListingStat'
 import { ListingData } from './ListModalRenderer'
 import { Currency } from 'types/currency'
 import { Token as TokenType, Collection as CollectionType, Marketplace } from 'types/workaround'
 import { marketplaceInfo } from 'constants/common'
+import Stat from '../Stat'
 
 type Props = {
   token?: TokenType

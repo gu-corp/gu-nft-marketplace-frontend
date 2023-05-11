@@ -64,7 +64,7 @@ import { Head } from 'components/Head'
 import { gql } from '__generated__'
 import { initializeApollo } from 'graphql/apollo-client'
 import { Token } from 'types/workaround'
-import TokenMedia from 'components/@reservoir0x/reservoir-kit-ui/TokenMedia'
+import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
 import { useNft } from 'use-nft'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>

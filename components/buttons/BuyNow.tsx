@@ -7,8 +7,8 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
 import { useMarketplaceChain } from 'hooks'
 import { Token } from 'types/workaround'
-import { BuyModal } from 'components/@reservoir0x/reservoir-kit-ui/Buy/BuyModal'
-import { BuyStep } from 'components/@reservoir0x/reservoir-kit-ui/Buy/BuyModalRenderer'
+import { BuyModal } from 'components/@reservoir0x/components/Modal/Buy/BuyModal'
+import { BuyStep } from 'components/@reservoir0x/components/Modal/Buy/BuyModalRenderer'
 
 type Props = {
   token?: Token

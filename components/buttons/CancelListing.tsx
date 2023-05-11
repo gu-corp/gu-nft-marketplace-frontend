@@ -4,8 +4,8 @@ import { SWRResponse } from 'swr'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-import { CancelListingModal } from 'components/@reservoir0x/reservoir-kit-ui/CancelListing/CancelListingModal'
-import { CancelStep } from 'components/@reservoir0x/reservoir-kit-ui/CancelListing/CancelListingModalRenderer'
+import { CancelListingModal } from 'components/@reservoir0x/components/Modal/CancelListing/CancelListingModal'
+import { CancelStep } from 'components/@reservoir0x/components/Modal/CancelListing/CancelListingModalRenderer'
 
 type Props = {
   listingId: string
