@@ -67,7 +67,7 @@ const MarketplacePriceInput = ({
       <Box css={{ flex: 1 }}>
         <Input
           type="number"
-          value={+price}
+          value={price}
           onChange={onChange}
           placeholder="Enter a listing price"
         />

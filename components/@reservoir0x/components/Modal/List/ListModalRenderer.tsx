@@ -61,7 +61,8 @@ type ChildrenProps = {
   loading: boolean,
   royaltyFee: number,
   protocolFee: number,
-  requestUserStep: RequestUserStep
+  requestUserStep: RequestUserStep,
+  steps: RequestUserStep[]
 }
 
 type Props = {
@@ -94,9 +95,10 @@ export const ListModalRenderer: FC<Props> = ({
   const [createOrderMutation] = useMutation(CREATE_ORDER);
 
   const [requestUserStep, setRequestUserStep] = useState<RequestUserStep>(RequestUserStep.APPROVAL)
+  const [steps, setSteps] = useState<RequestUserStep[]>([])
 
   const { data: dataNonce, refetch: refetchNonce } = useQuery(GET_NONCE, {
-    variables: { signer: account.address as string },
+    variables: { signer: account.address?.toLowerCase() as string },
   })
 
   const nonce = dataNonce?.nonce?.nonce
@@ -175,7 +177,17 @@ export const ListModalRenderer: FC<Props> = ({
       })
       
       setListingData(maker)
-  
+
+      if (!isCollectionApproved && existListing) {
+        setSteps([RequestUserStep.APPROVAL, RequestUserStep.CANCEL_LIST, RequestUserStep.SIGN])
+      } else if (!isCollectionApproved && !existListing) {
+        setSteps([RequestUserStep.APPROVAL, RequestUserStep.SIGN])
+      } else if (isCollectionApproved && existListing) {
+        setSteps([RequestUserStep.CANCEL_LIST, RequestUserStep.SIGN])
+      } else {
+        setSteps([RequestUserStep.SIGN])
+      }
+
       if (!isCollectionApproved) {
         setRequestUserStep(RequestUserStep.APPROVAL)
         const tx = await looksRareSdk.approveAllCollectionItems(collectionId, true)
@@ -211,7 +223,6 @@ export const ListModalRenderer: FC<Props> = ({
       setListingStep(ListingStep.Complete)
     } catch (error: any) {
       setTransactionError(error)
-      setRequestUserStep(RequestUserStep.APPROVAL)
     }
   
   }, [
@@ -238,6 +249,11 @@ export const ListModalRenderer: FC<Props> = ({
   const protocolFee = useStrategyFee(strategy)
   const royaltyFee = useRoyaltyFee(token?.collection?.id as string, token?.tokenID)
 
+  useEffect(() => {
+    refetchListed()
+    refetchNonce()
+    refetchToken()
+  }, [transactionError])
   return <>{children({
     token,
     collection,
@@ -257,7 +273,8 @@ export const ListModalRenderer: FC<Props> = ({
     royaltyFee,
     listingData,
     transactionError,
-    requestUserStep
+    requestUserStep,
+    steps
 })}</>
 }
 

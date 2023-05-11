@@ -31,9 +31,7 @@ import TokenStats from './TokenStats'
 import TokenListingDetails from './TokenListingDetails'
 import useFallbackState from '../../../hooks/useFallbackState'
 import InfoTooltip from 'components/primitives/InfoTooltip'
-import { constants } from 'ethers'
 import { styled } from 'stitches.config'
-import { Currency } from 'types/currency'
 import MarketplacePriceInput from './MarketplacePriceInput'
 import { marketplaceInfo } from 'constants/common'
 import ProgressBar from '../ProgressBar'
@@ -108,7 +106,8 @@ export function ListModal({
         protocolFee,
         royaltyFee,
         listingData,
-        requestUserStep
+        requestUserStep,
+        steps
       }) => {
         const tokenImage =
           token && token?.image
@@ -325,8 +324,8 @@ export function ListModal({
                 <MainContainer css={{ p: '$4' }}>
                   {transactionError && <ErrorWell css={{ mt: 24 }} />}
                   <ProgressBar
-                    value={requestUserStep + 1}
-                    max={3}
+                    value={steps.findIndex(step => step === requestUserStep) + 1}
+                    max={steps.length}
                   />
                     <>
                       <Text
@@ -395,8 +394,8 @@ export function ListModal({
                 />
                 <MainContainer css={{ p: '$4' }}>
                   <ProgressBar
-                    value={requestUserStep + 1}
-                    max={3}
+                    value={steps.findIndex(step => step === requestUserStep) + 1}
+                    max={steps.length}
                   />
                   <Flex
                     align="center"
