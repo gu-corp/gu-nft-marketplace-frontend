@@ -25,6 +25,7 @@ import {
   BidModalRenderer,
   BidStep,
   BidData,
+  RequestUserStep,
 } from './BidModalRenderer'
 import TokenStats from './TokenStats'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -131,8 +132,10 @@ export function BidModal({
         currencyOption,
         currencyOptions,
         setCurrencyOption,
-        bidData
+        bidData,
+        steps
       }) => {
+        console.log(steps)
         const tokenCount = collection?.totalTokens
           ? +collection.totalTokens
           : undefined
@@ -145,7 +148,7 @@ export function BidModal({
         useEffect(() => {
           if (requestUserStep) {
             switch (requestUserStep) {
-              case 'SIGN': {
+              case RequestUserStep.SIGN: {
                 setStepTitle('Confirm Offer')
                 break
               }
@@ -346,9 +349,9 @@ export function BidModal({
                   bidData={bidData}
                 />
                 <MainContainer css={{ p: '$4' }}>
-                  <ProgressBar
-                    value={requestUserStep === "APPROVAL" ? 1 : 2}
-                    max={2}
+                <ProgressBar
+                    value={steps.findIndex(step => step === requestUserStep) + 1}
+                    max={steps.length}
                   />
                   {transactionError && <ErrorWell css={{ mt: 24 }} />}
                   <Text
@@ -357,13 +360,13 @@ export function BidModal({
                   >
                     {stepTitle}
                   </Text>
-                    {requestUserStep === 'SIGN' && (
+                    {requestUserStep === RequestUserStep.SIGN && (
                       <TransactionProgress
                         justify="center"
                         fromImg={itemImage || ''}
                       />
                     )}
-                    {requestUserStep !== 'SIGN' && (
+                    {requestUserStep === RequestUserStep.APPROVAL && (
                       <Flex align="center" justify="center">
                         <Flex
                           css={{ background: '$neutalLine', borderRadius: 8 }}
@@ -386,7 +389,7 @@ export function BidModal({
                         style="body2"
                         color="subtle"
                         >
-                        {requestUserStep === 'SIGN' ?
+                        {requestUserStep === RequestUserStep.SIGN ?
                           'A free off-chain signature to create the offer' :
                           `We'll ask your approval for the exchange to access your token. This is a one-time only operation per exchange.`}
                       </Text>

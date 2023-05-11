@@ -48,11 +48,17 @@ type ChildrenProps = {
   setBidAmount: React.Dispatch<React.SetStateAction<string>>
   setExpirationOption: React.Dispatch<React.SetStateAction<ExpirationOption>>
   placeBid: () => void
-  requestUserStep: "APPROVAL" | "SIGN"
+  requestUserStep: RequestUserStep
   currencyOptions: Currency[]
   currencyOption: Currency
   setCurrencyOption: (currency: Currency) => void
   bidData: BidData
+  steps: RequestUserStep[]
+}
+
+export enum RequestUserStep {
+  APPROVAL,
+  SIGN  
 }
 
 
@@ -79,7 +85,9 @@ export const BidModalRenderer: FC<Props> = ({
   const [bidData, setBidData] = useState<BidData | null>(null)
   const [hasEnoughCurrency, setHasEnoughCurrency] =
     useState(false)
-  const [requestUserStep, setRequestUserStep] = useState<"APPROVAL" | "SIGN">("APPROVAL")
+  const [requestUserStep, setRequestUserStep] = useState<RequestUserStep>(RequestUserStep.APPROVAL)
+  const [steps, setSteps] = useState<RequestUserStep[]>([])
+
   const [currencyOption, setCurrencyOption] = useState<Currency>(
     currencyOptions[0]
   )
@@ -107,7 +115,7 @@ export const BidModalRenderer: FC<Props> = ({
   })
 
   const { data: dataNonce, refetch: refetchNonce } = useQuery(GET_NONCE, {
-    variables: { signer: address as string },
+    variables: { signer: address?.toLowerCase() as string },
   })
   const nonce = dataNonce?.nonce?.nonce
 
@@ -185,13 +193,18 @@ export const BidModalRenderer: FC<Props> = ({
       })
   
       setBidData(maker)
-    
+      if (!isCurrencyApproved) {
+        setSteps([RequestUserStep.APPROVAL, RequestUserStep.SIGN])
+      } else {
+        setSteps([RequestUserStep.SIGN])
+      }
+
       if (!isCurrencyApproved) {
         const tx = await looksRareSdk.approveErc20(maker.currency)
         await tx.wait()
       }
   
-      setRequestUserStep("SIGN")
+      setRequestUserStep(RequestUserStep.SIGN)
       const signature = await looksRareSdk.signMakerOrder(maker)
   
       await createOrderMutation({ variables: { createOrderInput: {
@@ -214,7 +227,6 @@ export const BidModalRenderer: FC<Props> = ({
       setBidStep(BidStep.Complete)
     } catch (error: any) {
       setTransactionError(error)
-      setRequestUserStep("APPROVAL")
     }
   }, [
     tokenId,
@@ -245,7 +257,8 @@ export const BidModalRenderer: FC<Props> = ({
         currencyOptions,
         currencyOption,
         setCurrencyOption,
-        bidData
+        bidData,
+        steps
       })}
     </>
   )
