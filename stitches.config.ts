@@ -271,8 +271,8 @@ export const darkTheme = createTheme({
 
     // neutral colors
     neutralBase: '$slate1',
-    neutralBgSubtle: '$slate2',
-    neutralBg: '$slate3',
+    neutralBgSubtle: '$gray3',
+    neutralBg: '$gray1',
     neutralBgHover: '$slate4',
     neutralBgActive: '$slate5',
     neutalLine: '$slate6',
