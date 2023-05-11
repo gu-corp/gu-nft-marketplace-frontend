@@ -135,7 +135,6 @@ export function BidModal({
         bidData,
         steps
       }) => {
-        console.log(steps)
         const tokenCount = collection?.totalTokens
           ? +collection.totalTokens
           : undefined

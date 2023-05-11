@@ -473,7 +473,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 </Box>
               </Flex>
             </TabsContent>
-            <TabsContent value="activity">
+            {/* <TabsContent value="activity">
               <Flex
                 css={{
                   gap: activityFiltersOpen ? '$5' : '',
@@ -512,7 +512,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   />
                 </Box>
               </Flex>
-            </TabsContent>
+            </TabsContent> */}
           </Tabs.Root>
         </Flex>
       ) : (

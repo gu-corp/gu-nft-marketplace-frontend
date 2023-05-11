@@ -1,3 +1,4 @@
+import { useQuery } from '@apollo/client'
 import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
@@ -12,6 +13,7 @@ import {
   Tooltip,
 } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
+import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
@@ -54,8 +56,25 @@ export default ({
   const tokenIsInCart = token && token?.isInCart
   const isOwner = token?.owner?.id?.toLowerCase() === address?.toLowerCase()
 
+  const collectionId = token.collection.id
+  const tokenId = token.tokenID
+
   // TO-DO: remove later, should using token.image
-  const { nft } = useNft(token.collection.id, token.tokenID)
+  const { nft } = useNft(collectionId, tokenId)
+
+  const { data: orderData } = useQuery(GET_ORDER_LISTINGS, {
+    variables: { 
+      first: 1,
+      skip: 0,
+      where: {
+        collectionAddress: collectionId,
+        tokenId: `${tokenId}`,
+        isOrderAsk: true
+      }
+    }
+  })
+
+  const existListing = orderData?.orders?.[0];
 
   return (
     <Box
@@ -309,7 +328,7 @@ export default ({
           ) : null}
         </Flex>
       </Link>
-      {isOwner ? (
+      {(!isOwner && existListing) ? (
         <Flex
           className="token-button-container"
           css={{
@@ -323,6 +342,7 @@ export default ({
           }}
         >
           <BuyNow
+            orderId={existListing.hash}
             token={token}
             mutate={mutate}
             buttonCss={{

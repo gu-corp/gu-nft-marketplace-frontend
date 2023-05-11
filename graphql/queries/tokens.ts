@@ -37,6 +37,9 @@ export const GET_USER_TOKENS = gql(/* GraphQL */`
         name
         totalTokens
       }
+      owner {
+        id
+      }
     }
   }
 `);

@@ -239,12 +239,11 @@ const IndexPage: NextPage<Props> = ({ address, ensName }) => {
                         ))
                     : tokens.map((token, i) => {
                         if (token) {
-                          
                           return (
                             <TokenCard
                               key={i}
                               token={token}
-                              address={account.address as Address}
+                              address={account.address?.toLowerCase() as Address}
                               rarityEnabled={false}
                               addToCartEnabled={false}
                               onMediaPlayed={(e) => {

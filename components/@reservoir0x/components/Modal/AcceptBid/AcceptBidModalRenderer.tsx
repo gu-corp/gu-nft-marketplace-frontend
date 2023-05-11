@@ -72,7 +72,6 @@ export const AcceptBidModalRenderer: FC<Props> = ({
     activeChain?.blockExplorers?.default?.url || 'https://etherscan.io'
   const looksRareSdk = useLooksRareSDK()
 
-  console.log(activeChain)
   const { data: tokenData, loading: tokenLoading } = useQuery(GET_TOKEN_BY_ID, {
     variables: { id: `${collectionId}-${tokenId}` },
   })
