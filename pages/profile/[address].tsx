@@ -17,12 +17,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
-import {
-  useCollectionActivity,
-  useDynamicTokens,
-  useUserCollections,
-  useUserTokens,
-} from '@reservoir0x/reservoir-kit-ui'
 import TokenCard from 'components/collections/TokenCard'
 import { TokenFilters } from 'components/common/TokenFilters'
 import { useMounted, useMarketplaceChain } from '../../hooks'
@@ -43,20 +37,13 @@ import ChainToggle from 'components/common/ChainToggle'
 import { ChainContext } from 'context/ChainContextProvider'
 import { GET_USER_COLLECTIONS } from 'graphql/queries/collections'
 import { useQuery } from '@apollo/client'
-import { Collection_OrderBy, Token_OrderBy } from '__generated__/graphql'
+import { ActivityType, Collection_OrderBy, Token_OrderBy } from '__generated__/graphql'
 import { GET_USER_TOKENS } from 'graphql/queries/tokens'
 import { Token, Collection } from 'types/workaround'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-type ActivityTypes = Exclude<
-  NonNullable<
-    NonNullable<
-      Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
-    >['types']
-  >,
-  string
->
+type ActivityTypes = ActivityType[]
 
 const IndexPage: NextPage<Props> = ({ address, ensName }) => {
   const {
@@ -77,7 +64,7 @@ const IndexPage: NextPage<Props> = ({ address, ensName }) => {
     HTMLAudioElement | HTMLVideoElement | null
   >()
   const isMounted = useMounted()
-  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>([ActivityType.SaleEvent])
   const marketplaceChain = useMarketplaceChain()
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
@@ -280,7 +267,7 @@ const IndexPage: NextPage<Props> = ({ address, ensName }) => {
               </Box>
             </Flex>
           </TabsContent>
-          {/* <TabsContent value="activity">
+          <TabsContent value="activity">
             <Flex
               css={{
                 gap: activityFiltersOpen ? '$5' : '',
@@ -319,7 +306,7 @@ const IndexPage: NextPage<Props> = ({ address, ensName }) => {
                 />
               </Box>
             </Flex>
-          </TabsContent> */}
+          </TabsContent>
         </Tabs.Root>
       </Flex>
     </Layout>

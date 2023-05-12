@@ -35,6 +35,7 @@ function createApolloClient() {
             collections: offsetLimitPagination(["where", "collection_orderBy"]),
             tokens: offsetLimitPagination(["where"]),
             orders: offsetLimitPagination(["where"]),
+            activities: offsetLimitPagination(["where"])
           },
         },
       },

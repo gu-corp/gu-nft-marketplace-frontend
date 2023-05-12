@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, use, useEffect } from 'react'
 import { ActivityTable } from 'components/common/ActivityTable'
 import { ActivityType } from '__generated__/graphql'
 import { useQuery } from '@apollo/client'
@@ -15,7 +15,7 @@ export const UserActivityTable: FC<Props> = ({ user, activityTypes }) => {
       skip: 0,
       first: 10,
       where: {
-        user,
+        user: user?.toLowerCase(),
         types: !activityTypes.length ? undefined: activityTypes,
       },      
     }

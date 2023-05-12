@@ -5,12 +5,6 @@ import {
   NextPage,
 } from 'next'
 import { Text, Flex, Box } from '../../components/primitives'
-import {
-  useCollections,
-  useCollectionActivity,
-  useDynamicTokens,
-  useAttributes,
-} from '@reservoir0x/reservoir-kit-ui'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
 import { useEffect, useMemo, useRef, useState } from 'react'

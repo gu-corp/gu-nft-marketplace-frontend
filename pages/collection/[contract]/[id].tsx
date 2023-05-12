@@ -492,7 +492,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     <TokenInfo token={token} collection={collection} />
                   )}
                 </TabsContent>
-                {/* <TabsContent value="activity" css={{ mr: -15 }}>
+                <TabsContent value="activity" css={{ mr: -15 }}>
                   {isSmallDevice ? (
                     <MobileActivityFilters
                       activityTypes={activityTypes}
@@ -514,10 +514,11 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     </Dropdown>
                   )}
                   <TokenActivityTable
-                    id={`${contract}:${token?.tokenID}`}
+                    collection={contract as string}
+                    tokenId={`${token?.tokenID}`}
                     activityTypes={activityTypes}
                   />
-                </TabsContent> */}
+                </TabsContent>
               </Tabs.Root>
             </>
           )}
