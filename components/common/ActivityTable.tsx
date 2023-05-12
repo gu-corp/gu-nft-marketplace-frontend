@@ -31,42 +31,38 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from './LoadingSpinner'
 import Img from 'components/primitives/Img'
+import { QueryResult } from '@apollo/client'
+import { Activity, ActivityType, Activity_FilterArgs, Exact, GetActivitiesQuery, InputMaybe } from '__generated__/graphql'
+import { useNft } from 'use-nft'
 
-type CollectionActivityResponse = ReturnType<typeof useCollectionActivity>
-type CollectionActivity = CollectionActivityResponse['data'][0]
-export type CollectionActivityTypes = NonNullable<
-  Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
->['types']
-
-type UsersActivityResponse = ReturnType<typeof useCollectionActivity>
-type UsersActivity = UsersActivityResponse['data'][0]
-type ActivityResponse = CollectionActivityResponse | UsersActivityResponse
-export type UserActivityTypes = NonNullable<
-  Exclude<Parameters<typeof useUsersActivity>['1'], boolean>
->['types']
-
-type Activity = CollectionActivity | UsersActivity
 type Props = {
-  data: ActivityResponse
+  query: QueryResult<GetActivitiesQuery, Exact<{
+    first?: InputMaybe<number> | undefined;
+    skip?: InputMaybe<number> | undefined;
+    where?: InputMaybe<Activity_FilterArgs> | undefined;
+}>>
 }
 
-export const ActivityTable: FC<Props> = ({ data }) => {
+export const ActivityTable: FC<Props> = ({ query }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const activities = data.data
+  const activities = query.data?.activities || []
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      data.fetchNextPage()
+      query.fetchMore({
+        variables: {
+          skip: activities.length
+        }
+      })
     }
   }, [loadMoreObserver?.isIntersecting])
 
   return (
     <>
-      {!data.isValidating &&
-      !data.isFetchingPage &&
+      {!query.loading &&
       activities &&
       activities.length === 0 ? (
         <Flex direction="column" align="center" css={{ py: '$6', gap: '$4' }}>
@@ -88,7 +84,7 @@ export const ActivityTable: FC<Props> = ({ data }) => {
           <Box ref={loadMoreRef} css={{ height: 20 }}></Box>
         </Flex>
       )}
-      {data.isValidating && (
+      {query.loading && (
         <Flex align="center" justify="center" css={{ py: '$5' }}>
           <LoadingSpinner />
         </Flex>
@@ -122,13 +118,13 @@ type ActivityDescription = {
 }
 
 const activityTypeToDesciptionMap: ActivityDescription = {
-  ask_cancel: 'Listing Canceled',
-  bid_cancel: 'Offer Canceled',
-  mint: 'Mint',
-  ask: 'List',
-  bid: 'Offer',
-  transfer: 'Transfer',
-  sale: 'Sale',
+  [ActivityType.CancelListingEvent]: 'Listing Canceled',
+  [ActivityType.CancelOfferEvent]: 'Offer Canceled',
+  [ActivityType.MintEvent]: 'Mint',
+  [ActivityType.ListingEvent]: 'List',
+  [ActivityType.OfferEvent]: 'Offer',
+  [ActivityType.NftTransferEvent]: 'Transfer',
+  [ActivityType.SaleEvent]: 'Sale',
 }
 
 const activityTypeToDesciption = (activityType: string) => {
@@ -140,20 +136,17 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   const marketplaceChain = useMarketplaceChain()
   const blockExplorerBaseUrl =
     marketplaceChain?.blockExplorers?.default?.url || 'https://etherscan.io'
-  const href = activity?.token?.tokenId
-    ? `/collection/${activity?.contract}/${activity?.token?.tokenId}`
-    : `/collection/${activity?.collection?.collectionId}`
+  const href = activity?.tokenId
+    ? `/collection/${activity?.collection}/${activity?.tokenId}`
+    : `/collection/${activity?.collection}`
 
   if (!activity) {
     return null
   }
 
-  let imageSrc: string = (
-    activity?.token?.tokenId
-      ? activity?.token?.tokenImage || activity?.collection?.collectionImage
-      : activity?.collection?.collectionImage
-  ) as string
-
+  const { nft } = useNft(activity?.collection as string, activity?.tokenId as string)
+  const imageSrc = nft?.image
+  
   let activityDescription = activityTypeToDesciption(activity?.type || '')
   let attributeDescription = ''
 
@@ -173,8 +166,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
     }
   }
 
-  const { displayName: toDisplayName } = useENSResolver(activity?.toAddress)
-  const { displayName: fromDisplayName } = useENSResolver(activity?.fromAddress)
+  const { displayName: toDisplayName } = useENSResolver(activity?.to as string)
+  const { displayName: fromDisplayName } = useENSResolver(activity?.from as string)
 
   if (isSmallDevice) {
     return (
@@ -198,19 +191,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                 </Text>
               </Flex>
               <Flex align="center" justify="end" css={{ gap: '$3' }}>
-                {!!activity.order?.source?.icon && (
-                  <img
-                    width="20px"
-                    height="20px"
-                    src={(activity.order?.source?.icon as string) || ''}
-                    alt={`${activity.order?.source?.name} Source`}
-                  />
-                )}
                 <Text
                   style="subtitle3"
                   css={{ fontSize: '12px', color: '$gray11' }}
                 >
-                  {useTimeSince(activity?.timestamp)}
+                  {useTimeSince(activity?.timestamp as number)}
                 </Text>
 
                 {activity.txHash && (
@@ -241,16 +226,14 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                       style={{ borderRadius: '4px', objectFit: 'cover' }}
                       loader={({ src }) => src}
                       src={imageSrc}
-                      alt={`${activity.token?.tokenName} Token Image`}
+                      alt={`${activity.tokenId}`}
                       width={48}
                       height={48}
                     />
                   )}
                   <Flex align="start" direction="column" css={{ ml: '$2' }}>
                     <Text ellipsify css={{ fontSize: '14px' }}>
-                      {activity.token?.tokenName ||
-                        activity.token?.tokenId ||
-                        activity.collection?.collectionName}
+                      {activity?.tokenId}
                     </Text>
                     <Text
                       ellipsify
@@ -261,17 +244,14 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                   </Flex>
                 </Flex>
               </Link>
-              {activity.price &&
-              activity.price !== 0 &&
-              activity.type &&
-              !['transfer', 'mint'].includes(activity.type) ? (
+              {activity.order?.price ? (
                 <Flex
                   direction="column"
                   align="center"
                   css={{ minWidth: 'max-content', pl: '$2' }}
                 >
                   <FormatCryptoCurrency
-                    amount={activity.price}
+                    amount={activity.order?.price}
                     logoHeight={16}
                     textStyle="subtitle1"
                     css={{ mr: '$2', fontSize: '14px' }}
@@ -289,9 +269,9 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               >
                 From
               </Text>
-              {activity.fromAddress &&
-              activity.fromAddress !== constants.AddressZero ? (
-                <Link href={`/profile/${activity.fromAddress}`}>
+              {activity.from &&
+              activity.from !== constants.AddressZero ? (
+                <Link href={`/profile/${activity.from}`}>
                   <Text
                     style="subtitle3"
                     css={{
@@ -313,9 +293,9 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               >
                 to
               </Text>
-              {activity.toAddress &&
-              activity.toAddress !== constants.AddressZero ? (
-                <Link href={`/profile/${activity.toAddress}`}>
+              {activity.to &&
+              activity.to !== constants.AddressZero ? (
+                <Link href={`/profile/${activity.to}`}>
                   <Text
                     style="subtitle3"
                     css={{
@@ -381,9 +361,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
               style={{ maxWidth: '100%', minWidth: 0, overflow: 'hidden' }}
             >
               <Text ellipsify css={{ fontSize: '14px' }}>
-                {activity.token?.tokenName ||
-                  activity.token?.tokenId ||
-                  activity.collection?.collectionName}
+                {activity.tokenId}
               </Text>
               <Text ellipsify css={{ fontSize: '12px', color: '$gray11' }}>
                 {attributeDescription}
@@ -393,13 +371,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         </Link>
       </TableCell>
       <TableCell>
-        {activity.price &&
-        activity.price !== 0 &&
-        activity.type &&
-        !['transfer', 'mint'].includes(activity.type) ? (
+        {activity.order?.price
+         ? (
           <Flex align="center">
             <FormatCryptoCurrency
-              amount={activity.price}
+              amount={activity.order?.price}
               logoHeight={16}
               textStyle="subtitle1"
               css={{ mr: '$2', fontSize: '14px' }}
@@ -410,26 +386,22 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         )}
       </TableCell>
       <TableCell>
-        {activity.amount ? (
-          <Flex direction="column" align="start">
-            <Text style="subtitle3" color="subtle">
-              Quantity
-            </Text>
-            <Text style="subtitle3">{activity.amount}</Text>
-          </Flex>
-        ) : (
-          <span>-</span>
-        )}
+        <Flex direction="column" align="start">
+          <Text style="subtitle3" color="subtle">
+            Quantity
+          </Text>
+          <Text style="subtitle3">1</Text>
+        </Flex>
       </TableCell>
       <TableCell css={{ minWidth: 0 }}>
-        {activity.fromAddress &&
-        activity.fromAddress !== constants.AddressZero ? (
+        {activity.from &&
+        activity.from !== constants.AddressZero ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" color="subtle">
               From
             </Text>
             <Link
-              href={`/profile/${activity.fromAddress}`}
+              href={`/profile/${activity.from}`}
               style={{
                 maxWidth: '100%',
                 minWidth: 0,
@@ -457,13 +429,13 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         )}
       </TableCell>
       <TableCell css={{ minWidth: 0 }}>
-        {activity.toAddress && activity.toAddress !== constants.AddressZero ? (
+        {activity.to && activity.to !== constants.AddressZero ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" color="subtle">
               To
             </Text>
             <Link
-              href={`/profile/${activity.toAddress}`}
+              href={`/profile/${activity.to}`}
               style={{
                 maxWidth: '100%',
                 minWidth: 0,
@@ -492,16 +464,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       </TableCell>
       <TableCell css={{ minWidth: 0 }}>
         <Flex align="center" justify="end" css={{ gap: '$3' }}>
-          {!!activity.order?.source?.icon && (
-            <img
-              width="20px"
-              height="20px"
-              src={(activity.order?.source?.icon as string) || ''}
-              alt={`${activity.order?.source?.name} Source`}
-            />
-          )}
           <Text style="subtitle3" color="subtle" ellipsify>
-            {useTimeSince(activity?.timestamp)}
+            {useTimeSince(activity?.timestamp as number)}
           </Text>
 
           {activity.txHash && (

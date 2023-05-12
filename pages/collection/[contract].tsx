@@ -52,15 +52,9 @@ import { addApolloState, initializeApollo } from 'graphql/apollo-client'
 import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
 import { Collection, Token } from 'types/workaround'
+import { ActivityType } from '__generated__/graphql'
 
-type ActivityTypes = Exclude<
-  NonNullable<
-    NonNullable<
-      Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
-    >['types']
-  >,
-  string
->
+type ActivityTypes = ActivityType[]
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -69,7 +63,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const { address } = useAccount()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
-  const [activityTypes, setActivityTypes] = useState<ActivityTypes>(['sale'])
+  const [activityTypes, setActivityTypes] = useState<ActivityTypes>([ActivityType.SaleEvent])
   const [initialTokenFallbackData, setInitialTokenFallbackData] = useState(true)
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
@@ -473,7 +467,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 </Box>
               </Flex>
             </TabsContent>
-            {/* <TabsContent value="activity">
+            <TabsContent value="activity">
               <Flex
                 css={{
                   gap: activityFiltersOpen ? '$5' : '',
@@ -512,7 +506,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                   />
                 </Box>
               </Flex>
-            </TabsContent> */}
+            </TabsContent>
           </Tabs.Root>
         </Flex>
       ) : (
