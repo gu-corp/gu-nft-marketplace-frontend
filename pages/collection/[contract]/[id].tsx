@@ -66,17 +66,11 @@ import { initializeApollo } from 'graphql/apollo-client'
 import { Token } from 'types/workaround'
 import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
 import { useNft } from 'use-nft'
+import { ActivityType } from '__generated__/graphql'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-type ActivityTypes = Exclude<
-  NonNullable<
-    NonNullable<
-      Exclude<Parameters<typeof useTokenActivity>['1'], boolean>
-    >['types']
-  >,
-  string
->
+type ActivityTypes = ActivityType[]
 
 const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const router = useRouter()
@@ -498,7 +492,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     <TokenInfo token={token} collection={collection} />
                   )}
                 </TabsContent>
-                <TabsContent value="activity" css={{ mr: -15 }}>
+                {/* <TabsContent value="activity" css={{ mr: -15 }}>
                   {isSmallDevice ? (
                     <MobileActivityFilters
                       activityTypes={activityTypes}
@@ -523,7 +517,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                     id={`${contract}:${token?.tokenID}`}
                     activityTypes={activityTypes}
                   />
-                </TabsContent>
+                </TabsContent> */}
               </Tabs.Root>
             </>
           )}
