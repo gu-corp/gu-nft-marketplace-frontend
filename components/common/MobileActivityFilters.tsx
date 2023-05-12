@@ -5,23 +5,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faHand,
   faRightLeft,
-  faSeedling,
   faShoppingCart,
-  faTag,
   faXmark,
   IconDefinition,
+  faCartPlus,
+  faStar,
+  faBan
 } from '@fortawesome/free-solid-svg-icons'
 import { FullscreenModal } from 'components/common/FullscreenModal'
-import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
+import { ActivityType } from '__generated__/graphql'
 
-type ActivityTypes = Exclude<
-  NonNullable<
-    NonNullable<
-      Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
-    >['types']
-  >,
-  string
->
+type ActivityTypes = Array<ActivityType>
 
 type Filters = {
   type: ArrayItemTypes<ActivityTypes>
@@ -40,29 +34,39 @@ export const MobileActivityFilters: FC<Props> = ({
 }) => {
   const filters: Filters = [
     {
-      type: 'sale',
+      type: ActivityType.ListingEvent,
+      name: 'Listings',
+      icon: faCartPlus,
+    },
+    {
+      type: ActivityType.MintEvent,
+      name: 'Mints',
+      icon: faStar,
+    },
+    {
+      type: ActivityType.NftTransferEvent,
+      name: 'Transfers',
+      icon: faRightLeft,
+    },
+    {
+      type: ActivityType.SaleEvent,
       name: 'Sales',
       icon: faShoppingCart,
     },
     {
-      type: 'ask',
-      name: 'Listings',
-      icon: faTag,
-    },
-    {
-      type: 'bid',
+      type: ActivityType.OfferEvent,
       name: 'Offers',
       icon: faHand,
     },
     {
-      type: 'transfer',
-      name: 'Transfer',
-      icon: faRightLeft,
+      type: ActivityType.CancelListingEvent,
+      name: 'Canceled Listings',
+      icon: faBan,
     },
     {
-      type: 'mint',
-      name: 'Mint',
-      icon: faSeedling,
+      type: ActivityType.CancelOfferEvent,
+      name: 'Cancel Offers',
+      icon: faBan,
     },
   ]
 

@@ -1,4 +1,3 @@
-import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
 import { Box, Flex, Switch, Text } from 'components/primitives'
 import { FC } from 'react'
 import * as Collapsible from '@radix-ui/react-collapsible'
@@ -7,20 +6,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faHand,
   faRightLeft,
-  faSeedling,
   faShoppingCart,
-  faTag,
   IconDefinition,
+  faCartPlus,
+  faStar,
+  faBan
 } from '@fortawesome/free-solid-svg-icons'
+import { ActivityType } from '__generated__/graphql'
 
-type ActivityTypes = Exclude<
-  NonNullable<
-    NonNullable<
-      Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
-    >['types']
-  >,
-  string
->
+type ActivityTypes = ActivityType[]
 
 type Filters = {
   type: ArrayItemTypes<ActivityTypes>
@@ -43,32 +37,41 @@ export const ActivityFilters: FC<Props> = ({
 }) => {
   const filters: Filters = [
     {
-      type: 'sale',
+      type: ActivityType.ListingEvent,
+      name: 'Listings',
+      icon: faCartPlus,
+    },
+    {
+      type: ActivityType.MintEvent,
+      name: 'Mints',
+      icon: faStar,
+    },
+    {
+      type: ActivityType.NftTransferEvent,
+      name: 'Transfers',
+      icon: faRightLeft,
+    },
+    {
+      type: ActivityType.SaleEvent,
       name: 'Sales',
       icon: faShoppingCart,
     },
     {
-      type: 'ask',
-      name: 'Listings',
-      icon: faTag,
-    },
-    {
-      type: 'bid',
+      type: ActivityType.OfferEvent,
       name: 'Offers',
       icon: faHand,
     },
     {
-      type: 'transfer',
-      name: 'Transfer',
-      icon: faRightLeft,
+      type: ActivityType.CancelListingEvent,
+      name: 'Canceled Listings',
+      icon: faBan,
     },
     {
-      type: 'mint',
-      name: 'Mint',
-      icon: faSeedling,
+      type: ActivityType.CancelOfferEvent,
+      name: 'Cancel Offers',
+      icon: faBan,
     },
   ]
-
   return (
     <Collapsible.Root
       open={open}

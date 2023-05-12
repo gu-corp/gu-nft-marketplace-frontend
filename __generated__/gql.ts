@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  query GetCollectionById($id: ID!) {\n      collection(id: $id) {\n        id\n        name\n        totalTokens\n      }\n    }\n  ": types.GetCollectionByIdDocument,
+    "\n  query GetActivities($first: Int, $skip: Int, $where: Activity_FilterArgs) {\n    activities(first: $first, skip: $skip, where: $where) {\n      id\n      type\n      timestamp\n      to\n      from\n      tokenId\n      collection\n      txHash\n    }\n}\n": types.GetActivitiesDocument,
     "\n  query GetUserCollections($first: Int, $skip: Int $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy, $where: Collection_FilterArgs) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy, where: $where) {\n      id\n      name\n      totalTokens\n    }\n}\n": types.GetUserCollectionsDocument,
     "\n  mutation CreateOrder(\n    $createOrderInput: CreateOrderInput!\n  ) {\n    createOrder(\n      createOrderInput: $createOrderInput\n    ) {\n      hash\n    }\n  }\n": types.CreateOrderDocument,
     "\nquery GetOrderListings($first: Int, $skip: Int, $orderDirection: OrderDirection, $order_OrderBy: Order_OrderBy, $where: Order_FilterArgs) {\n    orders(first: $first, skip: $skip, orderDirection: $orderDirection, order_OrderBy: $order_OrderBy, where: $where) {\n      hash\n      collectionAddress\n      tokenId\n      price\n      startTime\n      endTime\n      nonce\n      currencyAddress\n      amount\n      isOrderAsk\n      signer\n      strategy\n      minPercentageToAsk\n      params\n      signature\n    }\n  }\n": types.GetOrderListingsDocument,
@@ -46,6 +47,10 @@ export function gql(source: string): unknown;
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query GetCollectionById($id: ID!) {\n      collection(id: $id) {\n        id\n        name\n        totalTokens\n      }\n    }\n  "): (typeof documents)["\n  query GetCollectionById($id: ID!) {\n      collection(id: $id) {\n        id\n        name\n        totalTokens\n      }\n    }\n  "];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query GetActivities($first: Int, $skip: Int, $where: Activity_FilterArgs) {\n    activities(first: $first, skip: $skip, where: $where) {\n      id\n      type\n      timestamp\n      to\n      from\n      tokenId\n      collection\n      txHash\n    }\n}\n"): (typeof documents)["\n  query GetActivities($first: Int, $skip: Int, $where: Activity_FilterArgs) {\n    activities(first: $first, skip: $skip, where: $where) {\n      id\n      type\n      timestamp\n      to\n      from\n      tokenId\n      collection\n      txHash\n    }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

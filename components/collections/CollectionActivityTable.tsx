@@ -1,29 +1,29 @@
 import { FC, useEffect } from 'react'
 import { ActivityTable } from 'components/common/ActivityTable'
-import { useCollectionActivity } from '@reservoir0x/reservoir-kit-ui'
+import { ActivityType } from '__generated__/graphql'
+import { useQuery } from '@apollo/client'
+import { GET_ACTIVITIES } from 'graphql/queries/activities'
 
 type Props = {
   id: string | undefined
-  activityTypes: NonNullable<
-    Exclude<Parameters<typeof useCollectionActivity>['0'], boolean>
-  >['types']
+  activityTypes: ActivityType[]
 }
 
 export const CollectionActivityTable: FC<Props> = ({ id, activityTypes }) => {
-  const data = useCollectionActivity(
-    { collection: id, types: activityTypes, limit: 20 },
-    {
-      revalidateOnMount: true,
-      fallbackData: [],
+  const query = useQuery(GET_ACTIVITIES, {
+    variables: {
+      skip: 0,
+      first: 10,
+      where: {
+        collection: id,
+        types: !activityTypes.length ? undefined: activityTypes,
+      },      
     }
-  )
+  })
 
   useEffect(() => {
-    data.mutate()
-    return () => {
-      data.setSize(1)
-    }
+    query.refetch()
   }, [])
 
-  return <ActivityTable data={data} />
+  return <ActivityTable query={query} />
 }
