@@ -36,6 +36,7 @@ import MarketplacePriceInput from './MarketplacePriceInput'
 import { marketplaceInfo } from 'constants/common'
 import ProgressBar from '../ProgressBar'
 import TransactionProgress from '../TransactionProgress'
+import { useNft } from 'use-nft'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -109,10 +110,8 @@ export function ListModal({
         requestUserStep,
         steps
       }) => {
-        const tokenImage =
-          token && token?.image
-            ? token.image
-            : (collection?.image as string)
+        const { nft } = useNft(token?.collection as string, token?.tokenId as string)
+        const tokenImage = nft?.image as string
 
         useEffect(() => {
           if (transactionError && onListingError) {
@@ -416,13 +415,11 @@ export function ListModal({
                       css={{ mb: 24, maxWidth: 300, overflow: 'hidden' }}
                     >
                       <Text color="subtle" ellipsify style="body2">
-                        {token?.name
-                          ? token?.name
-                          : `#${token?.tokenID}`}
+                        {`#${token?.tokenId}`}
                       </Text>{' '}
                       from{' '}
                       <Span css={{ color: '$accentText' }}>
-                        {token?.collection?.name}
+                        {collection?.name}
                       </Span>{' '}
                       has been listed for sale
                     </Text>
@@ -432,7 +429,7 @@ export function ListModal({
                     <Flex css={{ gap: '$3' }}>
                       <a
                         target="_blank"
-                        href={`${process.env.NEXT_PUBLIC_BASE_URL}/collection/${token?.collection?.id}/${token?.tokenID}`}
+                        href={`${process.env.NEXT_PUBLIC_BASE_URL}/collection/${token?.collection}/${token?.tokenId}`}
                       >
                         <Image
                           css={{ width: 24 }}

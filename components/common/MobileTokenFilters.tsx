@@ -8,7 +8,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { paths } from '@reservoir0x/reservoir-sdk'
 import { useUserCollections } from '@reservoir0x/reservoir-kit-ui'
 import { NAVBAR_HEIGHT_MOBILE } from 'components/navbar'
-import { Collection } from 'types/workaround'
+import { Collection } from '__generated__/graphql'
 
 type Props = {
   collections?: Collection[]
@@ -156,7 +156,7 @@ export const MobileTokenFilters: FC<Props> = ({
                   triggerRef?.current?.click()
                 }}
               >
-                {collection?.image && (
+                {/* {collection?.image && (
                   <Image
                     style={{
                       borderRadius: '4px',
@@ -169,7 +169,7 @@ export const MobileTokenFilters: FC<Props> = ({
                     width={24}
                     height={24}
                   />
-                )}
+                )} */}
                 <Text
                   style="body1"
                   css={{

@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import { Flex, Box, Text } from 'components/primitives'
 import Token from './Token'
 import InfoTooltip from 'components/primitives/InfoTooltip'
-import { Token as TokenType, Collection as CollectionType } from 'types/workaround'
+import { Token as TokenType, Collection as CollectionType } from '__generated__/graphql'
 import Stat from '../Stat'
 
 type Props = {
@@ -12,14 +12,16 @@ type Props = {
 }
 
 const TokenStats: FC<Props> = ({ token, collection, royaltyFee = 0 }) => {
-  let attributeFloor = token?.attributes
-    ? Math.max(
-        ...token.attributes.map((attr: any) =>
-          Number(attr.floorAskPrice)
-        ),
-        0
-      )
-    : 0
+  // let attributeFloor = token?.attributes
+  //   ? Math.max(
+  //       ...token.attributes.map((attr: any) =>
+  //         Number(attr.floorAskPrice)
+  //       ),
+  //       0
+  //     )
+  //   : 0
+
+  const attributeFloor = 0
   return (
     <Flex
       css={{
@@ -67,63 +69,63 @@ const TokenStats: FC<Props> = ({ token, collection, royaltyFee = 0 }) => {
             ),
             value: `${royaltyFee * 0.01}%`,
           },
-          {
-            id: 1,
-            label: (
-              <Text
-                style="subtitle2"
-                color="subtle"
-                css={{ minWidth: '0' }}
-                ellipsify
-              >
-                Last Sale
-              </Text>
-            ),
-            value: token?.lastSale?.price?.amount?.decimal || null,
-            asNative: true,
-          },
-          {
-            id: 2,
-            label: (
-              <Text
-                style="subtitle2"
-                color="subtle"
-                css={{ minWidth: '0' }}
-                ellipsify
-              >
-                Collection Floor
-              </Text>
-            ),
-            value: collection?.floorAsk?.price?.amount?.native || 0,
-            asNative: true,
-          },
-          {
-            id: 3,
-            label: (
-              <>
-                <Text
-                  style="subtitle2"
-                  color="subtle"
-                  css={{ minWidth: '0' }}
-                  ellipsify
-                >
-                  Highest Trait Floor
-                </Text>
-                <InfoTooltip
-                  side="right"
-                  width={200}
-                  content={
-                    'The floor price of the most valuable trait of a token.'
-                  }
-                />
-              </>
-            ),
-            value:
-              attributeFloor ||
-              collection?.floorAsk?.price?.amount?.native ||
-              0,
-            asNative: true,
-          },
+          // {
+          //   id: 1,
+          //   label: (
+          //     <Text
+          //       style="subtitle2"
+          //       color="subtle"
+          //       css={{ minWidth: '0' }}
+          //       ellipsify
+          //     >
+          //       Last Sale
+          //     </Text>
+          //   ),
+          //   value: token?.lastSale?.price?.amount?.decimal || null,
+          //   asNative: true,
+          // },
+          // {
+          //   id: 2,
+          //   label: (
+          //     <Text
+          //       style="subtitle2"
+          //       color="subtle"
+          //       css={{ minWidth: '0' }}
+          //       ellipsify
+          //     >
+          //       Collection Floor
+          //     </Text>
+          //   ),
+          //   value: collection?.floorAsk?.price?.amount?.native || 0,
+          //   asNative: true,
+          // },
+          // {
+          //   id: 3,
+          //   label: (
+          //     <>
+          //       <Text
+          //         style="subtitle2"
+          //         color="subtle"
+          //         css={{ minWidth: '0' }}
+          //         ellipsify
+          //       >
+          //         Highest Trait Floor
+          //       </Text>
+          //       <InfoTooltip
+          //         side="right"
+          //         width={200}
+          //         content={
+          //           'The floor price of the most valuable trait of a token.'
+          //         }
+          //       />
+          //     </>
+          //   ),
+          //   value:
+          //     attributeFloor ||
+          //     collection?.floorAsk?.price?.amount?.native ||
+          //     0,
+          //   asNative: true,
+          // },
         ].map((stat) => (
           <Stat key={stat.id} {...stat} />
         ))}

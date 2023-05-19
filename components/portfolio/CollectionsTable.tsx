@@ -23,9 +23,8 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { PercentChange } from 'components/primitives/PercentChange'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useQuery } from '@apollo/client'
-import { Collection_OrderBy } from '__generated__/graphql'
-import { Collection } from 'types/workaround'
-import { GET_USER_COLLECTIONS } from 'graphql/queries/collections'
+import { Collection } from '__generated__/graphql'
+import { GET_USER_RELATIVE_COLLECTIONS } from 'graphql/queries/collections'
 
 type Props = {
   address: Address | undefined
@@ -42,21 +41,20 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const { data, loading, fetchMore } = useQuery(GET_USER_COLLECTIONS, {
+  const { data, loading, fetchMore } = useQuery(GET_USER_RELATIVE_COLLECTIONS, {
     variables: {
       first: 10,
       skip: 0,
-      collection_orderBy: Collection_OrderBy.TotalTokens,
-      where: { owner: address?.toLocaleLowerCase() }
+      user:  address?.toLocaleLowerCase() as string
     }
   })
 
-  const collections = data?.collections || []
+  const collections = data?.relativeCollections || []
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchMore({ variables: { skip: data?.collections.length || 0 }})
+      fetchMore({ variables: { skip: collections.length }})
     }
   }, [loadMoreObserver?.isIntersecting])
 
@@ -128,7 +126,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
             href={`/collection/${collection?.id}`}
           >
             <Flex align="center">
-              {collection?.image && (
+              {/* {collection?.image && (
                 <Image
                   style={{
                     borderRadius: '4px',
@@ -141,7 +139,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
                   width={36}
                   height={36}
                 />
-              )}
+              )} */}
               <Text
                 style="subtitle3"
                 ellipsify
@@ -161,7 +159,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
               whiteSpace: 'nowrap',
             }}
           >
-            <FormatCryptoCurrency
+            {/* <FormatCryptoCurrency
               amount={collection?.volume?.[sortByTime]}
               maximumFractionDigits={3}
               textStyle="subtitle2"
@@ -177,17 +175,17 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
                 <PercentChange
                   value={collection?.volumeChange[sortByTime]}
                 />
-              )}
+              )} */}
           </Flex>
         </TableCell>
         <TableCell css={{ minWidth: 'max-content' }}>
           <Text style="subtitle2" css={{ minWidth: 'max-content' }}>
-            <FormatCryptoCurrency
+            {/* <FormatCryptoCurrency
               amount={collection?.topBidValue}
               maximumFractionDigits={3}
               textStyle="subtitle2"
               logoHeight={14}
-            />
+            /> */}
           </Text>
         </TableCell>
       </TableRow>
@@ -202,7 +200,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
       <TableCell css={{ minWidth: 0 }}>
         <Link href={`/collection/${collection?.id}`}>
           <Flex align="center">
-            {collection?.image && (
+            {/* {collection?.image && (
               <Image
                 style={{
                   borderRadius: '4px',
@@ -215,7 +213,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
                 width={48}
                 height={48}
               />
-            )}
+            )} */}
             <Text style="subtitle2" ellipsify css={{ ml: '$2' }}>
               {collection?.name}
             </Text>
@@ -229,7 +227,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
           justify="start"
           css={{ height: '100%' }}
         >
-          <FormatCryptoCurrency
+          {/* <FormatCryptoCurrency
             amount={collection?.volume?.[sortByTime]}
             textStyle="subtitle2"
             logoHeight={14}
@@ -238,24 +236,24 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
             <PercentChange
               value={collection?.volumeChange[sortByTime]}
             />
-          )}
+          )} */}
         </Flex>
       </TableCell>
       <TableCell>
         <Text style="subtitle2">
-          <FormatCryptoCurrency
+          {/* <FormatCryptoCurrency
             amount={collection?.topBidValue}
             textStyle="subtitle2"
             logoHeight={14}
-          />
+          /> */}
         </Text>
       </TableCell>
       <TableCell>
-        <FormatCryptoCurrency
+        {/* <FormatCryptoCurrency
           amount={collection?.floorAskPrice}
           textStyle="subtitle2"
           logoHeight={14}
-        />
+        /> */}
       </TableCell>
       <TableCell>
         <Text style="subtitle2">{collection?.totalTokens}</Text>

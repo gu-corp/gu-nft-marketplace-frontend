@@ -1,14 +1,14 @@
 import React, { FC, useEffect, useState, useCallback, ReactNode } from 'react'
-import { useSigner, useNetwork } from 'wagmi'
-import { Token } from 'types/workaround'
-import { Order } from '__generated__/graphql'
+import { useNetwork } from 'wagmi'
+import { Token, Order, Collection } from '__generated__/graphql'
 import { useQuery } from '@apollo/client'
 import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
 import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
-import { GET_TOKEN_BY_ID } from 'graphql/queries/tokens'
 import { useNft } from 'use-nft'
 import { useCurrency } from 'hooks'
 import { Currency } from 'types/currency'
+import { GET_TOKEN } from 'graphql/queries/tokens'
+import { GET_COLLECTION } from 'graphql/queries/collections'
 
 export enum CancelStep {
   Cancel,
@@ -27,7 +27,8 @@ type ChildrenProps = {
   txHash: string | null
   setCancelStep: React.Dispatch<React.SetStateAction<CancelStep>>
   cancelOrder: () => void
-  currency?: Currency
+  currency?: Currency,
+  collection?: Collection
 }
 
 type Props = {
@@ -57,12 +58,16 @@ export const CancelListingModalRenderer: FC<Props> = ({
 
   const currency = useCurrency(listing?.currencyAddress)
 
-  const { data: tokenData } = useQuery(GET_TOKEN_BY_ID, {
+  const { data: tokenData } = useQuery(GET_TOKEN, {
     variables: { id: `${listing?.collectionAddress}-${listing?.tokenId}` },
   })
-  // TO-DO: remove later, should using token.image
-  const { nft } = useNft(listing?.collectionAddress, listing?.tokenId)
-  const token = {...tokenData?.token, image: nft?.image} as Token
+
+  const { data: collectionData } = useQuery(GET_COLLECTION, {
+    variables: { id: listing?.collectionAddress as string },
+  })
+
+  const token = tokenData?.token
+  const collection = collectionData?.collection
 
   const cancelOrder = useCallback(async () => {
     try {
@@ -123,7 +128,8 @@ export const CancelListingModalRenderer: FC<Props> = ({
         txHash,
         token,
         totalUsd: 0,
-        currency
+        currency,
+        collection
       })}
     </>
   )

@@ -1,14 +1,15 @@
 import { useQuery } from '@apollo/client'
-import { Order } from '__generated__/graphql'
+import { Collection, Order } from '__generated__/graphql'
 import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
 import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
-import { GET_TOKEN_BY_ID } from 'graphql/queries/tokens'
 import { useCurrency } from 'hooks'
 import React, { FC, useEffect, useState, useCallback, ReactNode } from 'react'
 import { Currency } from 'types/currency'
-import { Token } from 'types/workaround'
+import { Token } from '__generated__/graphql'
 import { useNft } from 'use-nft'
 import { useNetwork } from 'wagmi'
+import { GET_TOKEN } from 'graphql/queries/tokens'
+import { GET_COLLECTION } from 'graphql/queries/collections'
 
 export enum CancelStep {
   Cancel,
@@ -28,6 +29,7 @@ type ChildrenProps = {
   setCancelStep: React.Dispatch<React.SetStateAction<CancelStep>>
   cancelOrder: () => void
   currency?: Currency
+  collection?: Collection
 }
 
 type Props = {
@@ -57,12 +59,16 @@ export const CancelBidModalRenderer: FC<Props> = ({
 
   const currency = useCurrency(bid?.currencyAddress)
 
-  const { data: tokenData } = useQuery(GET_TOKEN_BY_ID, {
+  const { data: tokenData } = useQuery(GET_TOKEN, {
     variables: { id: `${bid?.collectionAddress}-${bid?.tokenId}` },
   })
-  // TO-DO: remove later, should using token.image
-  const { nft } = useNft(bid?.collectionAddress, bid?.tokenId)
-  const token = {...tokenData?.token, image: nft?.image} as Token
+
+  const { data: collectionData } = useQuery(GET_COLLECTION, {
+    variables: { id: bid?.collectionAddress as string },
+  })
+
+  const token = tokenData?.token
+  const collection = collectionData?.collection
 
   const cancelOrder = useCallback(async () => {
     try {
@@ -122,7 +128,8 @@ export const CancelBidModalRenderer: FC<Props> = ({
         txHash,
         token,
         totalUsd: 0,
-        currency
+        currency,
+        collection
       })}
     </>
   )

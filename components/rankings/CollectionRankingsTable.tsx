@@ -21,7 +21,7 @@ import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 
 type Props = {
-  collections: Pick<Collection, "id"| "name">[]
+  collections: Collection[]
   loading?: boolean
   volumeKey: '1day' | '7day' | '30day' | 'allTime'
 }
@@ -84,7 +84,7 @@ export const CollectionRankingsTable: FC<Props> = ({
 }
 
 type RankingsTableRowProps = {
-  collection: ReturnType<typeof useCollections>['data'][0]
+  collection?: Collection
   rank: number
   volumeKey: ComponentPropsWithoutRef<
     typeof CollectionRankingsTable
@@ -101,22 +101,22 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
   if (isSmallDevice) {
     return (
       <Link
-        href={`/collection/${collection.id}`}
+        href={`/collection/${collection?.id}`}
         style={{ display: 'inline-block', minWidth: 0, marginBottom: 24 }}
-        key={collection.id}
+        key={collection?.id}
       >
         <Flex align="center" css={{ cursor: 'pointer' }}>
           <Text css={{ mr: '$4', width: 15 }} style="subtitle3">
             {rank}
           </Text>
-          <Img
+          {/* <Img
             src={collection.image as string}
             css={{ borderRadius: 8, width: 48, height: 48, objectFit: 'cover' }}
             alt="Collection Image"
             width={48}
             height={48}
             unoptimized
-          />
+          /> */}
           <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
             <Flex align="center" css={{ gap: '$2', mb: 4, maxWidth: '80%' }}>
               <Text
@@ -128,29 +128,29 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               >
                 {collection?.name}
               </Text>
-              <OpenSeaVerified
+              {/* <OpenSeaVerified
                 openseaVerificationStatus={
                   collection?.openseaVerificationStatus
                 }
-              />
+              /> */}
             </Flex>
             <Flex align="center">
               <Text css={{ mr: '$1', color: '$gray11' }} style="body2">
                 Floor
               </Text>
-              <FormatCryptoCurrency
+              {/* <FormatCryptoCurrency
                 amount={collection?.floorAsk?.price?.amount?.decimal}
                 address={collection?.floorAsk?.price?.currency?.contract}
                 decimals={collection?.floorAsk?.price?.currency?.decimals}
                 logoHeight={16}
                 maximumFractionDigits={2}
                 textStyle="subtitle2"
-              />
+              /> */}
             </Flex>
           </Box>
 
           <Flex direction="column" align="end" css={{ gap: '$1' }}>
-            <FormatCryptoCurrency
+            {/* <FormatCryptoCurrency
               amount={collection?.volume?.[volumeKey]}
               maximumFractionDigits={1}
               logoHeight={16}
@@ -161,7 +161,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 value={collection?.volumeChange?.[volumeKey]}
                 decimals={1}
               />
-            )}
+            )} */}
           </Flex>
         </Flex>
       </Link>
@@ -169,14 +169,14 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
   } else {
     return (
       <TableRow
-        key={collection.id}
+        key={collection?.id}
         css={{
           gridTemplateColumns: desktopTemplateColumns,
         }}
       >
         <TableCell css={{ minWidth: 0 }}>
           <Link
-            href={`/collection/${collection.id}`}
+            href={`/collection/${collection?.id}`}
             style={{ display: 'inline-block', width: '100%', minWidth: 0 }}
           >
             <Flex
@@ -192,7 +192,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               <Text css={{ mr: '$2', width: 15 }} style="subtitle3">
                 {rank}
               </Text>
-              <Img
+              {/* <Img
                 src={collection.image as string}
                 css={{
                   borderRadius: 8,
@@ -204,7 +204,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 width={56}
                 height={56}
                 unoptimized
-              />
+              /> */}
 
               <Text
                 css={{
@@ -216,11 +216,11 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               >
                 {collection?.name}
               </Text>
-              <OpenSeaVerified
+              {/* <OpenSeaVerified
                 openseaVerificationStatus={
                   collection?.openseaVerificationStatus
                 }
-              />
+              /> */}
             </Flex>
           </Link>
         </TableCell>
@@ -231,7 +231,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               minWidth: 0,
             }}
           >
-            {collection?.sampleImages?.map((image, i) =>
+            {/* {collection?.sampleImages?.map((image, i) =>
               image ? (
                 <img
                   key={image + i}
@@ -249,7 +249,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                   }}
                 />
               ) : null
-            )}
+            )} */}
           </Flex>
         </TableCell>
         <TableCell>
@@ -259,14 +259,14 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             justify="start"
             css={{ height: '100%' }}
           >
-            <FormatCryptoCurrency
+            {/* <FormatCryptoCurrency
               amount={collection?.volume?.[volumeKey]}
               textStyle="subtitle2"
               logoHeight={14}
-            />
-            {volumeKey != 'allTime' && collection?.volumeChange && (
+            /> */}
+            {/* {volumeKey != 'allTime' && collection?.volumeChange && (
               <PercentChange value={collection?.volumeChange[volumeKey]} />
-            )}
+            )} */}
           </Flex>
         </TableCell>
         <TableCell>
@@ -276,7 +276,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             justify="start"
             css={{ height: '100%' }}
           >
-            <FormatCryptoCurrency
+            {/* <FormatCryptoCurrency
               amount={collection?.floorAsk?.price?.amount?.decimal}
               address={collection?.floorAsk?.price?.currency?.contract}
               decimals={collection?.floorAsk?.price?.currency?.decimals}
@@ -285,16 +285,16 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             />
             {volumeKey != 'allTime' && collection?.floorSaleChange && (
               <PercentChange value={collection?.floorSaleChange[volumeKey]} />
-            )}
+            )} */}
           </Flex>
         </TableCell>
         <TableCell>
-          <FormatCryptoCurrency
+          {/* <FormatCryptoCurrency
             amount={collection?.topBid?.price?.amount?.decimal}
             textStyle="subtitle2"
             logoHeight={14}
             address={collection?.topBid?.price?.currency?.contract}
-          />
+          /> */}
         </TableCell>
       </TableRow>
     )

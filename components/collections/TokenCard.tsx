@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client'
 import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Collection, Token } from '__generated__/graphql'
 import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
 
 import AddToCart from 'components/buttons/AddToCart'
@@ -18,7 +19,6 @@ import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
-import { Token } from 'types/workaround'
 import { useNft } from 'use-nft'
 import { formatNumber } from 'utils/numbers'
 import { Address } from 'wagmi'
@@ -34,6 +34,7 @@ type TokenCardProps = {
   ) => void
   tokenCount?: string
   orderQuantity?: number
+  collection?: Collection
 }
 
 export default ({
@@ -45,6 +46,7 @@ export default ({
   onMediaPlayed,
   orderQuantity,
   tokenCount,
+  collection
 }: TokenCardProps) => {
   const { addToast } = useContext(ToastContext)
   // TO-DO: later
@@ -53,14 +55,11 @@ export default ({
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
   const { routePrefix, proxyApi } = useMarketplaceChain()
-  const tokenIsInCart = token && token?.isInCart
-  const isOwner = token?.owner?.id?.toLowerCase() === address?.toLowerCase()
+  // const tokenIsInCart = token && token?.isInCart
+  const isOwner = token?.owner?.toLowerCase() === address?.toLowerCase()
 
-  const collectionId = token.collection.id
-  const tokenId = token.tokenID
-
-  // TO-DO: remove later, should using token.image
-  const { nft } = useNft(collectionId, tokenId)
+  const collectionId = token.collection
+  const tokenId = token.tokenId
 
   const { data: orderData } = useQuery(GET_ORDER_LISTINGS, {
     variables: { 
@@ -150,7 +149,7 @@ export default ({
           </Text>
         </Flex>
       )}
-      <Flex
+      {/* <Flex
         justify="center"
         align="center"
         css={{
@@ -161,24 +160,24 @@ export default ({
           position: 'absolute',
           right: '$2',
           zIndex: 1,
-          transition: `visibility 0s linear ${
-            tokenIsInCart ? '' : '250ms'
-          }, opacity 250ms ease-in-out, top 250ms ease-in-out`,
-          opacity: tokenIsInCart ? 1 : 0,
-          top: tokenIsInCart ? '$2' : 50,
-          visibility: tokenIsInCart ? 'visible' : 'hidden',
+          // transition: `visibility 0s linear ${
+          //   tokenIsInCart ? '' : '250ms'
+          // }, opacity 250ms ease-in-out, top 250ms ease-in-out`,
+          // opacity: tokenIsInCart ? 1 : 0,
+          // top: tokenIsInCart ? '$2' : 50,
+          // visibility: tokenIsInCart ? 'visible' : 'hidden',
           color: 'white',
         }}
       >
         <FontAwesomeIcon icon={faCheck} width={20} height={20} />
-      </Flex>
+      </Flex> */}
       <Link
         passHref
-        href={`/collection/${token?.collection?.id}/${token?.tokenID}`}
+        href={`/collection/${collectionId}/${tokenId}`}
       >
         <Box css={{ background: '$gray3', overflow: 'hidden' }}>
           <TokenMedia
-            token={{...token, image: nft?.image}}
+            token={token}
             style={{
               width: '100%',
               transition: 'transform .3s ease-in-out',
@@ -209,7 +208,7 @@ export default ({
         </Box>
       </Link>
       <Link
-        href={`/collection/${token?.collection?.id}/${token?.tokenID}`}
+        href={`/collection/${collectionId}/${tokenId}`}
         >
         <Flex
           css={{ p: '$4', minHeight: 132, cursor: 'pointer' }}
@@ -226,9 +225,9 @@ export default ({
                   flex: 1,
                 }}
               >
-                {token?.collection?.name || '#' + token?.tokenID}{' '}
+                {collection?.name || '#' + token?.tokenId}{' '}
               </Text>
-              {token?.isFlagged && (
+              {/* {token?.isFlagged && (
                 <Tooltip
                   content={
                     <Text style="body2" as="p">
@@ -244,7 +243,7 @@ export default ({
                     />
                   </Text>
                 </Tooltip>
-              )}
+              )} */}
             </Flex>
             <Box
               css={{
@@ -255,7 +254,7 @@ export default ({
                 minWidth: 'max-content',
               }}
             >
-              {rarityEnabled &&
+              {/* {rarityEnabled &&
                 token?.kind !== 'erc1155' &&
                 token?.rarityRank && (
                   <Flex align="center" css={{ gap: 5 }}>
@@ -267,7 +266,7 @@ export default ({
                       {formatNumber(token?.rarityRank)}
                     </Text>
                   </Flex>
-                )}
+                )} */}
             </Box>
           </Flex>
 
@@ -281,7 +280,7 @@ export default ({
                 textOverflow: 'ellipsis',
               }}
             >
-              {token?.market?.floorAsk?.price && (
+              {/* {token?.market?.floorAsk?.price && (
                 <FormatCryptoCurrency
                   logoHeight={18}
                   amount={token?.market?.floorAsk?.price?.amount?.decimal}
@@ -295,11 +294,11 @@ export default ({
                   }}
                   maximumFractionDigits={4}
                 />
-              )}
+              )} */}
             </Box>
 
             <>
-              {token?.market?.floorAsk?.source?.name && (
+              {/* {token?.market?.floorAsk?.source?.name && (
                 <img
                   style={{
                     width: 20,
@@ -308,10 +307,10 @@ export default ({
                   }}
                   src={`${proxyApi}/redirect/sources/${token?.market?.floorAsk?.source?.domain}/logo/v2`}
                 />
-              )}
+              )} */}
             </>
           </Flex>
-          {token?.lastSale?.price?.amount?.decimal ? (
+          {/* {token?.lastSale?.price?.amount?.decimal ? (
             <Flex css={{ gap: '$2', marginTop: 'auto' }}>
               <Text css={{ color: '$gray11' }} style="subtitle3">
                 Last Sale
@@ -325,7 +324,7 @@ export default ({
                 maximumFractionDigits={4}
               />
             </Flex>
-          ) : null}
+          ) : null} */}
         </Flex>
       </Link>
       {(!isOwner && existListing) ? (

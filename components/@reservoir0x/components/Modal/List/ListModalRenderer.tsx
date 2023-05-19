@@ -13,7 +13,7 @@ import { ExpirationOption } from 'types/ExpirationOption'
 import expirationOptions from '../../../lib/defaultExpirationOptions'
 import currencyOptions from '../../../lib/defaultCurrencyOptions'
 
-import { Collection, Marketplace, Token } from 'types/workaround'
+import { Collection, Token } from '__generated__/graphql'
 import { Currency } from 'types/currency'
 import { gql } from '__generated__'
 import { useMutation, useQuery } from '@apollo/client'
@@ -23,9 +23,11 @@ import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
 import { MakerOrder } from "@cuonghx.gu-tech/looksrare-sdk"
 import { CREATE_ORDER } from 'graphql/queries/orders'
 import { parseUnits } from 'ethers/lib/utils.js'
-import { GET_NONCE, GET_TOKEN_BY_ID } from 'graphql/queries/tokens'
 import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
 import { OrderDirection, Order_OrderBy } from '__generated__/graphql'
+import { GET_NONCE } from 'graphql/queries/nonces'
+import { GET_TOKEN } from 'graphql/queries/tokens'
+import { GET_COLLECTION } from 'graphql/queries/collections'
 
 export type ListingData = MakerOrder | null
 
@@ -237,17 +239,18 @@ export const ListModalRenderer: FC<Props> = ({
   ])
 
 
-  const { data: tokenData, loading, refetch: refetchToken } = useQuery(GET_TOKEN_BY_ID, {
+  const { data: tokenData, loading, refetch: refetchToken } = useQuery(GET_TOKEN, {
     variables: { id: `${collectionId}-${tokenId}`}
   })
-  // TO-DO: remove later, should using token.image
-  const { nft } = useNft(tokenData?.token?.collection?.id as string, tokenData?.token?.tokenID)
-  const token = {...tokenData?.token, image: nft?.image} as Token
-  const collection = tokenData?.token?.collection
-  
+  const { data: collectionData } = useQuery(GET_COLLECTION, {
+    variables: { id: `${collectionId}-${tokenId}`}
+  })
 
+  const token = tokenData?.token
+  const collection = collectionData?.collection
+  
   const protocolFee = useStrategyFee(strategy)
-  const royaltyFee = useRoyaltyFee(token?.collection?.id as string, token?.tokenID)
+  const royaltyFee = useRoyaltyFee(token?.collection as string, token?.tokenId as string)
 
   useEffect(() => {
     refetchListed()

@@ -15,8 +15,8 @@ import {
   extractMediaType,
 } from '@reservoir0x/reservoir-kit-ui'
 import { motion } from 'framer-motion'
-import { Token } from 'types/workaround'
 import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
+import { Token } from '__generated__/graphql'
 
 
 type Props = {

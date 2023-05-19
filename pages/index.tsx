@@ -1,15 +1,10 @@
-import { GetStaticProps, InferGetStaticPropsType, NextPage } from 'next'
+import { InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
 import Layout from 'components/Layout'
-import { ComponentPropsWithoutRef, useContext, useState } from 'react'
+import { ComponentPropsWithoutRef, useState } from 'react'
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
-import { useMarketplaceChain, useMounted } from 'hooks'
-import { useAccount } from 'wagmi'
-import { paths } from '@reservoir0x/reservoir-sdk'
-import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from './_app'
-import supportedChains from 'utils/chains'
+import { useMounted } from 'hooks'
 import Link from 'next/link'
 import ChainToggle from 'components/common/ChainToggle'
 import CollectionsTimeDropdown, {
@@ -17,12 +12,12 @@ import CollectionsTimeDropdown, {
 } from 'components/common/CollectionsTimeDropdown'
 import { Head } from 'components/Head'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
-import { ChainContext } from 'context/ChainContextProvider'
-import { gql } from '__generated__/gql'
-import { useQuery } from '@apollo/client'
-import { Collection_OrderBy } from '__generated__/graphql'
+import { GET_COLLECTIONS } from 'graphql/queries/collections'
+import { initializeApollo } from 'graphql/apollo-client'
 
-const IndexPage: NextPage = () => {
+type Props = InferGetStaticPropsType<typeof getServerSideProps>
+
+const IndexPage: NextPage<Props> = ({ collections, loading }) => {
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
@@ -44,19 +39,6 @@ const IndexPage: NextPage = () => {
       volumeKey = '30day'
       break
   }
-
-  const TOP_COLLECTION_QUERY = gql(/* GraphQL */`
-    query GetTopCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy) {
-      collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy) {
-        id
-        name
-      }
-    }
-  `);
-
-  const { data, loading } = useQuery(TOP_COLLECTION_QUERY, {
-    variables: { first: 10, collection_orderBy: Collection_OrderBy.TotalTransactions }
-  })
 
   return (
     <Layout>
@@ -99,7 +81,7 @@ const IndexPage: NextPage = () => {
           </Flex>
           {isSSR || !isMounted ? null : (
             <CollectionRankingsTable
-              collections={data?.collections || []}
+              collections={collections}
               loading={loading}
               volumeKey={volumeKey}
             />
@@ -124,3 +106,19 @@ const IndexPage: NextPage = () => {
   )
 }
 export default IndexPage
+
+export async function getServerSideProps() {
+  const apolloClient = initializeApollo()
+
+  const { data, loading } = await apolloClient.query({
+    query: GET_COLLECTIONS,
+    variables: { first: 10, skip: 0 }
+  })
+
+  return {
+    props: {
+      collections: data?.collections || [],
+      loading
+    }
+  };
+}

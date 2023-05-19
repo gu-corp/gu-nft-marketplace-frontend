@@ -1,6 +1,7 @@
 import React, { FC, ComponentPropsWithoutRef, CSSProperties } from 'react'
 import TokenMedia from './index'
 import { Button, Flex, Text } from 'components/primitives'
+import { useNft } from 'use-nft'
 
 type TokenFallbackProps = {
   style?: CSSProperties
@@ -17,6 +18,9 @@ const TokenFallback: FC<TokenFallbackProps> = ({
   chainId,
   onRefreshClicked,
 }) => {
+  const { nft } = useNft(token?.collection as string, token?.tokenId as string)
+  const img = nft?.image
+
   return (
     <Flex
       justify="center"
@@ -25,10 +29,10 @@ const TokenFallback: FC<TokenFallbackProps> = ({
       css={{ gap: '$2', aspectRatio: '1/1', p: '$2', ...style }}
       className={className}
     >
-      {token?.collection?.image && (
+      {img && (
         <img
           style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 8 }}
-          src={token?.collection?.image}
+          src={img}
         />
       )}
       <Text style="body2" css={{ textAlign: 'center' }}>

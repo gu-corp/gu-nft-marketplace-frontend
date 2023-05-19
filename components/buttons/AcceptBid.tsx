@@ -7,8 +7,8 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import { AcceptBidModal } from 'components/@reservoir0x/components/Modal/AcceptBid/AcceptBidModal'
-import { Token } from 'types/workaround'
 import { AcceptBidStep } from 'components/@reservoir0x/components/Modal/AcceptBid/AcceptBidModalRenderer'
+import { Token } from '__generated__/graphql'
 
 type Props = {
   token?: Token
@@ -77,7 +77,7 @@ const AcceptBid: FC<Props> = ({
         openState={openState}
         bidId={bidId}
         collectionId={collectionId}
-        tokenId={token?.tokenID}
+        tokenId={token?.tokenId}
         onClose={(currentStep) => {
           if (mutate && currentStep == AcceptBidStep.Complete) mutate()
         }}

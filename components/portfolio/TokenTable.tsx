@@ -20,18 +20,14 @@ import {
   faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
-import { MutatorCallback } from 'swr'
 import { Address } from 'wagmi'
-import { useMarketplaceChain } from 'hooks'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import { ChainContext } from 'context/ChainContextProvider'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
-import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
-import { Token_OrderBy } from '__generated__/graphql'
-import { Token } from 'types/workaround'
+import { Token } from '__generated__/graphql'
 import { useNft } from 'use-nft'
-import { GET_USER_TOKENS } from 'graphql/queries/tokens'
+import { GET_TOKENS } from 'graphql/queries/tokens'
+import { GET_COLLECTION } from 'graphql/queries/collections'
 
 type Props = {
   address: Address | undefined
@@ -51,16 +47,16 @@ export const TokenTable: FC<Props> = ({
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const { data, loading, fetchMore } = useQuery(GET_USER_TOKENS, {
+  const { data, loading, fetchMore } = useQuery(GET_TOKENS, {
     variables: {
       first: 10,
-      token_OrderBy: Token_OrderBy.TotalTransactions,
       where: {
         owner: address?.toLocaleLowerCase(),
         collection: filterCollection
       }
     }
   })
+
   const tokens = data?.tokens || []
 
 
@@ -115,14 +111,22 @@ type TokenTableRowProps = {
 const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
+  const { data } = useQuery(GET_COLLECTION, {
+    variables: {
+      id: token.collection
+    }
+  })
+
+  const collection = data?.collection
+
   // TO-DO: remove later, should using token.image
-  const { nft } = useNft(token.collection.id, token.tokenID)
+  const { nft } = useNft(token.collection, token.tokenId)
   let imageSrc = nft?.image
 
   if (isSmallDevice) {
     return (
       <Flex
-        key={token?.tokenID}
+        key={token?.tokenId}
         direction="column"
         align="start"
         css={{
@@ -135,7 +139,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
         }}
       >
         <Link
-          href={`/collection/${token?.collection?.id}/${token?.tokenID}`}
+          href={`/collection/${token?.collection}/${token?.tokenId}`}
         >
           <Flex align="center">
             {imageSrc && (
@@ -147,7 +151,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
                 }}
                 loader={({ src }) => src}
                 src={imageSrc}
-                alt={`${token.collection.name}-${token?.tokenID}`}
+                alt={`${collection?.name}-${token?.tokenId}`}
                 width={36}
                 height={36}
               />
@@ -161,10 +165,10 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
               }}
             >
               <Text style="subtitle3" ellipsify color="subtle">
-                {token?.collection?.name}
+                {collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
-                #{token?.tokenID}
+                #{token?.tokenId}
               </Text>
             </Flex>
           </Flex>
@@ -174,7 +178,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
             <Text style="subtitle3" color="subtle">
               Net Floor
             </Text>
-            <FormatCryptoCurrency
+            {/* <FormatCryptoCurrency
               amount={
                 token?.collection?.floorAskPrice?.netAmount?.decimal
               }
@@ -186,7 +190,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
               }
               textStyle="subtitle2"
               logoHeight={14}
-            />
+            /> */}
             <List
               token={token}
               buttonCss={{
@@ -208,11 +212,11 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
             <Text style="subtitle3" color="subtle">
               You Get
             </Text>
-            <FormatCryptoCurrency
+            {/* <FormatCryptoCurrency
               amount={token?.topBid?.price?.netAmount?.native}
               textStyle="subtitle2"
               logoHeight={14}
-            />
+            /> */}
             {/* {token?.topBid?.price?.amount?.decimal && (
               <AcceptBid
                 token={token as ReturnType<typeof useTokens>['data'][0]}
@@ -245,12 +249,12 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
 
   return (
     <TableRow
-      key={token?.tokenID}
+      key={token?.tokenId}
       css={{ gridTemplateColumns: desktopTemplateColumns }}
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link
-          href={`/collection/${token?.collection?.id}/${token?.tokenID}`}
+          href={`/collection/${token?.collection}/${token?.tokenId}`}
         >
           <Flex align="center">
             {imageSrc && (
@@ -262,7 +266,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
                 }}
                 loader={({ src }) => src}
                 src={imageSrc}
-                alt={`${token?.name}`}
+                alt={`${token?.tokenId}`}
                 width={48}
                 height={48}
               />
@@ -276,9 +280,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
             >
               <Flex justify="between" css={{ gap: '$2' }}>
                 <Text style="subtitle3" ellipsify color="subtle">
-                  {token?.collection?.name}
+                  {collection?.name}
                 </Text>
-                {token?.kind === 'erc1155' &&
+                {/* {token?.kind === 'erc1155' &&
                   token?.ownership?.tokenCount && (
                     <Flex
                       justify="center"
@@ -294,43 +298,43 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
                         style="subtitle3"
                         css={{ px: '$2', fontSize: 10 }}
                     >
-                      {/* // TO-DO: must total token of user not collection total token */}
                         x{token?.collection?.totalTokens} 
                       </Text>
                     </Flex>
-                  )}
+                  )} 
+                    */}
               </Flex>
               <Text style="subtitle2" ellipsify>
-                #{token?.tokenID}
+                #{token?.tokenId}
               </Text>
             </Flex>
           </Flex>
         </Link>
       </TableCell>
       <TableCell>
-        <FormatCryptoCurrency
+        {/* <FormatCryptoCurrency
           amount={token?.ownership?.floorAsk?.price?.amount?.decimal}
           textStyle="subtitle1"
           logoHeight={14}
-        />
+        /> */}
       </TableCell>
       <TableCell>
-        <FormatCryptoCurrency
+        {/* <FormatCryptoCurrency
           amount={token?.collection?.floorAskPrice?.netAmount?.decimal}
           address={token?.collection?.floorAskPrice?.currency?.contract}
           decimals={token?.collection?.floorAskPrice?.currency?.decimals}
           textStyle="subtitle1"
           logoHeight={14}
-        />
+        /> */}
       </TableCell>
       <TableCell>
-        <FormatCryptoCurrency
+        {/* <FormatCryptoCurrency
           amount={token?.topBid?.price?.netAmount?.native}
           address={token?.topBid?.price?.currency?.contract}
           decimals={token?.topBid?.price?.currency?.decimals}
           textStyle="subtitle1"
           logoHeight={14}
-        />
+        /> */}
       </TableCell>
       <TableCell>
         <Flex justify="end" css={{ gap: '$3' }}>

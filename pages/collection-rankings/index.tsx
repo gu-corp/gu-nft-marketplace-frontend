@@ -27,7 +27,7 @@ import { ChainContext } from 'context/ChainContextProvider'
 import { useRouter } from 'next/router'
 import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
-import { Collection_OrderBy } from '__generated__/graphql'
+import { GET_COLLECTIONS } from 'graphql/queries/collections'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -68,17 +68,8 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     collectionQuery.community = chain.community
   }
 
-  const COLLECTION_RANKINGS = gql(/* GraphQL */`
-  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy) {
-    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy) {
-      id
-      name
-    }
-  }
-`);
-
-  const { data, loading, fetchMore } = useQuery(COLLECTION_RANKINGS, {
-    variables: { skip: 0, first: 10, collection_orderBy: Collection_OrderBy.TotalTokens }
+  const { data, loading, fetchMore } = useQuery(GET_COLLECTIONS, {
+    variables: { skip: 0, first: 10 }
   })
 
   let collections = data?.collections || []

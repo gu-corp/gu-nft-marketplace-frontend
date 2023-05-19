@@ -4,7 +4,7 @@ import * as Collapsible from '@radix-ui/react-collapsible'
 import { CollapsibleContent } from 'components/primitives/Collapsible'
 import Image from 'next/image'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import { Collection } from 'types/workaround'
+import { Collection } from '__generated__/graphql'
 
 type Props = {
   open: boolean
@@ -74,7 +74,7 @@ export const TokenFilters: FC<Props> = ({
                   scrollToTop?.()
                 }}
               >
-                {collection?.image && (
+                {/* {collection?.image && (
                   <Image
                     style={{
                       borderRadius: '4px',
@@ -87,7 +87,7 @@ export const TokenFilters: FC<Props> = ({
                     width={24}
                     height={24}
                   />
-                )}
+                )} */}
                 <Text
                   style="body1"
                   css={{

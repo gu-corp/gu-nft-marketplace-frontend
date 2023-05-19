@@ -15,7 +15,6 @@ import {
 import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
-import { useBids } from '@reservoir0x/reservoir-kit-ui'
 import Link from 'next/link'
 import { MutatorCallback } from 'swr'
 import { useMarketplaceChain, useTimeSince } from 'hooks'
@@ -27,8 +26,9 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
 import { Order, OrderDirection, Order_OrderBy } from '__generated__/graphql'
 import { useQuery } from '@apollo/client'
-import { GET_TOKEN_BY_ID } from 'graphql/queries/tokens'
 import { useNft } from 'use-nft'
+import { GET_COLLECTION } from 'graphql/queries/collections'
+import { GET_TOKEN } from 'graphql/queries/tokens'
 
 type Props = {
   address: Address | undefined
@@ -118,9 +118,15 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
     offer?.endTime ? Number(offer.endTime) : 0
   )
 
-  const { data: tokenData } = useQuery(GET_TOKEN_BY_ID, {
+  const { data: tokenData } = useQuery(GET_TOKEN, {
     variables: { id: `${offer.collectionAddress}-${offer.tokenId}`}
   })
+
+  const { data: collectionData } = useQuery(GET_COLLECTION, {
+    variables: { id: offer.collectionAddress as string}
+  })
+
+  const collection = collectionData?.collection
   const token = tokenData?.token
 
   // TO-DO: remove later, should using token.image
@@ -173,10 +179,10 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                 }}
               >
                 <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                  {token?.collection?.name}
+                  {collection?.name}
                 </Text>
                 <Text style="subtitle2" ellipsify>
-                  #{token?.tokenID}
+                  #{token?.tokenId}
                 </Text>
               </Flex>
             </Flex>
@@ -249,7 +255,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                 }}
                 loader={({ src }) => src}
                 src={imageSrc}
-                alt={`${token?.collection?.name}`}
+                alt={`${collection?.name}`}
                 width={48}
                 height={48}
               />
@@ -262,10 +268,10 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
               }}
             >
               <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                {token?.collection?.name}
+                {collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
-                #{token?.tokenID}
+                #{token?.tokenId}
               </Text>
             </Flex>
           </Flex>

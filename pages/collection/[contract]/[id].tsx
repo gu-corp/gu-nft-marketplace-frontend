@@ -63,16 +63,17 @@ import { useAccount } from 'wagmi'
 import { Head } from 'components/Head'
 import { gql } from '__generated__'
 import { initializeApollo } from 'graphql/apollo-client'
-import { Token } from 'types/workaround'
 import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
 import { useNft } from 'use-nft'
-import { ActivityType } from '__generated__/graphql'
+import { ActivityType, Collection, Token } from '__generated__/graphql'
+import { GET_TOKEN } from 'graphql/queries/tokens'
+import { GET_COLLECTION } from 'graphql/queries/collections'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 type ActivityTypes = ActivityType[]
 
-const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
+const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
   const router = useRouter()
   const { addToast } = useContext(ToastContext)
   const account = useAccount()
@@ -87,8 +88,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   const { proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
   
-  const { token } = ssr
-  const collection = token.collection
+  const { token, collection } = ssr
   const flagged = useTokenOpenseaBanned(collectionId, id)
 
 
@@ -103,19 +103,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
   // TO-DO: attributes
   // const attributesData = useAttributes(collectionId)
 
+  const hasAttributes = false
   const is1155 = false
-  const isOwner = account.address?.toLowerCase() === token?.owner?.id.toLowerCase()
-  const owner = isOwner ? account.address?.toLowerCase() : token?.owner?.id.toLowerCase()
-  const { displayName: ownerFormatted } = useENSResolver(token?.owner?.id)
+  const isOwner = account.address?.toLowerCase() === token?.owner?.toLowerCase()
+  const owner = isOwner ? account.address?.toLowerCase() : token?.owner?.toLowerCase()
+  const { displayName: ownerFormatted } = useENSResolver(token?.owner)
 
-  const tokenName = `${token?.collection?.name || `#${token?.tokenID}`}`
+  const tokenName = `${collection?.name || `#${token?.tokenId}`}`
 
-  const hasAttributes =
-    token?.attributes && token?.attributes.length > 0
+  // const hasAttributes =
+  //   token?.attributes && token?.attributes.length > 0
   
-  // TO-DO: remove later, should using token.image
-  const { nft } = useNft(token.collection.id, token.tokenID)
-
   const trigger = (
     <Button
       color="gray3"
@@ -176,16 +174,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
     router.push(router, undefined, { shallow: true })
   }, [tabValue])
 
-  const pageTitle = token?.name
-    ? token.collection.name
-    : `${token?.tokenID} - ${token?.collection?.name}`
+  // const pageTitle = token?.name
+  //   ? token.collection.name
+  //   : `${token?.tokenID} - ${token?.collection?.name}`
+  const pageTitle = `${collection.symbol}-${token.tokenId}`
 
   return (
     <Layout>
       <Head
-        ogImage={token?.image || collection?.banner}
+        // ogImage={token?.image || collection?.banner}
         title={pageTitle}
-        description={collection?.description as string}
+        // description={collection?.description as string}
       />
       <Flex
         justify="center"
@@ -250,7 +249,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
             }}
           >
             <TokenMedia
-              token={{...token, image: nft?.image }}
+              token={token}
               videoOptions={{ autoPlay: true, muted: true }}
               style={{
                 width: '100%',
@@ -269,10 +268,10 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
               }}
             />
             {/* TO-DO: later */}
-            <FullscreenMedia token={{...token, image: nft?.image }} />
+            <FullscreenMedia token={token} />
           </Box>
 
-          {token?.attributes && !isSmallDevice && (
+          {/* {token?.attributes && !isSmallDevice && (
             <Grid
               css={{
                 maxWidth: '100%',
@@ -291,7 +290,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 />
               ))}
             </Grid>
-          )}
+          )} */}
         </Flex>
         <Flex
           direction="column"
@@ -309,7 +308,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
           <Flex justify="between" align="center" css={{ mb: 20 }}>
             <Flex align="center" css={{ mr: '$2', gap: '$2' }}>
               <Link
-                href={`/collection/${token?.collection?.id}`}
+                href={`/collection/${token?.collection}`}
                 legacyBehavior={true}
               >
                 <Anchor
@@ -322,15 +321,15 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                 >
                   <FontAwesomeIcon icon={faArrowLeft} height={16} />
                   <Text css={{ color: 'inherit' }} style="subtitle1" ellipsify>
-                    {token?.collection?.name}
+                    {collection?.name}
                   </Text>
                 </Anchor>
               </Link>
-              <OpenSeaVerified
+              {/* <OpenSeaVerified
                 openseaVerificationStatus={
                   collection?.openseaVerificationStatus
                 }
-              />
+              /> */}
             </Flex>
             <Button
               onClick={(e) => {
@@ -515,7 +514,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
                   )}
                   <TokenActivityTable
                     collection={contract as string}
-                    tokenId={`${token?.tokenID}`}
+                    tokenId={`${token?.tokenId}`}
                     activityTypes={activityTypes}
                   />
                 </TabsContent>
@@ -540,6 +539,7 @@ export const getStaticProps: GetStaticProps<{
   collectionId?: string
   ssr: {
     token: Token
+    collection: Collection
   }
 }> = async ({ params }) => {
   let collectionId = params?.contract?.toString()
@@ -550,33 +550,27 @@ export const getStaticProps: GetStaticProps<{
 
   const apolloClient = initializeApollo()
 
-  const GET_TOKEN_BY_ID = gql(/* GraphQL */`
-    query GetTokenById($id: ID!) {
-        token(id: $id) {
-          id
-          tokenID
-          tokenURI
-          collection {
-            id
-            name
-            totalTokens
-          }
-          owner {
-            id
-          }
-        }
-      }
-  `);
-
-  const { data } = await apolloClient.query({
-    query: GET_TOKEN_BY_ID,
+  const { data: tokenData } = await apolloClient.query({
+    query: GET_TOKEN,
     variables: {
       id: tokenIdQuery
     },
   })
 
+  const { data: collectionData } = await apolloClient.query({
+    query: GET_COLLECTION,
+    variables: {
+      id: contract as string
+    },
+  })
+
   return {
-    props: { collectionId, id, ssr: { token: data?.token } },
+    props: {
+      collectionId, id, ssr: {
+        token: tokenData?.token,
+        collection: collectionData.collection
+      }
+    },
     revalidate: 20,
   }
 }

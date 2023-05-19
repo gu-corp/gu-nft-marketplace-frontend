@@ -13,20 +13,16 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "\n  query GetCollectionById($id: ID!) {\n      collection(id: $id) {\n        id\n        name\n        totalTokens\n      }\n    }\n  ": types.GetCollectionByIdDocument,
     "\n  query GetActivities($first: Int, $skip: Int, $where: Activity_FilterArgs) {\n    activities(first: $first, skip: $skip, where: $where) {\n      id\n      type\n      timestamp\n      to\n      from\n      tokenId\n      collection\n      txHash\n    }\n}\n": types.GetActivitiesDocument,
-    "\n  query GetUserCollections($first: Int, $skip: Int $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy, $where: Collection_FilterArgs) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy, where: $where) {\n      id\n      name\n      totalTokens\n    }\n}\n": types.GetUserCollectionsDocument,
+    "\n  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection) {\n      id\n      name\n      symbol\n      totalTokens\n      totalOwners\n    }\n  }\n": types.GetCollectionsDocument,
+    "\nquery GetCollection($id: String!) {\n    collection(id: $id) {\n      id\n      name\n      symbol\n      totalTokens\n      totalOwners\n    }\n  }\n": types.GetCollectionDocument,
+    "\nquery GetUserRelativeCollections($first: Int, $skip: Int, $user: String!) {\n    relativeCollections(first: $first, skip: $skip, user: $user) {\n      id\n      name\n      symbol\n      totalTokens\n      totalOwners\n    }\n  }\n": types.GetUserRelativeCollectionsDocument,
+    "\nquery GetNonce($signer: String!) {\n    nonce(signer: $signer) {\n      nonce\n    }\n  }\n": types.GetNonceDocument,
     "\n  mutation CreateOrder(\n    $createOrderInput: CreateOrderInput!\n  ) {\n    createOrder(\n      createOrderInput: $createOrderInput\n    ) {\n      hash\n    }\n  }\n": types.CreateOrderDocument,
     "\nquery GetOrderListings($first: Int, $skip: Int, $orderDirection: OrderDirection, $order_OrderBy: Order_OrderBy, $where: Order_FilterArgs) {\n    orders(first: $first, skip: $skip, orderDirection: $orderDirection, order_OrderBy: $order_OrderBy, where: $where) {\n      hash\n      collectionAddress\n      tokenId\n      price\n      startTime\n      endTime\n      nonce\n      currencyAddress\n      amount\n      isOrderAsk\n      signer\n      strategy\n      minPercentageToAsk\n      params\n      signature\n    }\n  }\n": types.GetOrderListingsDocument,
     "\nquery GetOrderByHash($hash: ID!) {\n    order(hash: $hash) {\n      hash\n      collectionAddress\n      tokenId\n      price\n      startTime\n      endTime\n      nonce\n      currencyAddress\n      amount\n      isOrderAsk\n      signer\n      strategy\n      minPercentageToAsk\n      params\n      signature\n    }\n  }\n": types.GetOrderByHashDocument,
-    "\nquery GetNonce($signer: String!) {\n    nonce(signer: $signer) {\n      nonce\n    }\n  }\n": types.GetNonceDocument,
-    "\nquery GetTokenById($id: ID!) {\n    token(id: $id) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n": types.GetTokenByIdDocument,
-    "\n  query GetUserTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n": types.GetUserTokensDocument,
-    "\n  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy) {\n      id\n      name\n    }\n  }\n": types.GetCollectionsDocument,
-    "\n  query GetTokensByCollection($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n  ": types.GetTokensByCollectionDocument,
-    "\n    query GetCollectionById($id: ID!) {\n        collection(id: $id) {\n          id\n          name\n          totalTokens\n        }\n      }\n  ": types.GetCollectionByIdDocument,
-    "\n    query GetTokenById($id: ID!) {\n        token(id: $id) {\n          id\n          tokenID\n          tokenURI\n          collection {\n            id\n            name\n            totalTokens\n          }\n          owner {\n            id\n          }\n        }\n      }\n  ": types.GetTokenByIdDocument,
-    "\n    query GetTopCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy) {\n      collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy) {\n        id\n        name\n      }\n    }\n  ": types.GetTopCollectionsDocument,
+    "\n  query GetToken($id: String!) {\n    token(id: $id) {\n      id\n      tokenId\n      tokenUri\n      collection\n      owner\n    }\n  }\n": types.GetTokenDocument,
+    "\n  query GetTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, where: $where) {\n      id\n      tokenId\n      tokenUri\n      collection\n      owner\n    }\n  }\n": types.GetTokensDocument,
 };
 
 /**
@@ -46,15 +42,23 @@ export function gql(source: string): unknown;
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query GetCollectionById($id: ID!) {\n      collection(id: $id) {\n        id\n        name\n        totalTokens\n      }\n    }\n  "): (typeof documents)["\n  query GetCollectionById($id: ID!) {\n      collection(id: $id) {\n        id\n        name\n        totalTokens\n      }\n    }\n  "];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
 export function gql(source: "\n  query GetActivities($first: Int, $skip: Int, $where: Activity_FilterArgs) {\n    activities(first: $first, skip: $skip, where: $where) {\n      id\n      type\n      timestamp\n      to\n      from\n      tokenId\n      collection\n      txHash\n    }\n}\n"): (typeof documents)["\n  query GetActivities($first: Int, $skip: Int, $where: Activity_FilterArgs) {\n    activities(first: $first, skip: $skip, where: $where) {\n      id\n      type\n      timestamp\n      to\n      from\n      tokenId\n      collection\n      txHash\n    }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\n  query GetUserCollections($first: Int, $skip: Int $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy, $where: Collection_FilterArgs) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy, where: $where) {\n      id\n      name\n      totalTokens\n    }\n}\n"): (typeof documents)["\n  query GetUserCollections($first: Int, $skip: Int $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy, $where: Collection_FilterArgs) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy, where: $where) {\n      id\n      name\n      totalTokens\n    }\n}\n"];
+export function gql(source: "\n  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection) {\n      id\n      name\n      symbol\n      totalTokens\n      totalOwners\n    }\n  }\n"): (typeof documents)["\n  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection) {\n      id\n      name\n      symbol\n      totalTokens\n      totalOwners\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery GetCollection($id: String!) {\n    collection(id: $id) {\n      id\n      name\n      symbol\n      totalTokens\n      totalOwners\n    }\n  }\n"): (typeof documents)["\nquery GetCollection($id: String!) {\n    collection(id: $id) {\n      id\n      name\n      symbol\n      totalTokens\n      totalOwners\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery GetUserRelativeCollections($first: Int, $skip: Int, $user: String!) {\n    relativeCollections(first: $first, skip: $skip, user: $user) {\n      id\n      name\n      symbol\n      totalTokens\n      totalOwners\n    }\n  }\n"): (typeof documents)["\nquery GetUserRelativeCollections($first: Int, $skip: Int, $user: String!) {\n    relativeCollections(first: $first, skip: $skip, user: $user) {\n      id\n      name\n      symbol\n      totalTokens\n      totalOwners\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\nquery GetNonce($signer: String!) {\n    nonce(signer: $signer) {\n      nonce\n    }\n  }\n"): (typeof documents)["\nquery GetNonce($signer: String!) {\n    nonce(signer: $signer) {\n      nonce\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -70,35 +74,11 @@ export function gql(source: "\nquery GetOrderByHash($hash: ID!) {\n    order(has
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nquery GetNonce($signer: String!) {\n    nonce(signer: $signer) {\n      nonce\n    }\n  }\n"): (typeof documents)["\nquery GetNonce($signer: String!) {\n    nonce(signer: $signer) {\n      nonce\n    }\n  }\n"];
+export function gql(source: "\n  query GetToken($id: String!) {\n    token(id: $id) {\n      id\n      tokenId\n      tokenUri\n      collection\n      owner\n    }\n  }\n"): (typeof documents)["\n  query GetToken($id: String!) {\n    token(id: $id) {\n      id\n      tokenId\n      tokenUri\n      collection\n      owner\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function gql(source: "\nquery GetTokenById($id: ID!) {\n    token(id: $id) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n"): (typeof documents)["\nquery GetTokenById($id: ID!) {\n    token(id: $id) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n  query GetUserTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetUserTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy) {\n      id\n      name\n    }\n  }\n"): (typeof documents)["\n  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy) {\n      id\n      name\n    }\n  }\n"];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n  query GetTokensByCollection($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n  "): (typeof documents)["\n  query GetTokensByCollection($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {\n      id\n      tokenID\n      tokenURI\n      collection {\n        id\n        name\n        totalTokens\n      }\n      owner {\n        id\n      }\n    }\n  }\n  "];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n    query GetCollectionById($id: ID!) {\n        collection(id: $id) {\n          id\n          name\n          totalTokens\n        }\n      }\n  "): (typeof documents)["\n    query GetCollectionById($id: ID!) {\n        collection(id: $id) {\n          id\n          name\n          totalTokens\n        }\n      }\n  "];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n    query GetTokenById($id: ID!) {\n        token(id: $id) {\n          id\n          tokenID\n          tokenURI\n          collection {\n            id\n            name\n            totalTokens\n          }\n          owner {\n            id\n          }\n        }\n      }\n  "): (typeof documents)["\n    query GetTokenById($id: ID!) {\n        token(id: $id) {\n          id\n          tokenID\n          tokenURI\n          collection {\n            id\n            name\n            totalTokens\n          }\n          owner {\n            id\n          }\n        }\n      }\n  "];
-/**
- * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function gql(source: "\n    query GetTopCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy) {\n      collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy) {\n        id\n        name\n      }\n    }\n  "): (typeof documents)["\n    query GetTopCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_orderBy: Collection_orderBy) {\n      collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_orderBy: $collection_orderBy) {\n        id\n        name\n      }\n    }\n  "];
+export function gql(source: "\n  query GetTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, where: $where) {\n      id\n      tokenId\n      tokenUri\n      collection\n      owner\n    }\n  }\n"): (typeof documents)["\n  query GetTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, where: $where) {\n      id\n      tokenId\n      tokenUri\n      collection\n      owner\n    }\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

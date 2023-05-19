@@ -5,7 +5,6 @@ import {
   NextPage,
 } from 'next'
 import { Text, Flex, Box, Grid } from '../../components/primitives'
-import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
 import fetcher, { basicFetcher } from 'utils/fetcher'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -27,19 +26,15 @@ import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileTokenFilters } from 'components/common/MobileTokenFilters'
 import LoadingCard from 'components/common/LoadingCard'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import { DefaultChain } from 'utils/chains'
 import { useENSResolver } from 'hooks'
-import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { Head } from 'components/Head'
 import CopyText from 'components/common/CopyText'
 import { Address, useAccount } from 'wagmi'
 import ChainToggle from 'components/common/ChainToggle'
-import { ChainContext } from 'context/ChainContextProvider'
-import { GET_USER_COLLECTIONS } from 'graphql/queries/collections'
+import { GET_USER_RELATIVE_COLLECTIONS } from 'graphql/queries/collections'
 import { useQuery } from '@apollo/client'
-import { ActivityType, Collection_OrderBy, Token_OrderBy } from '__generated__/graphql'
-import { GET_USER_TOKENS } from 'graphql/queries/tokens'
-import { Token, Collection } from 'types/workaround'
+import { ActivityType } from '__generated__/graphql'
+import { GET_TOKENS } from 'graphql/queries/tokens'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -77,18 +72,16 @@ const IndexPage: NextPage<Props> = ({ address, ensName }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const { data: collectionData, loading: collectionLoading } = useQuery(GET_USER_COLLECTIONS, {
+  const { data: collectionData, loading: collectionLoading } = useQuery(GET_USER_RELATIVE_COLLECTIONS, {
     variables: {
       first: 100,
-      collection_orderBy: Collection_OrderBy.TotalTokens,
-      where: { owner: address?.toLocaleLowerCase() }
+      user: address?.toLocaleLowerCase() as string
     }
   })
 
-  const { data: tokenData, loading: tokenLoading, fetchMore } = useQuery(GET_USER_TOKENS, {
+  const { data: tokenData, loading: tokenLoading, fetchMore } = useQuery(GET_TOKENS, {
     variables: {
       first: 10,
-      token_OrderBy: Token_OrderBy.TotalTransactions,
       where: {
         owner: address?.toLocaleLowerCase(),
         collection: filterCollection
@@ -96,8 +89,8 @@ const IndexPage: NextPage<Props> = ({ address, ensName }) => {
     }
   })
 
-  const tokens = (tokenData?.tokens || []) as Token[]
-  const collections = (collectionData?.collections || []) as Collection[]
+  const tokens = (tokenData?.tokens || [])
+  const collections = (collectionData?.relativeCollections || [])
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -230,6 +223,7 @@ const IndexPage: NextPage<Props> = ({ address, ensName }) => {
                             <TokenCard
                               key={i}
                               token={token}
+                              collection={collections.find(c => c.id === token.collection)}
                               address={account.address?.toLowerCase() as Address}
                               rarityEnabled={false}
                               addToCartEnabled={false}

@@ -18,6 +18,7 @@ import currencyOptions from '../../../lib/defaultCurrencyOptions'
 import { parseUnits } from '@ethersproject/units'
 import TokenPrimitive from '../TokenPrimitive'
 import Progress from '../Progress'
+import { useNft } from 'use-nft'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -56,8 +57,12 @@ export function CancelListingModal({
         totalUsd,
         blockExplorerBaseUrl,
         cancelOrder,
-        currency
+        currency,
+        collection
       }) => {
+        const { nft } = useNft(token?.collection as string, token?.tokenId as string)
+        const img = nft?.image
+
         const expires = useTimeSince(
           listing?.endTime ? Number(listing.endTime) : 0
         )
@@ -124,11 +129,11 @@ export function CancelListingModal({
                 )}
                 <Box css={{ p: '$4', borderBottom: '1px solid $borderColor' }}>
                   <TokenPrimitive
-                    img={token?.image}
-                    name={token?.tokenID}
+                    img={img}
+                    name={token?.tokenId}
                     price={parseUnits(listing?.price, 0).toString()}
                     usdPrice={totalUsd}
-                    collection={token?.collection?.name || ''}
+                    collection={collection?.name || ''}
                     currencyContract={currency?.contract}
                     currencyDecimals={currency?.decimals}
                     expires={expires}
@@ -151,11 +156,11 @@ export function CancelListingModal({
               <Flex direction="column">
                 <Box css={{ p: '$4', borderBottom: '1px solid $borderColor' }}>
                   <TokenPrimitive
-                    img={token?.image}
-                    name={token?.tokenID}
+                    img={img}
+                    name={token?.tokenId}
                     price={parseUnits(listing?.price || "0", 0).toString()}
                     usdPrice={totalUsd}
-                    collection={token?.collection?.name || ''}
+                    collection={collection?.name || ''}
                     currencyContract={currency?.contract}
                     currencyDecimals={currency?.decimals}
                     expires={expires}
@@ -202,7 +207,7 @@ export function CancelListingModal({
                       Your{' '}
                       listing for{' '}
                       <Text style="body2" color="accent">
-                        {token?.collection?.name}{' '}
+                        {collection?.name}{' '}
                       </Text>
                       at {listing?.price}{' '}
                       {currency?.symbol} has been canceled.

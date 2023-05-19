@@ -16,15 +16,17 @@ import { parseUnits } from 'ethers/lib/utils.js'
 import dayjs from 'dayjs'
 import { ExpirationOption } from 'types/ExpirationOption'
 import { formatBN } from 'utils/numbers'
-import { Token, Collection } from 'types/workaround'
 import { Currency } from 'types/currency'
 import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
-import { GET_NONCE, GET_TOKEN_BY_ID } from 'graphql/queries/tokens'
+import { GET_TOKEN } from 'graphql/queries/tokens'
 import { useMutation, useQuery } from '@apollo/client'
 import { MakerOrder } from '@cuonghx.gu-tech/looksrare-sdk'
 import { CREATE_ORDER } from 'graphql/queries/orders'
 import { useNft } from 'use-nft'
 import currencyOptions from '../../../lib/defaultCurrencyOptions'
+import { GET_NONCE } from 'graphql/queries/nonces'
+import { Collection, Token } from '__generated__/graphql'
+import { GET_COLLECTION } from 'graphql/queries/collections'
 
 export type BidData = MakerOrder | null
 
@@ -96,15 +98,16 @@ export const BidModalRenderer: FC<Props> = ({
   // TO-DO: strategyOptions
   const strategy = looksRareSdk.addresses.STRATEGY_STANDARD_SALE_DEPRECATED;
 
-  const { data: tokenData, refetch: refetchToken } = useQuery(GET_TOKEN_BY_ID, {
+  const { data: tokenData, refetch: refetchToken } = useQuery(GET_TOKEN, {
     variables: { id: `${collectionId}-${tokenId}`}
   })
 
-  // TO-DO: remove later, should using token.image
-  const { nft } = useNft(collectionId as string, tokenId as string)
-  const token = { ...tokenData?.token, image: nft?.image } as Token
+  const { data: collectionData } = useQuery(GET_COLLECTION, {
+    variables: { id: collectionId as string }
+  })
 
-  const collection = tokenData?.token?.collection
+  const collection = collectionData?.collection
+  const token = tokenData?.token
 
   const { address } = useAccount()
 

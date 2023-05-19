@@ -33,16 +33,8 @@ import Img from 'components/primitives/Img'
 import { gql } from '__generated__'
 import { useLazyQuery } from '@apollo/client';
 import { ethers } from 'ethers'
-
-const GLOBAL_SEARCH = gql(/* GraphQL */`
-  query GetCollectionById($id: ID!) {
-      collection(id: $id) {
-        id
-        name
-        totalTokens
-      }
-    }
-  `);
+import { GET_COLLECTIONS } from 'graphql/queries/collections'
+import { Collection } from '__generated__/graphql'
 
 type SearchCollection = { 
   id: string
@@ -210,7 +202,7 @@ const GlobalSearch = forwardRef<
 >(({ children, ...props }, forwardedRef) => {
   const [searching, setSearching] = useState(false)
   const [search, setSearch] = useState('')
-  const [results, setResults] = useState([])
+  const [results, setResults] = useState<Collection[]>([])
   const [recentResults, setRecentResults] = useState<SearchCollection[]>([])
   const [showSearchBox, setShowSearchBox] = useState(false)
 
@@ -219,7 +211,7 @@ const GlobalSearch = forwardRef<
 
   const debouncedSearch = useDebounce(search, 500)
 
-  const [ triggerSearch ] = useLazyQuery(GLOBAL_SEARCH)
+  const [ triggerSearch ] = useLazyQuery(GET_COLLECTIONS)
 
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
 
@@ -227,9 +219,9 @@ const GlobalSearch = forwardRef<
     const getSearchResults = async () => { 
       setSearching(true)
       const { data } = await triggerSearch({
-        variables: { id: debouncedSearch }
+        // variables: { id: debouncedSearch }
       })
-      setResults(data?.collection ? [data?.collection] as any: [])
+      setResults(data?.collections || [])
       setSearching(false)
     }
     if (ethers.utils.isAddress(debouncedSearch)) {

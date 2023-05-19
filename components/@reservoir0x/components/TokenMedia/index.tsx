@@ -15,8 +15,9 @@ import useModelViewer from '../../hooks/useModelViewer'
 import MediaPlayButton from './MediaPlayButton'
 import { useMeasure } from '@react-hookz/web'
 import TokenFallback from './TokenFallback'
-import { Token } from 'types/workaround'
 import { Box } from 'components/primitives'
+import { Token } from '__generated__/graphql'
+import { useNft } from 'use-nft'
 
 type MediaType =
   | 'mp4'
@@ -37,19 +38,20 @@ export const extractMediaType = (
   token?: RequiredTokenProps
 ): MediaType | null => {
   let extension: string | null = null
-  if (token?.media) {
-    const pieces = token.media.split('/')
-    const file =
-      pieces && pieces[pieces.length - 1] ? pieces[pieces.length - 1] : null
-    const matches = file ? file.match('(\\.[^.]+)$') : null
-    extension = matches && matches[0] ? matches[0].replace('.', '') : null
-  }
-  return (extension as MediaType) ? (extension as MediaType) : null
+  // if (token?.media) {
+  //   const pieces = token.media.split('/')
+  //   const file =
+  //     pieces && pieces[pieces.length - 1] ? pieces[pieces.length - 1] : null
+  //   const matches = file ? file.match('(\\.[^.]+)$') : null
+  //   extension = matches && matches[0] ? matches[0].replace('.', '') : null
+  // }
+  // return (extension as MediaType) ? (extension as MediaType) : null
+  return null
 }
 
 type RequiredTokenProps = Pick<
   NonNullable<Token>,
-  'image' | 'media' | 'collection' | 'tokenID'
+  'collection' | 'tokenId'
 >
 
 type Props = {
@@ -80,13 +82,16 @@ const TokenMedia: FC<Props> = ({
   onRefreshToken = () => {},
 }) => {
   const mediaRef = useRef<HTMLAudioElement | HTMLVideoElement>(null)
+  const { nft } = useNft(token?.collection as any, token?.tokenId as any)
+
   // TO-DO:
   // const themeContext = useContext(ThemeContext)
   // let borderRadius: string = themeContext?.radii?.borderRadius?.value || '0'
   let borderRadius = '0'
   const [error, setError] = useState<SyntheticEvent | Event | null>(null)
-  const media = token?.media
-  const tokenPreview = token?.image
+  // const media = token?.media
+  const media = undefined
+  const tokenPreview = nft?.image
   const mediaType = extractMediaType(token)
   const defaultStyle: CSSProperties = {
     width: '150px',
@@ -249,7 +254,7 @@ const TokenMedia: FC<Props> = ({
         className={className}
         style={{
           ...computedStyle,
-          visibility: !media || media.length === 0 ? 'hidden' : 'visible',
+          // visibility: !media || media.length === 0 ? 'hidden' : 'visible',
         }}
         onError={onErrorCb}
       />

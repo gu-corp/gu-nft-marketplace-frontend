@@ -4,7 +4,7 @@ import Token from './Token'
 import ListingStat from './ListingStat'
 import { ListingData } from './ListModalRenderer'
 import { Currency } from 'types/currency'
-import { Token as TokenType, Collection as CollectionType, Marketplace } from 'types/workaround'
+import { Token as TokenType, Collection as CollectionType } from '__generated__/graphql'
 import { marketplaceInfo } from 'constants/common'
 import Stat from '../Stat'
 

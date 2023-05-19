@@ -11,7 +11,7 @@ import {
 } from 'components/primitives'
 
 import { Currency } from 'types/currency'
-import { Collection, Marketplace } from 'types/workaround'
+import { Collection } from '__generated__/graphql'
 import { marketplaceInfo } from 'constants/common'
 
 type MarketPlaceInputProps = {
@@ -30,14 +30,16 @@ const MarketplacePriceInput = ({
   onChange,
   ...props
 }: MarketPlaceInputProps) => {
-  let profit =
-    (1 -
-      // TO-DO: minus market fee here
-      // (marketplace?.fee?.percent || 0) / 100  
-      (collection?.royalties?.bps || 0) * 0.0001) *
-    Number(price || 0) *
-    quantity
-  100
+  // let profit =
+  //   (1 -
+  //     // TO-DO: minus market fee here
+  //     // (marketplace?.fee?.percent || 0) / 100
+  //     (collection?.royalties?.bps || 0) * 0.0001) *
+  //   Number(price || 0) *
+  //   quantity
+  // 100
+  
+  let profit = Number(price || 0)
 
   return (
     <Flex {...props} align="center">
