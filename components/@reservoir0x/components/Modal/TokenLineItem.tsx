@@ -2,7 +2,8 @@ import React, { FC } from 'react'
 import { Box } from 'components/primitives'
 import TokenPrimitive from './TokenPrimitive'
 import { CSSProperties } from '@stitches/react'
-import { Collection, Token } from 'types/workaround'
+import { Collection, Token } from '__generated__/graphql'
+import { useNft } from 'use-nft'
 
 type TokenLineItemProps = {
   tokenDetails?: Token
@@ -42,18 +43,13 @@ const TokenLineItem: FC<TokenLineItemProps> = ({
 
   const usdPrice = price * usdConversion
 
-  const name = tokenDetails?.name || `#${tokenDetails?.tokenID}`
-  const collectionName =
-    tokenDetails?.collection?.name || collection?.name || ''
+  const name = `#${tokenDetails?.tokenId}`
+  const collectionName = collection?.name || ""
 
-  const img = tokenDetails?.image
-    ? tokenDetails.image
-    : (collection?.image as string)
+  const { nft } = useNft(tokenDetails.collection as string, tokenDetails.tokenId as string)
+  const img = nft?.image
 
-  const royaltiesBps =
-    showRoyalties && collection?.royalties
-      ? collection.royalties.bps
-      : undefined
+  const royaltiesBps = undefined
 
   return (
     <Box css={{ p: '$4', borderBottom: '1px solid $borderColor', ...css }}>

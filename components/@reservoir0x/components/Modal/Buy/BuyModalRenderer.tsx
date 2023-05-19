@@ -10,17 +10,16 @@ import React, {
 import { useAccount, useBalance, useSigner, useNetwork } from 'wagmi'
 
 import { ContractTransaction, utils } from 'ethers'
-import { Collection, Token } from 'types/workaround'
-import { Order } from '__generated__/graphql'
+import { Collection, Order, Token } from '__generated__/graphql'
 import { Currency } from 'types/currency'
 import { Address } from 'wagmi'
 import { useQuery } from '@apollo/client'
-import { GET_TOKEN_BY_ID } from 'graphql/queries/tokens'
 import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
 import currencyOptions from '../../../lib/defaultCurrencyOptions'
-import { useNft } from 'use-nft'
 import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
 import { MakerOrder } from '@cuonghx.gu-tech/looksrare-sdk'
+import { GET_TOKEN } from 'graphql/queries/tokens'
+import { GET_COLLECTION } from 'graphql/queries/collections'
 
 export enum BuyStep {
   Checkout,
@@ -29,7 +28,6 @@ export enum BuyStep {
   Complete,
   Unavailable,
 }
-
 
 type ChildrenProps = {
   loading: boolean
@@ -80,9 +78,14 @@ export const BuyModalRenderer: FC<Props> = ({
     activeChain?.blockExplorers?.default?.url || 'https://etherscan.io'
   const [txHash, setTxHash] = useState<string | undefined>(undefined)
 
-  const { data: tokenData } = useQuery(GET_TOKEN_BY_ID, {
+  const { data: tokenData } = useQuery(GET_TOKEN, {
     variables: { id: `${collectionId}-${tokenId}`}
   })
+
+  const { data: collectionData } = useQuery(GET_COLLECTION, {
+    variables: { id: collectionId as string }
+  })
+
 
   const { address } = useAccount()
 
@@ -99,11 +102,8 @@ export const BuyModalRenderer: FC<Props> = ({
     formatUnits: currency?.decimals,
   })
 
-    // TO-DO: remove later, should using token.image
-  const { nft } = useNft(collectionId as string, tokenId as string)
-  
-  const collection = tokenData?.token?.collection
-  const token = { ...tokenData?.token, image: nft?.image } as Token
+  const token = tokenData?.token
+  const collection = collectionData?.collection
 
   const { data, loading } = useQuery(GET_ORDER_BY_HASH, {
     variables: { hash: orderId as string }

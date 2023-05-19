@@ -45,14 +45,15 @@ import Img from 'components/primitives/Img'
 import { addApolloState, initializeApollo } from 'graphql/apollo-client'
 import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
-import { Collection, Token } from 'types/workaround'
-import { ActivityType } from '__generated__/graphql'
+import { ActivityType, Collection } from '__generated__/graphql'
+import { GET_COLLECTION } from 'graphql/queries/collections'
+import { GET_TOKENS } from 'graphql/queries/tokens'
 
 type ActivityTypes = ActivityType[]
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
+const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
   const router = useRouter()
   const { address } = useAccount()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
@@ -75,27 +76,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     window.scrollTo({ top: top })
   }
 
-  const { collection } = ssr
- 
-  const GET_TOKENS_BY_COLLECTION = gql(/* GraphQL */`
-  query GetTokensByCollection($first: Int, $skip: Int, $orderDirection: OrderDirection, $token_OrderBy: Token_OrderBy, $where: Token_FilterArgs) {
-    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, token_OrderBy: $token_OrderBy, where: $where) {
-      id
-      tokenID
-      tokenURI
-      collection {
-        id
-        name
-        totalTokens
-      }
-      owner {
-        id
-      }
-    }
-  }
-  `);
-
-  const { data, loading, fetchMore } = useQuery(GET_TOKENS_BY_COLLECTION, {
+  const { data, loading, fetchMore } = useQuery(GET_TOKENS, {
     variables: {
       first: 10,
       skip: 0,
@@ -105,7 +86,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     }
   })
 
-  const tokens = (data?.tokens || [] )as Token[]
+  const tokens = data?.tokens || []
 
   // TO-DO: query attributes
   // const attributesData = useAttributes(id)
@@ -151,9 +132,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   return (
     <Layout>
       <Head
-        ogImage={ssr?.collection?.banner}
-        title={ssr?.collection?.name}
-        description={ssr?.collection?.description as string}
+        // ogImage={collection?.banner}
+        title={collection?.name|| ""}
+        // description={collection?.description as string}
       />
 
       {collection ? (
@@ -171,7 +152,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
           <Flex justify="between" css={{ mb: '$4' }}>
             <Flex direction="column" css={{ gap: '$4', minWidth: 0 }}>
               <Flex css={{ gap: '$4', flex: 1 }} align="center">
-                <Img
+                {/* <Img
                   src={collection.image!}
                   width={64}
                   height={64}
@@ -182,17 +163,12 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                     objectFit: 'cover',
                   }}
                   alt="Collection Page Image"
-                />
+                /> */}
                 <Box css={{ minWidth: 0 }}>
                   <Flex align="center" css={{ gap: '$2' }}>
                     <Text style="h5" as="h6" ellipsify>
                       {collection.name}
                     </Text>
-                    <OpenSeaVerified
-                      openseaVerificationStatus={
-                        collection?.openseaVerificationStatus
-                      }
-                    />
                   </Flex>
 
                   {!smallSubtitle && (
@@ -252,7 +228,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                 </Box>
               </Flex>
             </Flex>
-            <CollectionActions collection={collection} />
+            {/* <CollectionActions collection={collection} /> */}
           </Flex>
           {smallSubtitle && (
             <Grid
@@ -303,7 +279,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               </Flex>
             </Grid>
           )}
-          <StatHeader collection={collection} />
+          {/* <StatHeader collection={collection} /> */}
           <Tabs.Root
             defaultValue="items"
             // TO-DO: update later
@@ -368,7 +344,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       }}
                     >
                       <SortTokens />
-                      <CollectionOffer
+                      {/* <CollectionOffer
                         collection={collection}
                         buttonCss={{
                           width: '100%',
@@ -377,7 +353,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                             maxWidth: '220px',
                           },
                         }}
-                      />
+                      /> */}
                     </Flex>
                   </Flex>
                   {!isSmallDevice && <SelectedAttributes />}
@@ -403,9 +379,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                           <TokenCard
                             key={i}
                             token={token}
-                            orderQuantity={
-                              token?.market?.floorAsk?.quantityRemaining
-                            }
+                            collection={collection}
+                            // orderQuantity={
+                            //   token?.market?.floorAsk?.quantityRemaining
+                            // }
                             address={address as Address}
                             // mutate={mutate}
                             // TO-DO: later
@@ -518,40 +495,23 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps<{
-  ssr: {
-    collection?: Collection
-    hasAttributes: boolean
-  }
+  ssr: { collection: Collection }
   id: string | undefined
 }> = async ({ params }) => {
   const id = params?.contract?.toString()
 
   const apolloClient = initializeApollo()
 
-  const GET_COLLECTION_BY_ID = gql(/* GraphQL */`
-    query GetCollectionById($id: ID!) {
-        collection(id: $id) {
-          id
-          name
-          totalTokens
-        }
-      }
-  `);
-
   const { data } = await apolloClient.query({
-    query: GET_COLLECTION_BY_ID,
+    query: GET_COLLECTION,
     variables: {
       id: id?.toLocaleLowerCase() as string
     },
   })
 
-
-  // TO-DO: fetch list attributes later
-  const hasAttributes = false
-
   return addApolloState(apolloClient, {
     props: {
-      ssr: { collection: data?.collection, hasAttributes },
+      ssr: { collection: data.collection },
       id 
     },
     revalidate: 30

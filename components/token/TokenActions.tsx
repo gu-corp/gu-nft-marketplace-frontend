@@ -2,7 +2,7 @@ import { useQuery } from '@apollo/client'
 import { faGasPump } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useBids, useTokens } from '@reservoir0x/reservoir-kit-ui'
-import { OrderDirection, Order_OrderBy } from '__generated__/graphql'
+import { OrderDirection, Order_OrderBy, Token } from '__generated__/graphql'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
 import AddToCart from 'components/buttons/AddToCart'
 import CancelBid from 'components/buttons/CancelBid'
@@ -12,7 +12,6 @@ import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
-import { Token } from 'types/workaround'
 import { useAccount } from 'wagmi'
 
 type Props = {
@@ -41,17 +40,13 @@ export const TokenActions: FC<Props> = ({
   const queryBidId = router.query.bidId as string
   const deeplinkToAcceptBid = router.query.acceptBid === 'true'
   
-  const is1155 = token?.kind === 'erc1155'
+  const is1155 = false
 
-  const isTopBidder =
-    account.isConnected &&
-    token?.market?.topBid?.maker?.toLowerCase() ===
-      account?.address?.toLowerCase()
-  const orderZone = offer?.rawData?.zone
-  const orderKind = offer?.kind
-
-  const isOracleOrder =
-    orderKind === 'seaport-v1.4' && zoneAddresses.includes(orderZone as string)
+  // const isTopBidder =
+  //   account.isConnected &&
+  //   token?.market?.topBid?.maker?.toLowerCase() ===
+  //   account?.address?.toLowerCase()
+  const isTopBidder = false 
 
   const buttonCss: ComponentPropsWithoutRef<typeof Button>['css'] = {
     width: '100%',
@@ -70,8 +65,8 @@ export const TokenActions: FC<Props> = ({
       order_OrderBy: Order_OrderBy.CreatedAt,
       orderDirection: OrderDirection.Desc,
       where: {
-        collectionAddress: token.collection.id,
-        tokenId: `${token.tokenID}`,
+        collectionAddress: token.collection,
+        tokenId: `${token.tokenId}`,
         isOrderAsk: true
       }
     }
@@ -87,8 +82,8 @@ export const TokenActions: FC<Props> = ({
       order_OrderBy: Order_OrderBy.Price,
       orderDirection: OrderDirection.Desc,
       where: {
-        collectionAddress: token.collection.id,
-        tokenId: `${token.tokenID}`,
+        collectionAddress: token.collection,
+        tokenId: `${token.tokenId}`,
         isOrderAsk: false
       }
     }
@@ -100,7 +95,7 @@ export const TokenActions: FC<Props> = ({
   !is1155 &&
   topBid &&
   isOwner &&
-  token?.owner?.id
+  token?.owner
     ? true
     : false
 
@@ -155,7 +150,7 @@ export const TokenActions: FC<Props> = ({
         <AcceptBid
           token={token}
           bidId={topBid?.hash}
-          collectionId={token?.collection.id}
+          collectionId={token?.collection}
           openState={
             isOwner && (queryBidId || deeplinkToAcceptBid)
               ? bidOpenState
@@ -169,8 +164,8 @@ export const TokenActions: FC<Props> = ({
 
       {(!isOwner || is1155) && (
         <Bid
-          tokenId={token?.tokenID}
-          collectionId={token?.collection?.id}
+          tokenId={token?.tokenId}
+          collectionId={token?.collection}
           mutate={mutate}
           buttonCss={buttonCss}
         />

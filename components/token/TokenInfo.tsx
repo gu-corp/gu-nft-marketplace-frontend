@@ -1,4 +1,3 @@
-import { useCollections, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { Anchor, Button, Flex, Text, Tooltip } from 'components/primitives'
 import { ComponentPropsWithoutRef, FC, useRef, useState } from 'react'
 import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
@@ -14,9 +13,8 @@ import { useMarketplaceChain, useMounted } from 'hooks'
 import { truncateAddress } from 'utils/truncate'
 import ReactMarkdown from 'react-markdown'
 import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
-import titleCase from 'utils/titleCase'
 import { useRouter } from 'next/router'
-import { Collection, Token } from 'types/workaround'
+import { Token, Collection } from '__generated__/graphql'
 
 
 type Props = {
@@ -65,10 +63,10 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
 
   const blockExplorerUrl = `${
     marketplaceChain?.blockExplorers?.default.url || 'https://etherscan.io'
-  }/token/${token?.collection?.id}?a=${token?.tokenID}`
-  const twitterLink = collection?.twitterUsername
-    ? `https://twitter.com/${collection?.twitterUsername}`
-    : null
+  }/token/${token?.collection}?a=${token?.tokenId}`
+  // const twitterLink = collection?.twitterUsername
+  //   ? `https://twitter.com/${collection?.twitterUsername}`
+  //   : null
 
   const expandedCss: ComponentPropsWithoutRef<typeof Flex>['css'] = {
     maxWidth: '100%',
@@ -94,15 +92,15 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
       <Flex direction="column" css={{ gap: '$3', maxWidth: '100%' }}>
         <Flex css={{ gap: '$2', flex: 1 }} align="center">
           <img
-            src={token?.collection?.image || collection?.image}
+            // src={token?.collection?.image || collection?.image}
             style={{ width: 36, height: 36, borderRadius: 4 }}
           />
           <Text style="h6" ellipsify>
-            {token?.collection?.name || collection?.name}
+            {collection?.name}
           </Text>
-          <OpenSeaVerified
+          {/* <OpenSeaVerified
             openseaVerificationStatus={collection?.openseaVerificationStatus}
-          />
+          /> */}
         </Flex>
         <Flex
           direction="column"
@@ -115,9 +113,9 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
         >
           <Flex direction="column" css={isExpanded ? undefined : expandedCss}>
             <Text ref={descriptionRef}>
-              <ReactMarkdown linkTarget="_blank">
+              {/* <ReactMarkdown linkTarget="_blank">
                 {collection?.description as string}
-              </ReactMarkdown>
+              </ReactMarkdown> */}
             </Text>
           </Flex>
           {isLongDescription && (
@@ -153,14 +151,14 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
           <a href={blockExplorerUrl} target="_blank" rel="noopener noreferrer">
             <CollectionAction>{etherscanImage}</CollectionAction>
           </a>
-          {twitterLink && (
+          {/* {twitterLink && (
             <a href={twitterLink} target="_blank" rel="noopener noreferrer">
               <CollectionAction>
                 <FontAwesomeIcon icon={faTwitter} width={16} height={16} />
               </CollectionAction>
             </a>
-          )}
-          {collection?.discordUrl && (
+          )} */}
+          {/* {collection?.discordUrl && (
             <a
               href={collection.discordUrl}
               target="_blank"
@@ -170,8 +168,8 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
                 <FontAwesomeIcon icon={faDiscord} width={16} height={16} />
               </CollectionAction>
             </a>
-          )}
-          {collection?.externalUrl && (
+          )} */}
+          {/* {collection?.externalUrl && (
             <a
               href={collection.externalUrl}
               target="_blank"
@@ -181,7 +179,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
                 <FontAwesomeIcon icon={faGlobe} width={16} height={16} />
               </CollectionAction>
             </a>
-          )}
+          )} */}
         </Flex>
         <Flex direction="column" css={{ width: '100%', gap: '$2' }}>
           <Flex justify="between" css={{ width: '100%' }}>
@@ -199,7 +197,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               weight="medium"
             >
               <Flex align="center" css={{ gap: '$2' }}>
-                {truncateAddress(token?.collection?.id as string)}
+                {truncateAddress(token?.collection as string)}
                 <FontAwesomeIcon icon={faExternalLink} width={12} height={15} />
               </Flex>
             </Anchor>
@@ -226,7 +224,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               Token ID
             </Text>
             <Text style="subtitle1" ellipsify css={{ maxWidth: '100%' }}>
-              {token?.tokenID}
+              {token?.tokenId}
             </Text>
           </Flex>
           <Flex justify="between" css={{ width: '100%' }}>
@@ -262,10 +260,10 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               </Tooltip>
             </Flex>
             <Text style="subtitle1">
-              {collection?.royalties?.bps
+              {/* {collection?.royalties?.bps
                 ? collection?.royalties?.bps * 0.01
-                : 0}
-              %
+                : 0} */}
+              0%
             </Text>
           </Flex>
         </Flex>

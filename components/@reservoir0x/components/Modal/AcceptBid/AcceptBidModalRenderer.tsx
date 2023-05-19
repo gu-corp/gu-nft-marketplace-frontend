@@ -9,16 +9,15 @@ import React, {
 
 import { useAccount, useSigner, useNetwork, useProvider, Address } from 'wagmi'
 import Fees from './Fees'
-import { Collection, Token } from 'types/workaround'
-import { GET_TOKEN_BY_ID } from 'graphql/queries/tokens'
 import { useQuery } from '@apollo/client'
-import { useNft } from 'use-nft'
-import { Order } from '__generated__/graphql'
+import { Collection, Order, Token } from '__generated__/graphql'
 import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
 import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
 import { useCurrency, useRoyaltyFee, useStrategyFee } from 'hooks'
 import { Currency } from 'types/currency'
 import { MakerOrder, isApprovedForAll } from "@cuonghx.gu-tech/looksrare-sdk"
+import { GET_TOKEN } from 'graphql/queries/tokens'
+import { GET_COLLECTION } from 'graphql/queries/collections'
 
 export enum AcceptBidStep {
   Checkout,
@@ -72,13 +71,14 @@ export const AcceptBidModalRenderer: FC<Props> = ({
     activeChain?.blockExplorers?.default?.url || 'https://etherscan.io'
   const looksRareSdk = useLooksRareSDK()
 
-  const { data: tokenData, loading: tokenLoading } = useQuery(GET_TOKEN_BY_ID, {
+  const { data: tokenData, loading: tokenLoading } = useQuery(GET_TOKEN, {
     variables: { id: `${collectionId}-${tokenId}` },
   })
-  // TO-DO: remove later, should using token.image
-  const { nft } = useNft(collectionId as string, tokenId as string)
-  const token = {...tokenData?.token, image: nft?.image} as Token
-  const collection = token.collection;
+  const { data: collectionData, loading: collectionLoading } = useQuery(GET_COLLECTION, {
+    variables: { id: collectionId as string },
+  })
+  const token = tokenData?.token
+  const collection = collectionData?.collection;
 
   const { data, loading: bidLoading } = useQuery(GET_ORDER_BY_HASH, {
     variables: { hash: bidId as string }
@@ -193,7 +193,7 @@ export const AcceptBidModalRenderer: FC<Props> = ({
   return (
     <>
       {children({
-        loading: bidLoading && tokenLoading,
+        loading: bidLoading && tokenLoading && collectionLoading,
         token,
         collection,
         acceptBidStep,

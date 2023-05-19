@@ -27,7 +27,8 @@ import { useQuery } from '@apollo/client'
 import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
 import { Order, OrderDirection, Order_OrderBy } from '__generated__/graphql'
 import { useNft } from 'use-nft'
-import { GET_TOKEN_BY_ID } from 'graphql/queries/tokens'
+import { GET_TOKEN } from 'graphql/queries/tokens'
+import { GET_COLLECTION } from 'graphql/queries/collections'
 
 type Props = {
   address: Address | undefined
@@ -114,10 +115,11 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const expiration = useTimeSince(listing?.endTime ? Number(listing.endTime) : 0)
 
-  const { data: tokenData, loading } = useQuery(GET_TOKEN_BY_ID, {
-    variables: { id: `${listing.collectionAddress}-${listing.tokenId}`}
+  const { data: collectionData } = useQuery(GET_COLLECTION, {
+    variables: { id: listing.collectionAddress as string}
   })
-  const token = tokenData?.token
+
+  const collection = collectionData?.collection
 
   // TO-DO: remove later, should using token.image
   const { nft } = useNft(listing.collectionAddress, listing.tokenId)
@@ -169,7 +171,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                 }}
               >
                 <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                  {token?.collection?.name}
+                  {collection?.name}
                 </Text>
                 <Text style="subtitle2" ellipsify>
                   #{listing?.tokenId}
@@ -245,7 +247,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                 }}
                 loader={({ src }) => src}
                 src={imageSrc as string}
-                alt={`${token?.collection?.name}`}
+                alt={`${collection?.name}`}
                 width={48}
                 height={48}
               />
@@ -258,7 +260,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
               }}
             >
               <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
-                {token?.collection?.name}
+                {collection?.name}
               </Text>
               <Text style="subtitle2" ellipsify>
                 #{listing?.tokenId}

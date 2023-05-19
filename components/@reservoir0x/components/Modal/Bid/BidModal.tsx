@@ -41,6 +41,7 @@ import useFallbackState from '../../../hooks/useFallbackState'
 import { Currency } from 'types/currency'
 import ProgressBar from '../ProgressBar'
 import TransactionProgress from '../TransactionProgress'
+import { useNft } from 'use-nft'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -139,10 +140,8 @@ export function BidModal({
           ? +collection.totalTokens
           : undefined
 
-        const itemImage =
-          token && token?.image
-            ? token?.image
-            : (collection?.image as string)
+        const { nft } = useNft(collectionId as string, tokenId as string)
+        const itemImage = nft?.image
 
         useEffect(() => {
           if (requestUserStep) {
@@ -191,7 +190,7 @@ export function BidModal({
             {bidStep === BidStep.SetPrice && collection && (
               <ContentContainer>
                 <TokenStats
-                  token={token ? token : undefined}
+                  token={token}
                   collection={collection}
                 />
                 <MainContainer css={{ p: '$4' }}>

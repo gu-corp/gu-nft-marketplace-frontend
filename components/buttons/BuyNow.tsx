@@ -6,9 +6,9 @@ import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
 import { useMarketplaceChain } from 'hooks'
-import { Token } from 'types/workaround'
 import { BuyStep } from 'components/@reservoir0x/components/Modal/Buy/BuyModalRenderer'
 import { BuyModal } from 'components/@reservoir0x/components/Modal/Buy/BuyModal'
+import { Token } from '__generated__/graphql'
 
 type Props = {
   token?: Token
@@ -37,8 +37,8 @@ const BuyNow: FC<Props> = ({ token, orderId, mutate, buttonCss, buttonProps = {}
   )
   const canBuy =
     signer &&
-    token?.tokenID &&
-    token?.collection?.id &&
+    token?.tokenId &&
+    token?.collection &&
     !isInTheWrongNetwork
 
   return !canBuy ? (
@@ -65,9 +65,9 @@ const BuyNow: FC<Props> = ({ token, orderId, mutate, buttonCss, buttonProps = {}
   ) : (
     <BuyModal
       trigger={trigger}
-      tokenId={token?.tokenID}
+      tokenId={token?.tokenId}
       orderId={orderId}
-      collectionId={token?.collection?.id}
+      collectionId={token?.collection}
       onClose={(currentStep) => {
         if (mutate && currentStep == BuyStep.Complete) mutate()
       }}

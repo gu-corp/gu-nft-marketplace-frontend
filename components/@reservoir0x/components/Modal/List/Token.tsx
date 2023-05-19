@@ -1,8 +1,9 @@
 import React, { FC } from 'react'
 import { Box, Text } from 'components/primitives'
 import optimizeImage from '../../../lib/optimizeImage'
-import { Token as TokenType, Collection as CollectionType } from 'types/workaround'
 import { styled } from 'stitches.config'
+import { Collection, Token } from '__generated__/graphql'
+import { useNft } from 'use-nft'
 
 const Img = styled('img', {
   width: '100%',
@@ -14,13 +15,15 @@ const Img = styled('img', {
 })
 
 type Props = {
-  token?: TokenType
-  collection?: CollectionType
+  token?: Token
+  collection?: Collection
 }
 
 const Token: FC<Props> = ({ token, collection }) => {
+
+  const { nft } = useNft(token?.collection as string, token?.tokenId as string)
   const img = optimizeImage(
-    token?.image ? token.image : (collection?.image as string),
+    nft?.image,
     600
   )
   return (
@@ -50,11 +53,11 @@ const Token: FC<Props> = ({ token, collection }) => {
         }}
       />
       <Text style="h6" css={{ flex: 1 }} as="h6" ellipsify>
-        {token?.name || `#${token?.tokenID}`}
+        {collection?.name || `#${token?.tokenId}`}
       </Text>
       <Box>
         <Text style="subtitle2" color="subtle" as="p" ellipsify>
-          {token?.collection?.name}
+          {collection?.name}
         </Text>
       </Box>
     </Box>

@@ -29,6 +29,7 @@ import useFallbackState from '../../../hooks/useFallbackState'
 import useTimeSince from '../../../hooks/useTimeSince'
 import { formatUnits } from 'ethers/lib/utils.js'
 import TokenLineItem from '../TokenLineItem'
+import { useNft } from 'use-nft'
 
 type BidData = {
   tokenId?: string
@@ -130,8 +131,9 @@ export function AcceptBidModal({
             ? `${difference}% lower than floor price`
             : undefined
 
-        const tokenImage =
-          token?.image || token?.collection?.image
+        const { nft } = useNft(collectionId as string, tokenId as string)
+
+        const tokenImage = nft?.image
 
         const expires = useTimeSince(
           bid?.endTime ? Number(bid.endTime) : 0
@@ -313,11 +315,9 @@ export function AcceptBidModal({
                         href={`collection/${collectionId}/${tokenId}`}
                         target="_blank"
                       >
-                        {token?.name
-                          ? token?.name
-                          : `#${token?.tokenID}`}
+                        {`#${token?.tokenId}`}
                       </Anchor>{' '}
-                      from the {token?.collection?.name} collection.
+                      from the {collection?.name} collection.
                     </Text>
                   </Flex>
                   <Anchor

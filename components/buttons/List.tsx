@@ -13,8 +13,8 @@ import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
-import { Token } from 'types/workaround'
 import { ListModal } from 'components/@reservoir0x/components/Modal/List/ListModal'
+import { Token } from '__generated__/graphql'
 
 type Props = {
   token?: Token
@@ -47,8 +47,8 @@ const List: FC<Props> = ({
     signer && marketplaceChain.id !== activeChain?.id
   )
 
-  const contract = token?.collection?.id
-  const tokenId = token?.tokenID
+  const contract = token?.collection
+  const tokenId = token?.tokenId
 
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
