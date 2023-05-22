@@ -33,7 +33,7 @@ import { Address, useAccount } from 'wagmi'
 import ChainToggle from 'components/common/ChainToggle'
 import { GET_USER_RELATIVE_COLLECTIONS } from 'graphql/queries/collections'
 import { useQuery } from '@apollo/client'
-import { ActivityType } from '__generated__/graphql'
+import { ActivityType, Token } from '__generated__/graphql'
 import { GET_TOKENS } from 'graphql/queries/tokens'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -89,7 +89,7 @@ const IndexPage: NextPage<Props> = ({ address, ensName }) => {
     }
   })
 
-  const tokens = (tokenData?.tokens || [])
+  const tokens = (tokenData?.tokens || []) as Token[]
   const collections = (collectionData?.relativeCollections || [])
 
   useEffect(() => {

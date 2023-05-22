@@ -109,7 +109,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
   const owner = isOwner ? account.address?.toLowerCase() : token?.owner?.toLowerCase()
   const { displayName: ownerFormatted } = useENSResolver(token?.owner)
 
-  const tokenName = `${collection?.name || `#${token?.tokenId}`}`
+  const tokenName = `${`#${token?.tokenId}`}`
 
   // const hasAttributes =
   //   token?.attributes && token?.attributes.length > 0
@@ -438,7 +438,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
                 collection={collection}
                 collectionAttributes={attributesData?.data}
               /> */}
-              {/* <PriceData token={token} /> */}
+              <PriceData token={token} />
               {isMounted && (
                 <TokenActions
                   token={token}
@@ -567,7 +567,7 @@ export const getStaticProps: GetStaticProps<{
   return {
     props: {
       collectionId, id, ssr: {
-        token: tokenData?.token,
+        token: tokenData?.token as Token,
         collection: collectionData.collection
       }
     },

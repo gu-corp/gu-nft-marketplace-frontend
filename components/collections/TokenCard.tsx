@@ -14,6 +14,7 @@ import {
   Tooltip,
 } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
+import { BigNumber } from 'ethers'
 import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
@@ -61,19 +62,7 @@ export default ({
   const collectionId = token.collection
   const tokenId = token.tokenId
 
-  const { data: orderData } = useQuery(GET_ORDER_LISTINGS, {
-    variables: { 
-      first: 1,
-      skip: 0,
-      where: {
-        collectionAddress: collectionId,
-        tokenId: `${tokenId}`,
-        isOrderAsk: true
-      }
-    }
-  })
-
-  const existListing = orderData?.orders?.[0];
+  const ask = token?.asks?.[0]
 
   return (
     <Box
@@ -280,11 +269,11 @@ export default ({
                 textOverflow: 'ellipsis',
               }}
             >
-              {/* {token?.market?.floorAsk?.price && (
+              {ask && (
                 <FormatCryptoCurrency
                   logoHeight={18}
-                  amount={token?.market?.floorAsk?.price?.amount?.decimal}
-                  address={token?.market?.floorAsk?.price?.currency?.contract}
+                  amount={ask.price}
+                  address={ask.currencyAddress}
                   textStyle="h6"
                   css={{
                     textOverflow: 'ellipsis',
@@ -294,7 +283,7 @@ export default ({
                   }}
                   maximumFractionDigits={4}
                 />
-              )} */}
+              )}
             </Box>
 
             <>
@@ -327,7 +316,7 @@ export default ({
           ) : null} */}
         </Flex>
       </Link>
-      {(!isOwner && existListing) ? (
+      {(!isOwner && ask) ? (
         <Flex
           className="token-button-container"
           css={{
@@ -341,7 +330,7 @@ export default ({
           }}
         >
           <BuyNow
-            orderId={existListing.hash}
+            orderId={ask.hash}
             token={token}
             mutate={mutate}
             buttonCss={{

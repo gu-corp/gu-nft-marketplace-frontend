@@ -24,7 +24,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGasPump, faHand } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
-import { Order, OrderDirection, Order_OrderBy } from '__generated__/graphql'
+import { Order, OrderDirection, Order_OrderBy, Token } from '__generated__/graphql'
 import { useQuery } from '@apollo/client'
 import { useNft } from 'use-nft'
 import { GET_COLLECTION } from 'graphql/queries/collections'
@@ -127,7 +127,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   })
 
   const collection = collectionData?.collection
-  const token = tokenData?.token
+  const token = tokenData?.token as Token
 
   // TO-DO: remove later, should using token.image
   const { nft } = useNft(offer.collectionAddress, offer.tokenId)

@@ -8,6 +8,21 @@ export const GET_TOKEN = gql(/* GraphQL */`
       tokenUri
       collection
       owner
+      owner
+      bids {
+        hash
+        collectionAddress
+        tokenId
+        price
+        currencyAddress
+      }
+      asks {
+        hash
+        collectionAddress
+        tokenId
+        price
+        currencyAddress
+      }
     }
   }
 `);
@@ -20,6 +35,20 @@ export const GET_TOKENS = gql(/* GraphQL */`
       tokenUri
       collection
       owner
+      bids {
+        hash
+        collectionAddress
+        tokenId
+        price
+        currencyAddress
+      }
+      asks {
+        hash
+        collectionAddress
+        tokenId
+        price
+        currencyAddress
+      }
     }
   }
 `);

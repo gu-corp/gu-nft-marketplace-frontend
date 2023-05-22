@@ -246,7 +246,7 @@ export const ListModalRenderer: FC<Props> = ({
     variables: { id: `${collectionId}-${tokenId}`}
   })
 
-  const token = tokenData?.token
+  const token = tokenData?.token as Token
   const collection = collectionData?.collection
   
   const protocolFee = useStrategyFee(strategy)

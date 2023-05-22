@@ -28,6 +28,7 @@ import { Token } from '__generated__/graphql'
 import { useNft } from 'use-nft'
 import { GET_TOKENS } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
+import { BigNumber } from 'ethers'
 
 type Props = {
   address: Address | undefined
@@ -49,7 +50,7 @@ export const TokenTable: FC<Props> = ({
 
   const { data, loading, fetchMore } = useQuery(GET_TOKENS, {
     variables: {
-      first: 10,
+      first: 20,
       where: {
         owner: address?.toLocaleLowerCase(),
         collection: filterCollection
@@ -57,13 +58,13 @@ export const TokenTable: FC<Props> = ({
     }
   })
 
-  const tokens = data?.tokens || []
+  const tokens = (data?.tokens || []) as Token[]
 
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchMore({ variables: { skip: data?.tokens.length || 0 }})
+      fetchMore({ variables: { skip: tokens.length }})
     }
   }, [loadMoreObserver?.isIntersecting])
 
@@ -92,7 +93,7 @@ export const TokenTable: FC<Props> = ({
 
             return (
               <TokenTableRow
-                key={`${token.id}-${i}`}
+                key={token.id}
                 token={token}
               />
             )
@@ -123,10 +124,13 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
   const { nft } = useNft(token.collection, token.tokenId)
   let imageSrc = nft?.image
 
+  const ask = token?.asks?.[0]
+  const highestBid = [...token?.bids || []].sort((a, b) => BigNumber.from(a.price).gt(BigNumber.from(b.price)) ? -1 : 1)?.[0]
+
   if (isSmallDevice) {
     return (
       <Flex
-        key={token?.tokenId}
+        key={token?.id}
         direction="column"
         align="start"
         css={{
@@ -212,15 +216,15 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
             <Text style="subtitle3" color="subtle">
               You Get
             </Text>
-            {/* <FormatCryptoCurrency
-              amount={token?.topBid?.price?.netAmount?.native}
+            <FormatCryptoCurrency
+              amount={highestBid?.price}
               textStyle="subtitle2"
               logoHeight={14}
-            /> */}
-            {/* {token?.topBid?.price?.amount?.decimal && (
+            />
+            {highestBid && (
               <AcceptBid
-                token={token as ReturnType<typeof useTokens>['data'][0]}
-                collectionId={token?.collection?.id}
+                token={token}
+                collectionId={token?.collection}
                 buttonCss={{
                   width: '100%',
                   maxWidth: '300px',
@@ -240,7 +244,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
                   </Flex>
                 }
               />
-            )} */}
+            )}
           </Flex>
         </Flex>
       </Flex>
@@ -312,36 +316,34 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
         </Link>
       </TableCell>
       <TableCell>
+        <FormatCryptoCurrency
+          amount={ask?.price}
+          textStyle="subtitle1"
+          logoHeight={14}
+        />
+      </TableCell>
+      <TableCell>
         {/* <FormatCryptoCurrency
-          amount={token?.ownership?.floorAsk?.price?.amount?.decimal}
+          amount={ask?.price}
+          address={ask?.currencyAddress}
           textStyle="subtitle1"
           logoHeight={14}
         /> */}
       </TableCell>
       <TableCell>
-        {/* <FormatCryptoCurrency
-          amount={token?.collection?.floorAskPrice?.netAmount?.decimal}
-          address={token?.collection?.floorAskPrice?.currency?.contract}
-          decimals={token?.collection?.floorAskPrice?.currency?.decimals}
+        <FormatCryptoCurrency
+          amount={highestBid?.price}
+          address={highestBid?.currencyAddress}
           textStyle="subtitle1"
           logoHeight={14}
-        /> */}
-      </TableCell>
-      <TableCell>
-        {/* <FormatCryptoCurrency
-          amount={token?.topBid?.price?.netAmount?.native}
-          address={token?.topBid?.price?.currency?.contract}
-          decimals={token?.topBid?.price?.currency?.decimals}
-          textStyle="subtitle1"
-          logoHeight={14}
-        /> */}
+        />
       </TableCell>
       <TableCell>
         <Flex justify="end" css={{ gap: '$3' }}>
-          {/* {token?.topBid?.price?.amount?.decimal && (
+          {highestBid && (
             <AcceptBid
-              token={token as ReturnType<typeof useTokens>['data'][0]}
-              collectionId={token?.collection?.id}
+              token={token}
+              collectionId={token?.collection}
               buttonCss={{
                 px: '32px',
                 backgroundColor: '$primary9',
@@ -357,7 +359,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
                 </Flex>
               }
             />
-          )} */}
+          )}
           <List
             token={token}
             buttonCss={{

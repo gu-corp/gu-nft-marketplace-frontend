@@ -45,7 +45,7 @@ import Img from 'components/primitives/Img'
 import { addApolloState, initializeApollo } from 'graphql/apollo-client'
 import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
-import { ActivityType, Collection } from '__generated__/graphql'
+import { ActivityType, Collection, Token } from '__generated__/graphql'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { GET_TOKENS } from 'graphql/queries/tokens'
 
@@ -86,7 +86,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
     }
   })
 
-  const tokens = data?.tokens || []
+  const tokens = (data?.tokens || []) as Token[]
 
   // TO-DO: query attributes
   // const attributesData = useAttributes(id)

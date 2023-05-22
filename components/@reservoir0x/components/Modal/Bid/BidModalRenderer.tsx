@@ -107,7 +107,7 @@ export const BidModalRenderer: FC<Props> = ({
   })
 
   const collection = collectionData?.collection
-  const token = tokenData?.token
+  const token = tokenData?.token as Token
 
   const { address } = useAccount()
 

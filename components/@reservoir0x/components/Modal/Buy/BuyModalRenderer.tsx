@@ -102,7 +102,7 @@ export const BuyModalRenderer: FC<Props> = ({
     formatUnits: currency?.decimals,
   })
 
-  const token = tokenData?.token
+  const token = tokenData?.token as Token
   const collection = collectionData?.collection
 
   const { data, loading } = useQuery(GET_ORDER_BY_HASH, {

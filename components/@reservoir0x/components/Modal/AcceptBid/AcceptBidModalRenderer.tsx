@@ -77,7 +77,7 @@ export const AcceptBidModalRenderer: FC<Props> = ({
   const { data: collectionData, loading: collectionLoading } = useQuery(GET_COLLECTION, {
     variables: { id: collectionId as string },
   })
-  const token = tokenData?.token
+  const token = tokenData?.token as Token
   const collection = collectionData?.collection;
 
   const { data, loading: bidLoading } = useQuery(GET_ORDER_BY_HASH, {
