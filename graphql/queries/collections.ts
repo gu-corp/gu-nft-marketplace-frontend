@@ -1,13 +1,19 @@
 import { gql } from "__generated__";
 
 export const GET_COLLECTIONS = gql(/* GraphQL */`
-  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection) {
-    collections(first: $first, skip: $skip, orderDirection: $orderDirection) {
+  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_OrderBy: Collection_OrderBy) {
+    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_OrderBy: $collection_OrderBy) {
       id
       name
       symbol
       totalTokens
       totalOwners
+      volume  {
+        day1Volume
+        day7Volume
+        monthVolume
+        totalVolume
+      }
     }
   }
 `);
@@ -20,6 +26,12 @@ query GetCollection($id: String!) {
       symbol
       totalTokens
       totalOwners
+      volume  {
+        day1Volume
+        day7Volume
+        monthVolume
+        totalVolume
+      }
     }
   }
 `);

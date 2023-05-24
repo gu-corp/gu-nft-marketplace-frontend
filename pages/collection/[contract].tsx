@@ -279,7 +279,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
               </Flex>
             </Grid>
           )}
-          {/* <StatHeader collection={collection} /> */}
+          <StatHeader collection={collection} />
           <Tabs.Root
             defaultValue="items"
             // TO-DO: update later

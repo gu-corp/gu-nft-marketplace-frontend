@@ -1,4 +1,4 @@
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
+import { Collection } from '__generated__/graphql'
 import { Text, Box, FormatCryptoCurrency, Grid } from 'components/primitives'
 import { useMounted } from 'hooks'
 import { FC, ReactNode } from 'react'
@@ -26,16 +26,16 @@ const StatBox: FC<Props> = ({ label, children }) => (
 )
 
 type StatHeaderProps = {
-  collection: NonNullable<ReturnType<typeof useCollections>['data']>['0']
+  collection: Collection
 }
 
 const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 600 }) && isMounted
-  const listedPercentage =
-    ((collection?.onSaleCount ? +collection.onSaleCount : 0) /
-      (collection?.tokenCount ? +collection.tokenCount : 0)) *
-    100
+  // const listedPercentage =
+  //   ((collection?.onSaleCount ? +collection.onSaleCount : 0) /
+  //     (collection?.tokenCount ? +collection.tokenCount : 0)) *
+  //   100
 
   return (
     <Grid
@@ -51,36 +51,36 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
       }}
     >
       <StatBox label="Floor">
-        <FormatCryptoCurrency
+        {/* <FormatCryptoCurrency
           amount={collection?.floorAsk?.price?.amount?.decimal}
           address={collection?.floorAsk?.price?.currency?.contract}
           decimals={collection?.floorAsk?.price?.currency?.decimals}
           logoHeight={18}
           textStyle={'h6'}
           maximumFractionDigits={4}
-        />
+        /> */}
       </StatBox>
 
       <StatBox label="Top Offer">
-        <FormatCryptoCurrency
+        {/* <FormatCryptoCurrency
           amount={collection?.topBid?.price?.amount?.decimal}
           address={collection?.topBid?.price?.currency?.contract}
           decimals={collection?.topBid?.price?.currency?.decimals}
           logoHeight={18}
           textStyle={'h6'}
           maximumFractionDigits={4}
-        />
+        /> */}
       </StatBox>
 
       {!isSmallDevice && (
         <StatBox label="Listed">
-          <Text style="h6">{formatNumber(listedPercentage)}%</Text>
+          {/* <Text style="h6">{formatNumber(listedPercentage)}%</Text> */}
         </StatBox>
       )}
 
       <StatBox label="Total Volume">
         <FormatCryptoCurrency
-          amount={collection.volume?.allTime}
+          amount={collection.volume?.totalVolume}
           logoHeight={18}
           textStyle={'h6'}
           maximumFractionDigits={4}
@@ -88,7 +88,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
       </StatBox>
 
       <StatBox label="Count">
-        <Text style="h6">{formatNumber(collection?.tokenCount)}</Text>
+        <Text style="h6">{formatNumber(collection?.totalTokens)}</Text>
       </StatBox>
     </Grid>
   )

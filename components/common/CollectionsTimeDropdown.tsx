@@ -8,16 +8,15 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { FC } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
+import { Collection_OrderBy } from '__generated__/graphql'
 
-export type CollectionsSortingOption = NonNullable<
-  Exclude<Parameters<typeof useCollections>[0], false | undefined>['sortBy']
->
+export type CollectionsSortingOption = Collection_OrderBy
 
 const sortingOptions: CollectionsSortingOption[] = [
-  '1DayVolume',
-  '7DayVolume',
-  '30DayVolume',
-  'allTimeVolume',
+  Collection_OrderBy.Volume1d,
+  Collection_OrderBy.Volume7d,
+  Collection_OrderBy.Volume1m,
+  Collection_OrderBy.VolumeMax
 ]
 
 const nameForSortingOption = (
@@ -25,13 +24,13 @@ const nameForSortingOption = (
   compact: boolean
 ) => {
   switch (option) {
-    case '1DayVolume':
+    case Collection_OrderBy.Volume1d:
       return compact ? '24h' : '24 hours'
-    case '7DayVolume':
+    case Collection_OrderBy.Volume7d:
       return compact ? '7d' : '7 days'
-    case '30DayVolume':
+    case Collection_OrderBy.Volume1m:
       return compact ? '30d' : '30 days'
-    case 'allTimeVolume':
+    case Collection_OrderBy.VolumeMax:
       return compact ? 'All' : 'All Time'
   }
 }

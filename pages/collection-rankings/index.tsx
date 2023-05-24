@@ -9,11 +9,8 @@ import {
   useState,
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
-import { useMarketplaceChain, useMounted } from 'hooks'
+import { useMounted } from 'hooks'
 import { paths } from '@reservoir0x/reservoir-sdk'
-import { useCollections } from '@reservoir0x/reservoir-kit-ui'
-import fetcher from 'utils/fetcher'
-import { NORMALIZE_ROYALTIES } from '../_app'
 import supportedChains from 'utils/chains'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { useIntersectionObserver } from 'usehooks-ts'
@@ -25,9 +22,10 @@ import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
 import { ChainContext } from 'context/ChainContextProvider'
 import { useRouter } from 'next/router'
-import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
 import { GET_COLLECTIONS } from 'graphql/queries/collections'
+import { Collection, Collection_OrderBy, OrderDirection } from '__generated__/graphql'
+import { initializeApollo } from 'graphql/apollo-client'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -37,14 +35,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] =
-    useState<CollectionsSortingOption>('1DayVolume')
-  const marketplaceChain = useMarketplaceChain()
-
-  let collectionQuery: Parameters<typeof useCollections>['0'] = {
-    limit: 20,
-    sortBy: sortByTime,
-    includeTopBid: true,
-  }
+    useState<CollectionsSortingOption>(Collection_OrderBy.Volume1d)
 
   const { chain, switchCurrentChain } = useContext(ChainContext)
 
@@ -62,17 +53,17 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
     }
   }, [router.query])
 
-  if (chain.collectionSetId) {
-    collectionQuery.collectionsSetId = chain.collectionSetId
-  } else if (chain.community) {
-    collectionQuery.community = chain.community
-  }
 
   const { data, loading, fetchMore } = useQuery(GET_COLLECTIONS, {
-    variables: { skip: 0, first: 10 }
+    variables: {
+      skip: 0,
+      first: 10,
+      collection_OrderBy: sortByTime,
+      orderDirection: OrderDirection.Desc
+    }
   })
 
-  let collections = data?.collections || []
+  let collections = data?.collections || ssr.collections
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
@@ -86,17 +77,20 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof CollectionRankingsTable
-  >['volumeKey'] = 'allTime'
+  >['volumeKey'] = 'totalVolume'
 
   switch (sortByTime) {
-    case '1DayVolume':
-      volumeKey = '1day'
+    case Collection_OrderBy.Volume1d:
+      volumeKey = 'day1Volume'
       break
-    case '7DayVolume':
-      volumeKey = '7day'
+    case Collection_OrderBy.Volume7d:
+      volumeKey = 'day7Volume'
       break
-    case '30DayVolume':
-      volumeKey = '30day'
+    case Collection_OrderBy.Volume1m:
+      volumeKey = 'monthVolume'
+      break
+    case Collection_OrderBy.VolumeMax:
+      volumeKey = 'totalVolume'
       break
   }
 
@@ -163,49 +157,25 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   )
 }
 
-type CollectionSchema =
-  paths['/collections/v5']['get']['responses']['200']['schema']
-type ChainCollections = Record<string, CollectionSchema>
-
 export const getStaticProps: GetStaticProps<{
   ssr: {
-    collections: ChainCollections
+    collections: Collection[]
   }
 }> = async () => {
-  const collectionQuery: paths['/collections/v5']['get']['parameters']['query'] =
-    {
-      sortBy: '1DayVolume',
-      normalizeRoyalties: NORMALIZE_ROYALTIES,
-      limit: 20,
-      includeTopBid: true,
-    }
+  const apolloClient = initializeApollo()
 
-  const promises: ReturnType<typeof fetcher>[] = []
-  supportedChains.forEach((chain) => {
-    const query = { ...collectionQuery }
-    if (chain.collectionSetId) {
-      query.collectionsSetId = chain.collectionSetId
-    } else if (chain.community) {
-      query.community = chain.community
-    }
-    promises.push(
-      fetcher(`${chain.reservoirBaseUrl}/collections/v5`, query, {
-        headers: {
-          'x-api-key': chain.apiKey || '',
-        },
-      })
-    )
-  })
-  const responses = await Promise.allSettled(promises)
-  const collections: ChainCollections = {}
-  responses.forEach((response, i) => {
-    if (response.status === 'fulfilled') {
-      collections[supportedChains[i].id] = response.value.data
+  const { data } = await apolloClient.query({
+    query: GET_COLLECTIONS,
+    variables: {
+      first: 10,
+      skip: 0,
+      collection_OrderBy: Collection_OrderBy.Volume1d,
+      orderDirection: OrderDirection.Desc
     }
   })
 
   return {
-    props: { ssr: { collections } },
+    props: { ssr: { collections: data.collections || [] } },
     revalidate: 5,
   }
 }

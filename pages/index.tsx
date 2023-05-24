@@ -14,31 +14,47 @@ import { Head } from 'components/Head'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { GET_COLLECTIONS } from 'graphql/queries/collections'
 import { initializeApollo } from 'graphql/apollo-client'
+import { Collection_OrderBy, OrderDirection } from '__generated__/graphql'
+import { useQuery } from '@apollo/client'
 
 type Props = InferGetStaticPropsType<typeof getServerSideProps>
 
-const IndexPage: NextPage<Props> = ({ collections, loading }) => {
+const IndexPage: NextPage<Props> = ({ ssr }) => {
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] =
-    useState<CollectionsSortingOption>('1DayVolume')
+    useState<CollectionsSortingOption>(Collection_OrderBy.Volume1d)
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof CollectionRankingsTable
-  >['volumeKey'] = 'allTime'
+  >['volumeKey'] = 'totalVolume'
 
   switch (sortByTime) {
-    case '1DayVolume':
-      volumeKey = '1day'
+    case Collection_OrderBy.Volume1d:
+      volumeKey = 'day1Volume'
       break
-    case '7DayVolume':
-      volumeKey = '7day'
+    case Collection_OrderBy.Volume7d:
+      volumeKey = 'day7Volume'
       break
-    case '30DayVolume':
-      volumeKey = '30day'
+    case Collection_OrderBy.Volume1m:
+      volumeKey = 'monthVolume'
+      break
+    case Collection_OrderBy.VolumeMax:
+      volumeKey = 'totalVolume'
       break
   }
+
+  const { data, loading } = useQuery(GET_COLLECTIONS, {
+    variables: {
+      skip: 0,
+      first: 10, 
+      collection_OrderBy: sortByTime,
+      orderDirection: OrderDirection.Desc
+    }
+  })
+
+  const collections = data?.collections || ssr.collections
 
   return (
     <Layout>
@@ -110,15 +126,19 @@ export default IndexPage
 export async function getServerSideProps() {
   const apolloClient = initializeApollo()
 
-  const { data, loading } = await apolloClient.query({
+  const { data } = await apolloClient.query({
     query: GET_COLLECTIONS,
-    variables: { first: 10, skip: 0 }
+    variables: {
+      first: 10,
+      skip: 0,
+      collection_OrderBy: Collection_OrderBy.Volume1d,
+      orderDirection: OrderDirection.Desc
+    }
   })
 
   return {
     props: {
-      collections: data?.collections || [],
-      loading
+      ssr: { collections: data?.collections || [] },
     }
   };
 }

@@ -23,7 +23,7 @@ import { useMediaQuery } from 'react-responsive'
 type Props = {
   collections: Collection[]
   loading?: boolean
-  volumeKey: '1day' | '7day' | '30day' | 'allTime'
+  volumeKey: 'day1Volume' | 'day7Volume' | 'monthVolume' | 'totalVolume'
 }
 
 const desktopTemplateColumns = '1.5fr 1.7fr repeat(3, 0.6fr)'
@@ -259,11 +259,11 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             justify="start"
             css={{ height: '100%' }}
           >
-            {/* <FormatCryptoCurrency
+            <FormatCryptoCurrency
               amount={collection?.volume?.[volumeKey]}
               textStyle="subtitle2"
               logoHeight={14}
-            /> */}
+            />
             {/* {volumeKey != 'allTime' && collection?.volumeChange && (
               <PercentChange value={collection?.volumeChange[volumeKey]} />
             )} */}
