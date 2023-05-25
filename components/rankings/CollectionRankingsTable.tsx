@@ -138,25 +138,23 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               <Text css={{ mr: '$1', color: '$gray11' }} style="body2">
                 Floor
               </Text>
-              {/* <FormatCryptoCurrency
-                amount={collection?.floorAsk?.price?.amount?.decimal}
-                address={collection?.floorAsk?.price?.currency?.contract}
-                decimals={collection?.floorAsk?.price?.currency?.decimals}
+              <FormatCryptoCurrency
+                amount={collection?.floor?.floorPrice}
                 logoHeight={16}
                 maximumFractionDigits={2}
                 textStyle="subtitle2"
-              /> */}
+              />
             </Flex>
           </Box>
 
           <Flex direction="column" align="end" css={{ gap: '$1' }}>
-            {/* <FormatCryptoCurrency
+            <FormatCryptoCurrency
               amount={collection?.volume?.[volumeKey]}
               maximumFractionDigits={1}
               logoHeight={16}
               textStyle="subtitle1"
             />
-            {volumeKey !== 'allTime' && (
+            {/* {volumeKey !== 'allTime' && (
               <PercentChange
                 value={collection?.volumeChange?.[volumeKey]}
                 decimals={1}
@@ -276,14 +274,12 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             justify="start"
             css={{ height: '100%' }}
           >
-            {/* <FormatCryptoCurrency
-              amount={collection?.floorAsk?.price?.amount?.decimal}
-              address={collection?.floorAsk?.price?.currency?.contract}
-              decimals={collection?.floorAsk?.price?.currency?.decimals}
+            <FormatCryptoCurrency
+              amount={collection?.floor?.floorPrice}
               textStyle="subtitle2"
               logoHeight={14}
             />
-            {volumeKey != 'allTime' && collection?.floorSaleChange && (
+            {/* {volumeKey != 'allTime' && collection?.floorSaleChange && (
               <PercentChange value={collection?.floorSaleChange[volumeKey]} />
             )} */}
           </Flex>

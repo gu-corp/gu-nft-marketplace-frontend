@@ -14,6 +14,9 @@ export const GET_COLLECTIONS = gql(/* GraphQL */`
         monthVolume
         totalVolume
       }
+      floor {
+        floorPrice
+      }
     }
   }
 `);
@@ -31,6 +34,9 @@ query GetCollection($id: String!) {
         day7Volume
         monthVolume
         totalVolume
+      }
+      floor {
+        floorPrice
       }
     }
   }

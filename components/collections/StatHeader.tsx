@@ -51,14 +51,12 @@ const StatHeader: FC<StatHeaderProps> = ({ collection }) => {
       }}
     >
       <StatBox label="Floor">
-        {/* <FormatCryptoCurrency
-          amount={collection?.floorAsk?.price?.amount?.decimal}
-          address={collection?.floorAsk?.price?.currency?.contract}
-          decimals={collection?.floorAsk?.price?.currency?.decimals}
+        <FormatCryptoCurrency
+          amount={collection?.floor?.floorPrice}
           logoHeight={18}
           textStyle={'h6'}
           maximumFractionDigits={4}
-        /> */}
+        />
       </StatBox>
 
       <StatBox label="Top Offer">
