@@ -119,7 +119,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchMore({ variables: { skip: data?.tokens.length || 0 }})
+      fetchMore({ variables: { skip: tokens.length }})
     }
   }, [loadMoreObserver?.isIntersecting])
 
@@ -132,9 +132,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
   return (
     <Layout>
       <Head
-        // ogImage={collection?.banner}
+        ogImage={collection?.image as string}
         title={collection?.name|| ""}
-        // description={collection?.description as string}
+        description={collection?.description as string}
       />
 
       {collection ? (
@@ -152,7 +152,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
           <Flex justify="between" css={{ mb: '$4' }}>
             <Flex direction="column" css={{ gap: '$4', minWidth: 0 }}>
               <Flex css={{ gap: '$4', flex: 1 }} align="center">
-                {/* <Img
+                <Img
                   src={collection.image!}
                   width={64}
                   height={64}
@@ -163,7 +163,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
                     objectFit: 'cover',
                   }}
                   alt="Collection Page Image"
-                /> */}
+                />
                 <Box css={{ minWidth: 0 }}>
                   <Flex align="center" css={{ gap: '$2' }}>
                     <Text style="h5" as="h6" ellipsify>
@@ -228,7 +228,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
                 </Box>
               </Flex>
             </Flex>
-            {/* <CollectionActions collection={collection} /> */}
+            <CollectionActions collection={collection} />
           </Flex>
           {smallSubtitle && (
             <Grid
@@ -380,9 +380,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
                             key={i}
                             token={token}
                             collection={collection}
-                            // orderQuantity={
-                            //   token?.market?.floorAsk?.quantityRemaining
-                            // }
+                            orderQuantity={1}
                             address={address as Address}
                             // mutate={mutate}
                             // TO-DO: later

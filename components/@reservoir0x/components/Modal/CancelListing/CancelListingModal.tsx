@@ -18,7 +18,6 @@ import currencyOptions from '../../../lib/defaultCurrencyOptions'
 import { parseUnits } from '@ethersproject/units'
 import TokenPrimitive from '../TokenPrimitive'
 import Progress from '../Progress'
-import { useNft } from 'use-nft'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -60,8 +59,7 @@ export function CancelListingModal({
         currency,
         collection
       }) => {
-        const { nft } = useNft(token?.collection as string, token?.tokenId as string)
-        const img = nft?.image
+        const img = token?.image as string
 
         const expires = useTimeSince(
           listing?.endTime ? Number(listing.endTime) : 0

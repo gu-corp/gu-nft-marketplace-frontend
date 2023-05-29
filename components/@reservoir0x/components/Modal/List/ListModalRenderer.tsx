@@ -17,7 +17,6 @@ import { Collection, Token } from '__generated__/graphql'
 import { Currency } from 'types/currency'
 import { gql } from '__generated__'
 import { useMutation, useQuery } from '@apollo/client'
-import { useNft } from 'use-nft'
 import { useRoyaltyFee, useStrategyFee  } from 'hooks'
 import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
 import { MakerOrder } from "@cuonghx.gu-tech/looksrare-sdk"

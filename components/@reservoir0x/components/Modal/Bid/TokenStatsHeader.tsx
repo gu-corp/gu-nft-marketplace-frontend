@@ -3,7 +3,6 @@ import { Box, Text } from 'components/primitives'
 import { styled } from 'stitches.config'
 import optimizeImage from '../../../lib/optimizeImage'
 import { Collection, Token } from '__generated__/graphql'
-import { useNft } from 'use-nft'
 
 const Img = styled('img', {
   width: '100%',
@@ -20,10 +19,8 @@ type Props = {
 }
 
 const TokenStatsHeader: FC<Props> = ({ token, collection }) => {
-  const { nft } = useNft(collection.id as string, token?.tokenId as string)
-
   const img = optimizeImage(
-    nft?.image,
+    token?.image as string,
     600
   )
 

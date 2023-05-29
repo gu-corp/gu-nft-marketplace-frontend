@@ -27,9 +27,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import LoadingSpinner from './LoadingSpinner'
 import Img from 'components/primitives/Img'
-import { QueryResult } from '@apollo/client'
+import { QueryResult, useQuery } from '@apollo/client'
 import { Activity, ActivityType, Activity_FilterArgs, Exact, GetActivitiesQuery, InputMaybe } from '__generated__/graphql'
-import { useNft } from 'use-nft'
+import { GET_TOKEN } from 'graphql/queries/tokens'
 
 type Props = {
   query: QueryResult<GetActivitiesQuery, Exact<{
@@ -140,8 +140,12 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
     return null
   }
 
-  const { nft } = useNft(activity?.collection as string, activity?.tokenId as string)
-  const imageSrc = nft?.image
+  const { data: tokenData } = useQuery(GET_TOKEN, {
+    variables: {
+      id: `${activity.collection}-${activity.tokenId}`
+    }
+  })
+  const imageSrc = tokenData?.token?.image as string
   
   let activityDescription = activityTypeToDesciption(activity?.type || '')
   let attributeDescription = ''

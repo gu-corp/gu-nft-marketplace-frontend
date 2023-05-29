@@ -26,7 +26,6 @@ import useCopyToClipboard from '../../../hooks/useCopyToClipboard'
 import ProgressBar from '../ProgressBar'
 import TokenLineItem from '../TokenLineItem'
 import Progress from '../Progress'
-import { useNft } from 'use-nft'
 
 type PurchaseData = {
   tokenId?: string
@@ -73,9 +72,6 @@ export function BuyModal({
   )
   const { copy: copyToClipboard, copied } = useCopyToClipboard()
   const { chain: activeChain } = useNetwork()
-
-  const { nft } = useNft(collectionId as string, tokenId as string)
-  const img = nft?.image
 
   return (
     <BuyModalRenderer
@@ -306,7 +302,7 @@ export function BuyModal({
                     Congratulations!
                   </Text>
                   <img
-                    src={img}
+                    src={token?.image as string}
                     style={{ width: 100, height: 100 }}
                   />
                   <Flex
@@ -314,14 +310,14 @@ export function BuyModal({
                     align="center"
                     justify="center"
                   >
-                    {/* {!!token?.collection?.image && (
+                    {collection?.image && (
                       <Box css={{ mr: '$1' }}>
                         <img
-                          src={token?.collection?.image}
+                          src={collection?.image}
                           style={{ width: 24, height: 24, borderRadius: '50%' }}
                         />
                       </Box>
-                    )} */}
+                    )}
 
                     <Text
                       style="subtitle2"

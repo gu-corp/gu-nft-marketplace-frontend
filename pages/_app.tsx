@@ -35,7 +35,6 @@ import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from 'graphql/apollo-client'
-import { NftProvider } from 'use-nft'
 import { LooksRareSDKProvider } from 'context/LooksRareSDKProvider'
 import { Signer } from "@cuonghx.gu-tech/looksrare-sdk"
 
@@ -87,12 +86,7 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
         <ChainContextProvider>
           <AnalyticsProvider>
             <ApolloProvider client={client}>
-              {/* TO-DO: later */}
-              <NftProvider fetcher={["ethers", {
-                provider: wagmiClient.provider as any
-              }]}>
-                <MyApp {...props} />
-              </NftProvider>
+              <MyApp {...props} />
             </ApolloProvider>
           </AnalyticsProvider>
         </ChainContextProvider>

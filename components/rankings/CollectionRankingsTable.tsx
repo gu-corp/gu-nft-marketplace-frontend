@@ -109,14 +109,14 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
           <Text css={{ mr: '$4', width: 15 }} style="subtitle3">
             {rank}
           </Text>
-          {/* <Img
-            src={collection.image as string}
+          <Img
+            src={collection?.image as string}
             css={{ borderRadius: 8, width: 48, height: 48, objectFit: 'cover' }}
             alt="Collection Image"
             width={48}
             height={48}
             unoptimized
-          /> */}
+          />
           <Box css={{ ml: '$4', width: '100%', minWidth: 0 }}>
             <Flex align="center" css={{ gap: '$2', mb: 4, maxWidth: '80%' }}>
               <Text
@@ -190,8 +190,8 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               <Text css={{ mr: '$2', width: 15 }} style="subtitle3">
                 {rank}
               </Text>
-              {/* <Img
-                src={collection.image as string}
+              <Img
+                src={collection?.image as string}
                 css={{
                   borderRadius: 8,
                   width: 56,
@@ -202,7 +202,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
                 width={56}
                 height={56}
                 unoptimized
-              /> */}
+              />
 
               <Text
                 css={{

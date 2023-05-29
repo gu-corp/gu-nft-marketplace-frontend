@@ -1,6 +1,5 @@
 import { Token } from '__generated__/graphql'
 import { Flex, FormatCryptoCurrency, Text } from 'components/primitives'
-import { Console } from 'console'
 import { BigNumber } from 'ethers'
 import { useMarketplaceChain } from 'hooks'
 import { FC } from 'react'
@@ -41,7 +40,6 @@ export const PriceData: FC<Props> = ({ token }) => {
   // const offerSourceRedirect = `${reservoirBaseUrl}/redirect/sources/${
   //   offerSourceDomain || offerSourceName
   // }/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
-
   const ask = token?.asks?.[0]
   const highestBid = [...token?.bids || []].sort((a, b) => BigNumber.from(a.price).gt(BigNumber.from(b.price)) ? -1 : 1)?.[0]
 

@@ -92,7 +92,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
       <Flex direction="column" css={{ gap: '$3', maxWidth: '100%' }}>
         <Flex css={{ gap: '$2', flex: 1 }} align="center">
           <img
-            // src={token?.collection?.image || collection?.image}
+            src={collection?.image as string}
             style={{ width: 36, height: 36, borderRadius: 4 }}
           />
           <Text style="h6" ellipsify>
@@ -113,9 +113,9 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
         >
           <Flex direction="column" css={isExpanded ? undefined : expandedCss}>
             <Text ref={descriptionRef}>
-              {/* <ReactMarkdown linkTarget="_blank">
+              <ReactMarkdown linkTarget="_blank">
                 {collection?.description as string}
-              </ReactMarkdown> */}
+              </ReactMarkdown>
             </Text>
           </Flex>
           {isLongDescription && (

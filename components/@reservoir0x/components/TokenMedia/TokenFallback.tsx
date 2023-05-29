@@ -1,7 +1,6 @@
 import React, { FC, ComponentPropsWithoutRef, CSSProperties } from 'react'
 import TokenMedia from './index'
 import { Button, Flex, Text } from 'components/primitives'
-import { useNft } from 'use-nft'
 
 type TokenFallbackProps = {
   style?: CSSProperties
@@ -18,8 +17,7 @@ const TokenFallback: FC<TokenFallbackProps> = ({
   chainId,
   onRefreshClicked,
 }) => {
-  const { nft } = useNft(token?.collection as string, token?.tokenId as string)
-  const img = nft?.image
+  const img = token?.image as string
 
   return (
     <Flex

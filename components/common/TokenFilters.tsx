@@ -74,7 +74,7 @@ export const TokenFilters: FC<Props> = ({
                   scrollToTop?.()
                 }}
               >
-                {/* {collection?.image && (
+                {collection?.image && (
                   <Image
                     style={{
                       borderRadius: '4px',
@@ -87,7 +87,7 @@ export const TokenFilters: FC<Props> = ({
                     width={24}
                     height={24}
                   />
-                )} */}
+                )}
                 <Text
                   style="body1"
                   css={{

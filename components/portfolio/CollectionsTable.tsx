@@ -126,7 +126,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
             href={`/collection/${collection?.id}`}
           >
             <Flex align="center">
-              {/* {collection?.image && (
+              {collection?.image && (
                 <Image
                   style={{
                     borderRadius: '4px',
@@ -139,7 +139,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
                   width={36}
                   height={36}
                 />
-              )} */}
+              )}
               <Text
                 style="subtitle3"
                 ellipsify
@@ -200,7 +200,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
       <TableCell css={{ minWidth: 0 }}>
         <Link href={`/collection/${collection?.id}`}>
           <Flex align="center">
-            {/* {collection?.image && (
+            {collection?.image && (
               <Image
                 style={{
                   borderRadius: '4px',
@@ -213,7 +213,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
                 width={48}
                 height={48}
               />
-            )} */}
+            )}
             <Text style="subtitle2" ellipsify css={{ ml: '$2' }}>
               {collection?.name}
             </Text>

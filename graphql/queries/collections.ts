@@ -7,6 +7,8 @@ export const GET_COLLECTIONS = gql(/* GraphQL */`
       name
       symbol
       totalTokens
+      image
+      description
       volume  {
         day1Volume
         day7Volume
@@ -27,6 +29,8 @@ query GetCollection($id: String!) {
       name
       symbol
       totalTokens
+      image
+      description
       volume  {
         day1Volume
         day7Volume
@@ -47,6 +51,8 @@ query GetUserRelativeCollections($first: Int, $skip: Int, $user: String!) {
       name
       symbol
       totalTokens
+      image
+      description
     }
   }
 `);

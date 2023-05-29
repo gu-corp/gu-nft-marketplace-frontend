@@ -36,7 +36,6 @@ import MarketplacePriceInput from './MarketplacePriceInput'
 import { marketplaceInfo } from 'constants/common'
 import ProgressBar from '../ProgressBar'
 import TransactionProgress from '../TransactionProgress'
-import { useNft } from 'use-nft'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -110,8 +109,7 @@ export function ListModal({
         requestUserStep,
         steps
       }) => {
-        const { nft } = useNft(token?.collection as string, token?.tokenId as string)
-        const tokenImage = nft?.image as string
+        const tokenImage = token?.image as string
 
         useEffect(() => {
           if (transactionError && onListingError) {

@@ -20,7 +20,6 @@ import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { MutatorCallback } from 'swr'
-import { useNft } from 'use-nft'
 import { formatNumber } from 'utils/numbers'
 import { Address } from 'wagmi'
 
@@ -214,25 +213,8 @@ export default ({
                   flex: 1,
                 }}
               >
-                {collection?.name || '#' + token?.tokenId}{' '}
+                {'#' + token?.tokenId}{' '}
               </Text>
-              {/* {token?.isFlagged && (
-                <Tooltip
-                  content={
-                    <Text style="body2" as="p">
-                      Not tradeable on OpenSea
-                    </Text>
-                  }
-                >
-                  <Text css={{ color: '$red10' }}>
-                    <FontAwesomeIcon
-                      icon={faCircleExclamation}
-                      width={16}
-                      height={16}
-                    />
-                  </Text>
-                </Tooltip>
-              )} */}
             </Flex>
             <Box
               css={{

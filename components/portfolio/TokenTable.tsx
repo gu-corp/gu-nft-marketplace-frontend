@@ -25,7 +25,6 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
 import { useQuery } from '@apollo/client'
 import { Token } from '__generated__/graphql'
-import { useNft } from 'use-nft'
 import { GET_TOKENS } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { BigNumber } from 'ethers'
@@ -120,9 +119,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
 
   const collection = data?.collection
 
-  // TO-DO: remove later, should using token.image
-  const { nft } = useNft(token.collection, token.tokenId)
-  let imageSrc = nft?.image
+  let imageSrc = token?.image as string
 
   const ask = token?.asks?.[0]
   const highestBid = [...token?.bids || []].sort((a, b) => BigNumber.from(a.price).gt(BigNumber.from(b.price)) ? -1 : 1)?.[0]

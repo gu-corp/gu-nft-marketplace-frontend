@@ -26,7 +26,6 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useQuery } from '@apollo/client'
 import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
 import { Order, OrderDirection, Order_OrderBy } from '__generated__/graphql'
-import { useNft } from 'use-nft'
 import { GET_TOKEN } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 
@@ -119,13 +118,14 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
     variables: { id: listing.collectionAddress as string}
   })
 
-  const collection = collectionData?.collection
+  const { data: tokenData } = useQuery(GET_TOKEN, {
+    variables: { id: `${listing.collectionAddress}-${listing.tokenId}`}
+  })
 
-  // TO-DO: remove later, should using token.image
-  const { nft } = useNft(listing.collectionAddress, listing.tokenId)
+  const collection = collectionData?.collection
   
   let imageSrc: string = (
-    nft?.image
+    tokenData?.token?.image
   ) as string
 
   if (isSmallDevice) {

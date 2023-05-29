@@ -17,9 +17,10 @@ import fetcher from 'utils/fetcher'
 import { ToastContext } from 'context/ToastContextProvider'
 import { spin } from 'components/common/LoadingSpinner'
 import { DATE_REGEX, timeTill } from 'utils/till'
+import { Collection } from '__generated__/graphql'
 
 type CollectionActionsProps = {
-  collection: NonNullable<ReturnType<typeof useCollections>['data']>['0']
+  collection: Collection
 }
 
 const CollectionAction = styled(Flex, {
@@ -74,9 +75,9 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const blockExplorerUrl = `${
     marketplaceChain?.blockExplorers?.default.url || 'https://etherscan.io'
   }/address/${collection?.id}`
-  const twitterLink = collection?.twitterUsername
-    ? `https://twitter.com/${collection?.twitterUsername}`
-    : null
+  // const twitterLink = collection?.twitterUsername
+  //   ? `https://twitter.com/${collection?.twitterUsername}`
+  //   : null
 
   const containerCss: ComponentPropsWithoutRef<typeof Flex>['css'] = {
     borderRadius: 8,
@@ -104,7 +105,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
       css={{
         cursor: isRefreshing ? 'not-allowed' : 'pointer',
       }}
-      onClick={(e) => {
+      onClick={(e: any) => {
         if (isRefreshing) {
           e.preventDefault()
           return
@@ -179,7 +180,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
                 Etherscan
               </CollectionActionDropdownItem>
             </a>
-            {collection?.externalUrl && (
+            {/* {collection?.externalUrl && (
               <a
                 href={collection.externalUrl}
                 target="_blank"
@@ -202,15 +203,15 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
                   Discord
                 </CollectionActionDropdownItem>
               </a>
-            )}
-            {twitterLink && (
+            )} */}
+            {/* {twitterLink && (
               <a href={twitterLink} target="_blank" rel="noopener noreferrer">
                 <CollectionActionDropdownItem>
                   <FontAwesomeIcon icon={faTwitter} width={16} height={16} />{' '}
                   Twitter
                 </CollectionActionDropdownItem>
               </a>
-            )}
+            )} */}
             {refreshMetadataItem}
           </Flex>
         </Dropdown>
@@ -223,7 +224,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
       <a href={blockExplorerUrl} target="_blank" rel="noopener noreferrer">
         <CollectionAction>{etherscanImage}</CollectionAction>
       </a>
-      {twitterLink && (
+      {/* {twitterLink && (
         <a href={twitterLink} target="_blank" rel="noopener noreferrer">
           <CollectionAction>
             <FontAwesomeIcon icon={faTwitter} width={16} height={16} />
@@ -251,7 +252,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
             <FontAwesomeIcon icon={faGlobe} width={16} height={16} />
           </CollectionAction>
         </a>
-      )}
+      )} */}
       <Dropdown
         trigger={collectionActionOverflowTrigger}
         contentProps={dropdownContentProps}

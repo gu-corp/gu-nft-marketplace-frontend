@@ -156,7 +156,7 @@ export const MobileTokenFilters: FC<Props> = ({
                   triggerRef?.current?.click()
                 }}
               >
-                {/* {collection?.image && (
+                {collection?.image && (
                   <Image
                     style={{
                       borderRadius: '4px',
@@ -169,7 +169,7 @@ export const MobileTokenFilters: FC<Props> = ({
                     width={24}
                     height={24}
                   />
-                )} */}
+                )}
                 <Text
                   style="body1"
                   css={{

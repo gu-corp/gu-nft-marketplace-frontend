@@ -17,7 +17,6 @@ import { useMeasure } from '@react-hookz/web'
 import TokenFallback from './TokenFallback'
 import { Box } from 'components/primitives'
 import { Token } from '__generated__/graphql'
-import { useNft } from 'use-nft'
 
 type MediaType =
   | 'mp4'
@@ -35,7 +34,7 @@ type MediaType =
   | undefined
 
 export const extractMediaType = (
-  token?: RequiredTokenProps
+  token?: Token
 ): MediaType | null => {
   let extension: string | null = null
   // if (token?.media) {
@@ -49,13 +48,8 @@ export const extractMediaType = (
   return null
 }
 
-type RequiredTokenProps = Pick<
-  NonNullable<Token>,
-  'collection' | 'tokenId'
->
-
 type Props = {
-  token?: RequiredTokenProps
+  token?: Token
   preview?: boolean
   style?: CSSProperties
   className?: string
@@ -82,7 +76,6 @@ const TokenMedia: FC<Props> = ({
   onRefreshToken = () => {},
 }) => {
   const mediaRef = useRef<HTMLAudioElement | HTMLVideoElement>(null)
-  const { nft } = useNft(token?.collection as any, token?.tokenId as any)
 
   // TO-DO:
   // const themeContext = useContext(ThemeContext)
@@ -91,7 +84,7 @@ const TokenMedia: FC<Props> = ({
   const [error, setError] = useState<SyntheticEvent | Event | null>(null)
   // const media = token?.media
   const media = undefined
-  const tokenPreview = nft?.image
+  const tokenPreview = token?.image as string
   const mediaType = extractMediaType(token)
   const defaultStyle: CSSProperties = {
     width: '150px',
