@@ -36,23 +36,9 @@ import { ethers } from 'ethers'
 import { GET_COLLECTIONS } from 'graphql/queries/collections'
 import { Collection } from '__generated__/graphql'
 
-type SearchCollection = { 
-  id: string
-  name: string
-  totalTokens: number
-  // To-dos: support later
-  image?: string
-  openseaVerificationStatus?: string
-  darkChainIcon?: string;
-  lightChainIcon?: string;
-  volumeCurrencySymbol?: string
-  allTimeVolume?: number
-  volumeCurrencyDecimals?: number
-}
-
 type Props = {
-  collection: SearchCollection
-  handleSelectResult: (result: SearchCollection) => void
+  collection: Collection
+  handleSelectResult: (result: Collection) => void
 }
 
 const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
@@ -94,20 +80,20 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
             <Text style="subtitle1" ellipsify>
               {collection.name}
             </Text>
-            <OpenSeaVerified
+            {/* <OpenSeaVerified
               openseaVerificationStatus={collection?.openseaVerificationStatus}
-            />
+            /> */}
           </Flex>
           <Flex align="center" css={{ gap: '$1' }}>
             <Box css={{ height: 12, minWidth: 'max-content' }}>
-              <img
+              {/* <img
                 src={
                   theme === 'dark'
                     ? collection.darkChainIcon
                     : collection.lightChainIcon
                 }
                 style={{ height: 12 }}
-              />
+              /> */}
             </Box>
             {tokenCount && (
               <Text style="subtitle3" color="subtle">
@@ -116,15 +102,15 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
             )}
           </Flex>
         </Flex>
-        {collection.volumeCurrencySymbol && (
+        {collection?.volume && (
           <Flex css={{ ml: 'auto', flexShrink: 0, gap: '$1' }}>
             <FormatCrypto
               textStyle="subtitle2"
-              amount={collection.allTimeVolume}
-              decimals={collection.volumeCurrencyDecimals}
+              amount={collection?.volume?.totalVolume}
               maximumFractionDigits={2}
             />
-            {collection.volumeCurrencySymbol}
+            {/* {collection.volumeCurrencySymbol} */}
+            USDT
           </Flex>
         )}
       </Flex>
@@ -177,7 +163,7 @@ type SearchResultProps = {
     type: 'collection' | 'wallet'
     data: any
   }
-  handleSelectResult: (result: SearchCollection) => void
+  handleSelectResult: (result: Collection) => void
 }
  
 const SearchResult: FC<SearchResultProps> = ({
@@ -203,7 +189,7 @@ const GlobalSearch = forwardRef<
   const [searching, setSearching] = useState(false)
   const [search, setSearch] = useState('')
   const [results, setResults] = useState<Collection[]>([])
-  const [recentResults, setRecentResults] = useState<SearchCollection[]>([])
+  const [recentResults, setRecentResults] = useState<Collection[]>([])
   const [showSearchBox, setShowSearchBox] = useState(false)
 
   const hasResults = results.length > 0
@@ -219,12 +205,16 @@ const GlobalSearch = forwardRef<
     const getSearchResults = async () => { 
       setSearching(true)
       const { data } = await triggerSearch({
-        // variables: { id: debouncedSearch }
+        variables: {
+          where: {
+            search: debouncedSearch    
+          }
+        }
       })
       setResults(data?.collections || [])
       setSearching(false)
     }
-    if (ethers.utils.isAddress(debouncedSearch)) {
+    if (debouncedSearch.length >= 2) {
       getSearchResults()
     } else {
       setResults([])
@@ -245,9 +235,8 @@ const GlobalSearch = forwardRef<
 
       //migration code for results that are missing data
       results = results.filter(
-        (result: SearchCollection) =>
-          result.allTimeVolume !== undefined &&
-          result.volumeCurrencySymbol !== undefined &&
+        (result: Collection) =>
+          result.volume !== undefined &&
           result.totalTokens !== undefined
       )
 
@@ -256,7 +245,7 @@ const GlobalSearch = forwardRef<
   }, [])
 
   // Add selected collection to recent results
-  const handleSelectResult = (selectedResult: SearchCollection) => {
+  const handleSelectResult = (selectedResult: Collection) => {
     if (
       !recentResults.find(
         (result) => result.id === selectedResult.id
