@@ -49,6 +49,7 @@ export const GET_TOKENS = gql(/* GraphQL */`
       sales {
         hash
         price
+        updatedAt
       }
     }
   }

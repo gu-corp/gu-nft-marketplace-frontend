@@ -62,7 +62,7 @@ export default ({
   const tokenId = token.tokenId
 
   const ask = token?.asks?.[0]
-  const lastSale = token?.sales?.sort((a, b) => a.updatedAt - b.updatedAt)?.[0]
+  const lastSale = [...(token?.sales || []) ]?.sort((a, b) => b.updatedAt - a.updatedAt)?.[0]
 
   return (
     <Box

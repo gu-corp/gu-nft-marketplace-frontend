@@ -7,9 +7,9 @@ import React, {
   useMemo,
 } from 'react'
 
-import { useAccount, useBalance, useSigner, useNetwork } from 'wagmi'
+import { useAccount, useBalance, useSigner, useNetwork, useProvider } from 'wagmi'
 
-import { ContractTransaction, utils } from 'ethers'
+import { BigNumber, ContractTransaction, utils } from 'ethers'
 import { Collection, Order, Token } from '__generated__/graphql'
 import { Currency } from 'types/currency'
 import { Address } from 'wagmi'
@@ -17,7 +17,7 @@ import { useQuery } from '@apollo/client'
 import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
 import currencyOptions from '../../../lib/defaultCurrencyOptions'
 import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
-import { MakerOrder } from '@cuonghx.gu-tech/looksrare-sdk'
+import { MakerOrder, allowance } from '@cuonghx.gu-tech/looksrare-sdk'
 import { GET_TOKEN } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 
@@ -66,6 +66,7 @@ export const BuyModalRenderer: FC<Props> = ({
   children,
 }) => {
   const looksRareSdk = useLooksRareSDK()
+  const provider = useProvider()
   const [currency, setCurrency] = useState<undefined | Currency>()
   const [buyStep, setBuyStep] = useState<BuyStep>(BuyStep.Checkout)
   const [transactionError, setTransactionError] = useState<Error | null>()
@@ -127,8 +128,17 @@ export const BuyModalRenderer: FC<Props> = ({
 
       setBuyStep(BuyStep.Approving)
       if (!mixedCurrencies) {
-        const tx = await looksRareSdk.approveErc20(listing.currencyAddress)
-        await tx.wait() 
+        const erc20Allowance = await allowance(
+          provider, 
+          listing.currencyAddress,
+          address as string,
+          looksRareSdk.addresses.EXCHANGE
+        )
+        
+        if (BigNumber.from(listing.price).gt(erc20Allowance.toString())) {
+          const tx = await looksRareSdk.approveErc20(listing.currencyAddress)
+          await tx.wait() 
+        }
       }
       
       setRequestUserStep("BUY")
