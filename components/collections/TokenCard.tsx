@@ -62,6 +62,7 @@ export default ({
   const tokenId = token.tokenId
 
   const ask = token?.asks?.[0]
+  const lastSale = token?.sales?.sort((a, b) => a.updatedAt - b.updatedAt)?.[0]
 
   return (
     <Box
@@ -281,21 +282,19 @@ export default ({
               )} */}
             </>
           </Flex>
-          {/* {token?.lastSale?.price?.amount?.decimal ? (
+          {lastSale ? (
             <Flex css={{ gap: '$2', marginTop: 'auto' }}>
               <Text css={{ color: '$gray11' }} style="subtitle3">
                 Last Sale
               </Text>
               <FormatCryptoCurrency
                 logoHeight={12}
-                amount={token.lastSale.price.amount?.decimal}
-                address={token.lastSale.price.currency?.contract}
-                decimals={token.lastSale.price.currency?.decimals}
+                amount={lastSale.price}
                 textStyle="subtitle3"
                 maximumFractionDigits={4}
               />
             </Flex>
-          ) : null} */}
+          ) : null}
         </Flex>
       </Link>
       {(!isOwner && ask) ? (

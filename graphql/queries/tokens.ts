@@ -40,15 +40,15 @@ export const GET_TOKENS = gql(/* GraphQL */`
       name
       bids {
         hash
-        collectionAddress
         price
-        currencyAddress
       }
       asks {
         hash
-        collectionAddress
         price
-        currencyAddress
+      }
+      sales {
+        hash
+        price
       }
     }
   }
