@@ -43,7 +43,6 @@ import titleCase from 'utils/titleCase'
 import Link from 'next/link'
 import Img from 'components/primitives/Img'
 import { addApolloState, initializeApollo } from 'graphql/apollo-client'
-import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
 import { ActivityType, Collection, Token } from '__generated__/graphql'
 import { GET_COLLECTION } from 'graphql/queries/collections'
@@ -279,7 +278,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
               </Flex>
             </Grid>
           )}
-          <StatHeader collection={collection} />
+          <StatHeader collection={collection} tokens={tokens} />
           <Tabs.Root
             defaultValue="items"
             // TO-DO: update later

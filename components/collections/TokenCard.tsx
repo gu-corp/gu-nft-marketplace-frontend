@@ -214,7 +214,7 @@ export default ({
                   flex: 1,
                 }}
               >
-                {'#' + token?.tokenId}{' '}
+                {`${collection?.name} #${token?.tokenId} `}
               </Text>
             </Flex>
             <Box
