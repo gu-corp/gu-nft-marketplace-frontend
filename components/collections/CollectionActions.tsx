@@ -18,6 +18,8 @@ import { ToastContext } from 'context/ToastContextProvider'
 import { spin } from 'components/common/LoadingSpinner'
 import { DATE_REGEX, timeTill } from 'utils/till'
 import { Collection } from '__generated__/graphql'
+import { useMutation } from '@apollo/client'
+import { REFRESH_COLLECTION_METADATA } from 'graphql/queries/collections'
 
 type CollectionActionsProps = {
   collection: Collection
@@ -54,9 +56,9 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const { addToast } = useContext(ToastContext)
   const isMounted = useMounted()
   const isMobile = useMediaQuery({ maxWidth: 600 }) && isMounted
-  const [isRefreshing, setIsRefreshing] = useState(false)
   const marketplaceChain = useMarketplaceChain()
   const { theme } = useTheme()
+  const [refreshCollectionMetadata, { loading: isRefreshing }] = useMutation(REFRESH_COLLECTION_METADATA);
   const etherscanImage = (
     <img
       src={
@@ -110,43 +112,24 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
           e.preventDefault()
           return
         }
-        setIsRefreshing(true)
-        fetcher(
-          `${window.location.origin}/${marketplaceChain.proxyApi}/collections/refresh/v1`,
-          undefined,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ collection: collection.id }),
-          }
-        )
-          .then(({ data, response }) => {
-            if (response.status === 200) {
-              addToast?.({
-                title: 'Refresh collection',
-                description: 'Request to refresh collection was accepted.',
-              })
-            } else {
-              throw data
+        refreshCollectionMetadata({
+          variables: {
+            args: {
+              collection: collection.id
             }
-            setIsRefreshing(false)
+          }
+        }).then(() => {
+          addToast?.({
+            title: 'Refresh collection',
+            description: 'Request to refresh collection was accepted.',
           })
-          .catch((e) => {
-            const ratelimit = DATE_REGEX.exec(e?.message)?.[0]
-
-            addToast?.({
+        }).catch((e) => {
+             addToast?.({
               title: 'Refresh collection failed',
-              description: ratelimit
-                ? `This collection was recently refreshed. The next available refresh is ${timeTill(
-                    ratelimit
-                  )}.`
-                : `This collection was recently refreshed. Please try again later.`,
+              description: 'This collection was recently refreshed. Please try again later.',
             })
-            setIsRefreshing(false)
             throw e
-          })
+        })
       }}
     >
       <Box

@@ -17,12 +17,14 @@ const documents = {
     "\n  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_OrderBy: Collection_OrderBy, $where: Collection_FilterArgs) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_OrderBy: $collection_OrderBy, where: $where) {\n      id\n      name\n      symbol\n      totalTokens\n      image\n      description\n      volume  {\n        day1Volume\n        day7Volume\n        monthVolume\n        totalVolume\n      }\n      floor {\n        floorPrice\n      }\n    }\n  }\n": types.GetCollectionsDocument,
     "\nquery GetCollection($id: String!) {\n    collection(id: $id) {\n      id\n      name\n      symbol\n      totalTokens\n      image\n      description\n      volume  {\n        day1Volume\n        day7Volume\n        monthVolume\n        totalVolume\n      }\n      floor {\n        floorPrice\n      }\n    }\n  }\n": types.GetCollectionDocument,
     "\nquery GetUserRelativeCollections($first: Int, $skip: Int, $user: String!) {\n    relativeCollections(first: $first, skip: $skip, user: $user) {\n      id\n      name\n      symbol\n      totalTokens\n      image\n      description\n    }\n  }\n": types.GetUserRelativeCollectionsDocument,
+    "\n  mutation RefreshCollectionMetadata(\n    $args: RefreshCollectionMetadataArgs!\n  ) {\n    refreshCollectionMetadata(\n      args: $args\n    )\n  }\n": types.RefreshCollectionMetadataDocument,
     "\nquery GetNonce($signer: String!) {\n    nonce(signer: $signer) {\n      nonce\n    }\n  }\n": types.GetNonceDocument,
     "\n  mutation CreateOrder(\n    $createOrderInput: CreateOrderInput!\n  ) {\n    createOrder(\n      createOrderInput: $createOrderInput\n    ) {\n      hash\n    }\n  }\n": types.CreateOrderDocument,
     "\nquery GetOrderListings($first: Int, $skip: Int, $orderDirection: OrderDirection, $order_OrderBy: Order_OrderBy, $where: Order_FilterArgs) {\n    orders(first: $first, skip: $skip, orderDirection: $orderDirection, order_OrderBy: $order_OrderBy, where: $where) {\n      hash\n      collectionAddress\n      tokenId\n      price\n      startTime\n      endTime\n      nonce\n      currencyAddress\n      amount\n      isOrderAsk\n      signer\n      strategy\n      minPercentageToAsk\n      params\n      signature\n    }\n  }\n": types.GetOrderListingsDocument,
     "\nquery GetOrderByHash($hash: ID!) {\n    order(hash: $hash) {\n      hash\n      collectionAddress\n      tokenId\n      price\n      startTime\n      endTime\n      nonce\n      currencyAddress\n      amount\n      isOrderAsk\n      signer\n      strategy\n      minPercentageToAsk\n      params\n      signature\n    }\n  }\n": types.GetOrderByHashDocument,
     "\n  query GetToken($id: String!) {\n    token(id: $id) {\n      id\n      tokenId\n      tokenUri\n      collection\n      owner\n      image\n      description\n      name\n      bids {\n        hash\n        collectionAddress\n        price\n        currencyAddress\n      }\n      asks {\n        hash\n        collectionAddress\n        price\n        currencyAddress\n      }\n    }\n  }\n": types.GetTokenDocument,
     "\n  query GetTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, where: $where) {\n      id\n      tokenId\n      tokenUri\n      collection\n      owner\n      image\n      description\n      name\n      bids {\n        hash\n        price\n      }\n      asks {\n        hash\n        price\n      }\n      sales {\n        hash\n        price\n        updatedAt\n      }\n    }\n  }\n": types.GetTokensDocument,
+    "\n  mutation RefreshTokenMetadata(\n    $args: RefreshTokenMetadataArgs!\n  ) {\n    refreshTokenMetadata(\n      args: $args\n    )\n  }\n": types.RefreshTokenMetadataDocument,
 };
 
 /**
@@ -58,6 +60,10 @@ export function gql(source: "\nquery GetUserRelativeCollections($first: Int, $sk
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
+export function gql(source: "\n  mutation RefreshCollectionMetadata(\n    $args: RefreshCollectionMetadataArgs!\n  ) {\n    refreshCollectionMetadata(\n      args: $args\n    )\n  }\n"): (typeof documents)["\n  mutation RefreshCollectionMetadata(\n    $args: RefreshCollectionMetadataArgs!\n  ) {\n    refreshCollectionMetadata(\n      args: $args\n    )\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
 export function gql(source: "\nquery GetNonce($signer: String!) {\n    nonce(signer: $signer) {\n      nonce\n    }\n  }\n"): (typeof documents)["\nquery GetNonce($signer: String!) {\n    nonce(signer: $signer) {\n      nonce\n    }\n  }\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
@@ -79,6 +85,10 @@ export function gql(source: "\n  query GetToken($id: String!) {\n    token(id: $
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query GetTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, where: $where) {\n      id\n      tokenId\n      tokenUri\n      collection\n      owner\n      image\n      description\n      name\n      bids {\n        hash\n        price\n      }\n      asks {\n        hash\n        price\n      }\n      sales {\n        hash\n        price\n        updatedAt\n      }\n    }\n  }\n"): (typeof documents)["\n  query GetTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $where: Token_FilterArgs) {\n    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, where: $where) {\n      id\n      tokenId\n      tokenUri\n      collection\n      owner\n      image\n      description\n      name\n      bids {\n        hash\n        price\n      }\n      asks {\n        hash\n        price\n      }\n      sales {\n        hash\n        price\n        updatedAt\n      }\n    }\n  }\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  mutation RefreshTokenMetadata(\n    $args: RefreshTokenMetadataArgs!\n  ) {\n    refreshTokenMetadata(\n      args: $args\n    )\n  }\n"): (typeof documents)["\n  mutation RefreshTokenMetadata(\n    $args: RefreshTokenMetadataArgs!\n  ) {\n    refreshTokenMetadata(\n      args: $args\n    )\n  }\n"];
 
 export function gql(source: string) {
   return (documents as any)[source] ?? {};

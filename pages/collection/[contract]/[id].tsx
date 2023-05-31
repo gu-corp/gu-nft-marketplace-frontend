@@ -65,8 +65,9 @@ import { gql } from '__generated__'
 import { initializeApollo } from 'graphql/apollo-client'
 import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
 import { ActivityType, Collection, Token } from '__generated__/graphql'
-import { GET_TOKEN } from 'graphql/queries/tokens'
+import { GET_TOKEN, REFRESH_TOKEN_METADATA } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
+import { useMutation } from '@apollo/client'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -79,7 +80,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 }) && isMounted
   const [tabValue, setTabValue] = useState('info')
-  const [isRefreshing, setIsRefreshing] = useState(false)
 
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>([])
@@ -90,7 +90,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
   const { token, collection } = ssr
   const flagged = useTokenOpenseaBanned(collectionId, id)
 
-
+  const [refreshTokenMetadata, { loading: isRefreshing }] = useMutation(REFRESH_TOKEN_METADATA);
 
   // TO-DO: bids
   // const { data: offers, isLoading: offersLoading } = useBids({
@@ -181,9 +181,9 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
   return (
     <Layout>
       <Head
-        // ogImage={token?.image || collection?.banner}
+        ogImage={token?.image || collection?.image as string}
         title={pageTitle}
-        // description={collection?.description as string}
+        description={collection?.description as string}
       />
       <Flex
         justify="center"
@@ -336,45 +336,26 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
                   e.preventDefault()
                   return
                 }
-                setIsRefreshing(true)
-                fetcher(
-                  `${window.location.origin}/${proxyApi}/tokens/refresh/v1`,
-                  undefined,
-                  {
-                    method: 'POST',
-                    headers: {
-                      'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ token: `${contract}:${id}` }),
-                  }
-                )
-                  .then(({ data, response }) => {
-                    if (response.status === 200) {
-                      addToast?.({
-                        title: 'Refresh token',
-                        description:
-                          'Request to refresh this token was accepted.',
-                      })
-                    } else {
-                      throw data
+                refreshTokenMetadata({
+                  variables: {
+                    args: {
+                      collection: contract as string,
+                      tokenId: id as string
                     }
-                    setIsRefreshing(false)
+                    }
+                }).then(() => {
+                  addToast?.({
+                    title: 'Refresh token',
+                    description:
+                      'Request to refresh this token was accepted.',
                   })
-                  .catch((e) => {
-                    const ratelimit = DATE_REGEX.exec(e?.message)?.[0]
-
-                    addToast?.({
-                      title: 'Refresh token failed',
-                      description: ratelimit
-                        ? `This token was recently refreshed. The next available refresh is ${timeTill(
-                            ratelimit
-                          )}.`
-                        : `This token was recently refreshed. Please try again later.`,
-                    })
-
-                    setIsRefreshing(false)
-                    throw e
+                }).catch(e => {
+                  addToast?.({
+                    title: 'Refresh token failed',
+                    description: 'This token was recently refreshed. Please try again later.',
                   })
+                  throw e
+                })
               }}
               disabled={isRefreshing}
               color="gray3"

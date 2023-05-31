@@ -55,3 +55,12 @@ export const GET_TOKENS = gql(/* GraphQL */`
   }
 `);
 
+export const REFRESH_TOKEN_METADATA = gql(/* GraphQL */`
+  mutation RefreshTokenMetadata(
+    $args: RefreshTokenMetadataArgs!
+  ) {
+    refreshTokenMetadata(
+      args: $args
+    )
+  }
+`);

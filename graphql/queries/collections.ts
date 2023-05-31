@@ -56,3 +56,13 @@ query GetUserRelativeCollections($first: Int, $skip: Int, $user: String!) {
     }
   }
 `);
+
+export const REFRESH_COLLECTION_METADATA = gql(/* GraphQL */`
+  mutation RefreshCollectionMetadata(
+    $args: RefreshCollectionMetadataArgs!
+  ) {
+    refreshCollectionMetadata(
+      args: $args
+    )
+  }
+`);

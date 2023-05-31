@@ -1,6 +1,8 @@
 import React, { FC, ComponentPropsWithoutRef, CSSProperties } from 'react'
 import TokenMedia from './index'
 import { Button, Flex, Text } from 'components/primitives'
+import { useMutation } from '@apollo/client'
+import { REFRESH_TOKEN_METADATA } from 'graphql/queries/tokens'
 
 type TokenFallbackProps = {
   style?: CSSProperties
@@ -18,6 +20,7 @@ const TokenFallback: FC<TokenFallbackProps> = ({
   onRefreshClicked,
 }) => {
   const img = token?.image as string
+  const [refreshTokenMetadata] = useMutation(REFRESH_TOKEN_METADATA);
 
   return (
     <Flex
@@ -39,30 +42,16 @@ const TokenFallback: FC<TokenFallbackProps> = ({
       <Button
         color="secondary"
         onClick={(e: any) => {
-          // TO-DO
-          // e.preventDefault()
-          // if (!reservoirChain) {
-          //   throw 'ReservoirClient missing chain configuration'
-          // }
-          // onRefreshClicked()
-          // const url = `${reservoirChain?.baseApiUrl}/tokens/refresh/v1`
-          // const body: paths['/tokens/refresh/v1']['post']['parameters']['body']['body'] =
-          //   {
-          //     token: `${token?.collection?.id}:${token?.tokenId}`,
-          //   }
-          // const headers = {
-          //   ...defaultHeaders(reservoirChain?.apiKey, client?.version),
-          //   'Content-Type': 'application/json',
-          // }
-          // fetch(url, {
-          //   headers,
-          //   method: 'POST',
-          //   body: JSON.stringify(body),
-          // })
-          //   .then((res) => res.json())
-          //   .catch((e) => {
-          //     throw e
-          //   })
+          e.preventDefault()
+          onRefreshClicked()
+          refreshTokenMetadata({
+            variables: {
+              args: {
+                collection: token?.collection as string,
+                tokenId: token?.tokenId as string
+              }
+            }
+          }).then().catch(e => { throw e })
         }}
       >
         Refresh
