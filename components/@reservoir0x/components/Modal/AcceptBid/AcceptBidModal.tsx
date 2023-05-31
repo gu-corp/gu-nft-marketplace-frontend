@@ -120,7 +120,7 @@ export function AcceptBidModal({
         const floorPrice = collection?.floor?.floorPrice;
 
         const difference =
-          floorPrice && bid?.price
+          floorPrice && BigNumber.from(floorPrice).gt(0) && bid?.price
             ? BigNumber.from(floorPrice).sub(bid.price).div(floorPrice).mul(100).toNumber()
             : undefined
 
