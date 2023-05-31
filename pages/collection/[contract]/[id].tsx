@@ -6,17 +6,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import * as Tabs from '@radix-ui/react-tabs'
-import {
-  // TokenMedia,
-  useAttributes,
-  useBids,
-  useCollections,
-  useDynamicTokens,
-  useTokenActivity,
-  useTokenOpenseaBanned,
-  useUserTokens,
-} from '@reservoir0x/reservoir-kit-ui'
-import { paths } from '@reservoir0x/reservoir-sdk'
 import { ActivityFilters } from 'components/token/ActivityFilters'
 import { spin } from 'components/common/LoadingSpinner'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
@@ -56,7 +45,6 @@ import { jsNumberForAddress } from 'react-jazzicon'
 import Jazzicon from 'react-jazzicon/dist/Jazzicon'
 import { useMediaQuery } from 'react-responsive'
 import supportedChains, { DefaultChain } from 'utils/chains'
-import fetcher from 'utils/fetcher'
 import { DATE_REGEX, timeTill } from 'utils/till'
 import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
@@ -88,7 +76,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
   
   const { token, collection } = ssr
-  const flagged = useTokenOpenseaBanned(collectionId, id)
 
   const [refreshTokenMetadata, { loading: isRefreshing }] = useMutation(REFRESH_TOKEN_METADATA);
 
@@ -377,23 +364,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
             <Text style="h4" css={{ wordBreak: 'break-all' }}>
               {tokenName}
             </Text>
-            {flagged && (
-              <Tooltip
-                content={
-                  <Text style="body2" as="p">
-                    Not tradeable on OpenSea
-                  </Text>
-                }
-              >
-                <Text css={{ color: '$red10' }}>
-                  <FontAwesomeIcon
-                    icon={faCircleExclamation}
-                    width={16}
-                    height={16}
-                  />
-                </Text>
-              </Tooltip>
-            )}
           </Flex>
           {token && (
             <>

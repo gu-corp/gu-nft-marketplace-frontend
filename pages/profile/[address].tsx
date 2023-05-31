@@ -6,7 +6,6 @@ import {
 } from 'next'
 import { Text, Flex, Box, Grid } from '../../components/primitives'
 import Layout from 'components/Layout'
-import fetcher, { basicFetcher } from 'utils/fetcher'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
 import { useContext, useEffect, useRef, useState } from 'react'
@@ -40,13 +39,12 @@ type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 type ActivityTypes = ActivityType[]
 
-const IndexPage: NextPage<Props> = ({ address, ensName }) => {
+const IndexPage: NextPage<Props> = ({ address }) => {
   const {
     avatar: ensAvatar,
     name: resolvedEnsName,
     shortAddress,
   } = useENSResolver(address)
-  ensName = resolvedEnsName ? resolvedEnsName : ensName
   const account = useAccount()
 
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
@@ -136,7 +134,7 @@ const IndexPage: NextPage<Props> = ({ address, ensName }) => {
               />
             )}
             <Flex direction="column" css={{ ml: '$4' }}>
-              <Text style="h5">{ensName ? ensName : shortAddress}</Text>
+              <Text style="h5">{shortAddress}</Text>
               <CopyText text={address as string}>
                 <Flex align="center" css={{ cursor: 'pointer' }}>
                   <Text style="subtitle1" color="subtle" css={{ mr: '$3' }}>
@@ -316,29 +314,11 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps<{
   address: string | undefined
-  ensName: string | null
 }> = async ({ params }) => {
   let address = params?.address?.toString() || ''
-  const isEnsName = address.includes('.')
-  let ensName: null | string = null
-
-  if (isEnsName) {
-    ensName = address
-    const ensResponse = await basicFetcher(
-      `https://api.ensideas.com/ens/resolve/${address}`
-    )
-    const ensAddress = ensResponse?.data?.address
-    if (ensAddress) {
-      address = ensAddress
-    } else {
-      return {
-        notFound: true,
-      }
-    }
-  }
 
   return {
-    props: { address, ensName },
+    props: { address },
     revalidate: 5,
   }
 }

@@ -5,7 +5,6 @@ import {
   NextPage,
 } from 'next'
 import { Text, Flex, Box } from '../../components/primitives'
-import { paths } from '@reservoir0x/reservoir-sdk'
 import Layout from 'components/Layout'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { truncateAddress } from 'utils/truncate'
@@ -18,7 +17,6 @@ import SelectedAttributes from 'components/collections/filters/SelectedAttribute
 import { CollectionOffer } from 'components/buttons'
 import { Grid } from 'components/primitives/Grid'
 import { useIntersectionObserver } from 'usehooks-ts'
-import fetcher from 'utils/fetcher'
 import { useRouter } from 'next/router'
 import { SortTokens } from 'components/collections/SortTokens'
 import { useMediaQuery } from 'react-responsive'

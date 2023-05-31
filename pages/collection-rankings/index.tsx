@@ -10,7 +10,6 @@ import {
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from 'hooks'
-import { paths } from '@reservoir0x/reservoir-sdk'
 import supportedChains from 'utils/chains'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { useIntersectionObserver } from 'usehooks-ts'

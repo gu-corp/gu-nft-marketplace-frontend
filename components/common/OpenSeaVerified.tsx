@@ -1,11 +1,8 @@
 import { FC } from 'react'
-import { paths } from '@reservoir0x/reservoir-sdk'
 import { Tooltip, Text } from 'components/primitives'
 
 type Props = {
-  openseaVerificationStatus: NonNullable<
-    paths['/collections/v5']['get']['responses']['200']['schema']['collections']
-  >['0']['openseaVerificationStatus']
+  openseaVerificationStatus: string
 }
 
 export const OpenSeaVerified: FC<Props> = ({ openseaVerificationStatus }) => {
