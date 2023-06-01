@@ -8,7 +8,7 @@ import AddToCart from 'components/buttons/AddToCart'
 import CancelBid from 'components/buttons/CancelBid'
 import CancelListing from 'components/buttons/CancelListing'
 import { Button, Flex, Grid, Tooltip, Text } from 'components/primitives'
-import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
+import { GET_ORDERS } from 'graphql/queries/orders'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { MutatorCallback } from 'swr'
@@ -58,7 +58,7 @@ export const TokenActions: FC<Props> = ({
     },
   }
 
-  const { data } = useQuery(GET_ORDER_LISTINGS, {
+  const { data } = useQuery(GET_ORDERS, {
     variables: { 
       first: 1,
       skip: 0,
@@ -75,7 +75,7 @@ export const TokenActions: FC<Props> = ({
   const listing = data?.orders?.[0];
   const isListed = token && listing
 
-  const { data: bidData } = useQuery(GET_ORDER_LISTINGS, {
+  const { data: bidData } = useQuery(GET_ORDERS, {
     variables: { 
       first: 1,
       skip: 0,

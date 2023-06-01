@@ -24,7 +24,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useQuery } from '@apollo/client'
-import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
+import { GET_ORDERS } from 'graphql/queries/orders'
 import { Order, OrderDirection, Order_OrderBy } from '__generated__/graphql'
 import { GET_TOKEN } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
@@ -39,7 +39,7 @@ export const ListingsTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const { data, loading, fetchMore, refetch } = useQuery(GET_ORDER_LISTINGS, {
+  const { data, loading, fetchMore, refetch } = useQuery(GET_ORDERS, {
     variables: { 
       first: 10,
       skip: 0,

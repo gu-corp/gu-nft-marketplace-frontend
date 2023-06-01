@@ -15,7 +15,7 @@ import {
 } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
 import { BigNumber } from 'ethers'
-import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
+import { GET_ORDERS } from 'graphql/queries/orders'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'

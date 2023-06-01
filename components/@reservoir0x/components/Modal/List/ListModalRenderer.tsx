@@ -22,7 +22,7 @@ import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
 import { MakerOrder } from "@cuonghx.gu-tech/looksrare-sdk"
 import { CREATE_ORDER } from 'graphql/queries/orders'
 import { parseUnits } from 'ethers/lib/utils.js'
-import { GET_ORDER_LISTINGS } from 'graphql/queries/orders'
+import { GET_ORDERS } from 'graphql/queries/orders'
 import { OrderDirection, Order_OrderBy } from '__generated__/graphql'
 import { GET_NONCE } from 'graphql/queries/nonces'
 import { GET_TOKEN } from 'graphql/queries/tokens'
@@ -104,7 +104,7 @@ export const ListModalRenderer: FC<Props> = ({
 
   const nonce = dataNonce?.nonce?.nonce
 
-  const { data: orderData, refetch: refetchListed } = useQuery(GET_ORDER_LISTINGS, {
+  const { data: orderData, refetch: refetchListed } = useQuery(GET_ORDERS, {
     variables: { 
       first: 1,
       skip: 0,
