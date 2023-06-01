@@ -1,7 +1,7 @@
 import { InferGetStaticPropsType, NextPage } from 'next'
 import { Text, Flex, Box, Button } from 'components/primitives'
 import Layout from 'components/Layout'
-import { ComponentPropsWithoutRef, useState } from 'react'
+import { ComponentPropsWithoutRef, useEffect, useState } from 'react'
 import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from 'hooks'
@@ -45,7 +45,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
       break
   }
 
-  const { data, loading } = useQuery(GET_COLLECTIONS, {
+  const { data, loading, refetch } = useQuery(GET_COLLECTIONS, {
     variables: {
       skip: 0,
       first: 10, 
@@ -56,6 +56,10 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
 
   const collections = data?.collections || ssr.collections
 
+  useEffect(() => {
+    refetch()
+  }, [sortByTime])
+  
   return (
     <Layout>
       <Head />

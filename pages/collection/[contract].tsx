@@ -42,7 +42,7 @@ import Link from 'next/link'
 import Img from 'components/primitives/Img'
 import { addApolloState, initializeApollo } from 'graphql/apollo-client'
 import { useQuery } from '@apollo/client'
-import { ActivityType, Collection, Token } from '__generated__/graphql'
+import { ActivityType, Collection, OrderDirection, Token, Token_OrderBy } from '__generated__/graphql'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { GET_TOKENS } from 'graphql/queries/tokens'
 
@@ -73,13 +73,18 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
     window.scrollTo({ top: top })
   }
 
-  const { data, loading, fetchMore } = useQuery(GET_TOKENS, {
+  const orderDirection = router.query['orderDirection']?.toString()
+  const orderBy = router.query['orderBy']?.toString()
+
+  const { data, loading, fetchMore, refetch } = useQuery(GET_TOKENS, {
     variables: {
       first: 10,
       skip: 0,
       where: {
-        collection: collection?.id
-      }
+        collection: collection?.id,
+      },
+      orderDirection: orderDirection as OrderDirection,
+      token_OrderBy: orderBy as Token_OrderBy
     }
   })
 
@@ -126,6 +131,9 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
     }
   }, [router.query])
 
+  useEffect(() => {
+    refetch()
+  }, [orderBy, orderDirection])
   return (
     <Layout>
       <Head

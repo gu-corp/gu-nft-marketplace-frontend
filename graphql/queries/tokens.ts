@@ -28,8 +28,8 @@ export const GET_TOKEN = gql(/* GraphQL */`
 `);
 
 export const GET_TOKENS = gql(/* GraphQL */`
-  query GetTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $where: Token_FilterArgs) {
-    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, where: $where) {
+  query GetTokens($first: Int, $skip: Int, $orderDirection: OrderDirection, $where: Token_FilterArgs, $token_OrderBy: Token_OrderBy) {
+    tokens(first: $first, skip: $skip, orderDirection: $orderDirection, where: $where, token_OrderBy: $token_OrderBy) {
       id
       tokenId
       tokenUri

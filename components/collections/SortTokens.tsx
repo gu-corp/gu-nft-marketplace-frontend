@@ -10,18 +10,19 @@ import { faChevronDown, faSort } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useMounted } from 'hooks'
 import { useMediaQuery } from 'react-responsive'
+import { OrderDirection, Token_OrderBy } from '__generated__/graphql'
 
 type Options =
   | 'Price low to high'
   | 'Price high to low'
-  | 'Rare to common'
-  | 'Common to rare'
+  // | 'Rare to common'
+  // | 'Common to rare'
 
-const options: { [x: string]: { sortBy: string; sortDirection: string } } = {
-  'Price low to high': { sortBy: 'floorAskPrice', sortDirection: 'asc' },
-  'Price high to low': { sortBy: 'floorAskPrice', sortDirection: 'desc' },
-  'Rare to common': { sortBy: 'rarity', sortDirection: 'asc' },
-  'Common to rare': { sortBy: 'rarity', sortDirection: 'desc' },
+const options: { [x: string]: { orderBy: string; orderDirection: string } } = {
+  'Price low to high': { orderBy: Token_OrderBy.Price, orderDirection: OrderDirection.Asc },
+  'Price high to low': { orderBy: Token_OrderBy.Price, orderDirection: OrderDirection.Desc },
+  // 'Rare to common': { orderBy: 'rarity', orderDirection: 'asc' },
+  // 'Common to rare': { orderBy: 'rarity', orderDirection: 'desc' },
 }
 
 export const SortTokens: FC = () => {
@@ -33,18 +34,18 @@ export const SortTokens: FC = () => {
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
 
   useEffect(() => {
-    const sortBy = router?.query['sortBy']?.toString()
-    const sortDirection = router?.query['sortDirection']?.toString()
+    const orderBy = router?.query['orderBy']?.toString()
+    const orderDirection = router?.query['orderDirection']?.toString()
 
-    if (sortBy === 'rarity' && sortDirection === 'desc') {
-      setSortSelection('Common to rare')
-      return
-    }
-    if (sortBy === 'rarity' && sortDirection === 'asc') {
-      setSortSelection('Rare to common')
-      return
-    }
-    if (sortBy === 'floorAskPrice' && sortDirection === 'desc') {
+    // if (orderBy === 'rarity' && orderDirection === 'desc') {
+    //   setSortSelection('Common to rare')
+    //   return
+    // }
+    // if (orderBy === 'rarity' && orderDirection === 'asc') {
+    //   setSortSelection('Rare to common')
+    //   return
+    // }
+    if (orderBy === 'floorAskPrice' && orderDirection === 'desc') {
       setSortSelection('Price high to low')
       return
     }
@@ -93,8 +94,8 @@ export const SortTokens: FC = () => {
                 {
                   query: {
                     ...router.query,
-                    ['sortBy']: options[key].sortBy,
-                    ['sortDirection']: options[key].sortDirection,
+                    ['orderBy']: options[key].orderBy,
+                    ['orderDirection']: options[key].orderDirection,
                   },
                 },
                 undefined,
