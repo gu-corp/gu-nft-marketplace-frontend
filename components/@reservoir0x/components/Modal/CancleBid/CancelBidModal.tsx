@@ -14,6 +14,7 @@ import { parseUnits } from '@ethersproject/units'
 import currencyOptions from '../../../lib/defaultCurrencyOptions'
 import TokenPrimitive from '../TokenPrimitive'
 import Progress from '../Progress'
+import { ethers } from 'ethers'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -208,7 +209,7 @@ export function CancelBidModal({
                       <Text style="body2" color="accent">
                         {collection?.name}{' '}
                       </Text>
-                      at {bid?.price}{' '}
+                      at {ethers.utils.formatEther(bid?.price as string)}{' '}
                       {currency?.symbol} has been canceled.
                     </>
                   </Text>

@@ -52,10 +52,11 @@ import { Head } from 'components/Head'
 import { gql } from '__generated__'
 import { initializeApollo } from 'graphql/apollo-client'
 import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
-import { ActivityType, Collection, Token } from '__generated__/graphql'
+import { ActivityType, Collection, Order, OrderDirection, Order_OrderBy, Token } from '__generated__/graphql'
 import { GET_TOKEN, REFRESH_TOKEN_METADATA } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
+import { GET_ORDERS } from 'graphql/queries/orders'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -79,13 +80,19 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
 
   const [refreshTokenMetadata, { loading: isRefreshing }] = useMutation(REFRESH_TOKEN_METADATA);
 
-  // TO-DO: bids
-  // const { data: offers, isLoading: offersLoading } = useBids({
-  //   token: `${token?.token?.collection?.id}:${token?.token?.tokenId}`,
-  //   includeRawData: true,
-  // })
+  const { data } = useQuery(GET_ORDERS, {
+    variables: {
+      skip: 0,
+      first: 1,
+      order_OrderBy: Order_OrderBy.Price,
+      orderDirection: OrderDirection.Desc,
+      where: {
+        isOrderAsk: false
+      }
+    }
+  })
 
-  // const offer = offers && offers[0] ? offers[0] : undefined
+  const offer = data?.orders?.[0] as Order
   // TO-DO: attributes
   // const attributesData = useAttributes(collectionId)
 
@@ -392,7 +399,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
               {isMounted && (
                 <TokenActions
                   token={token}
-                  // offer={offer}
+                  offer={offer}
                   isOwner={isOwner}
                   // mutate={mutate}
                   account={account}
