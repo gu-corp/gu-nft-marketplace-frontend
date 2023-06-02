@@ -15,7 +15,6 @@ import {
 } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
 import { BigNumber } from 'ethers'
-import { GET_ORDERS } from 'graphql/queries/orders'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
@@ -27,7 +26,6 @@ type TokenCardProps = {
   token: Token
   address: Address
   rarityEnabled: boolean
-  addToCartEnabled?: boolean
   mutate?: MutatorCallback
   onMediaPlayed?: (
     e: SyntheticEvent<HTMLAudioElement | HTMLVideoElement, Event>
@@ -41,7 +39,6 @@ export default ({
   token,
   address,
   rarityEnabled = true,
-  addToCartEnabled = false,
   mutate,
   onMediaPlayed,
   orderQuantity,
@@ -322,8 +319,7 @@ export default ({
               corners: 'square',
             }}
           />
-          {addToCartEnabled ? (
-            <AddToCart
+           <AddToCart
               token={token}
               buttonCss={{
                 width: 52,
@@ -332,7 +328,6 @@ export default ({
               }}
               buttonProps={{ corners: 'square' }}
             />
-          ) : null}
         </Flex>
       ) : null}
     </Box>

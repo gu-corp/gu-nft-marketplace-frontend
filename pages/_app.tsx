@@ -25,7 +25,6 @@ import {
   darkTheme as reservoirDarkTheme,
   lightTheme as reservoirLightTheme,
   ReservoirKitTheme,
-  CartProvider,
 } from '@reservoir0x/reservoir-kit-ui'
 import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
@@ -37,6 +36,7 @@ import { ApolloProvider } from "@apollo/client";
 import { useApollo } from 'graphql/apollo-client'
 import { LooksRareSDKProvider } from 'context/LooksRareSDKProvider'
 import { Signer } from "@cuonghx.gu-tech/looksrare-sdk"
+import { CartProvider } from 'components/@reservoir0x/context/CartProvider'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
 const inter = Inter({

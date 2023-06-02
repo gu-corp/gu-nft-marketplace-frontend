@@ -1,6 +1,5 @@
 import React, { ComponentProps, FC, useContext, useState } from 'react'
 import { useAccount } from 'wagmi'
-import { useCart } from '@reservoir0x/reservoir-kit-ui'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
@@ -9,9 +8,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinus, faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { ToastContext } from 'context/ToastContextProvider'
 import { ConfirmationModal } from 'components/common/ConfirmationModal'
+import { Token } from '__generated__/graphql'
+import useCart from 'components/@reservoir0x/hooks/useCart'
 
 type Props = {
-  token?: Parameters<ReturnType<typeof useCart>['add']>[0][0]
+  token?: Token
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
 }
@@ -19,32 +20,22 @@ type Props = {
 const AddToCart: FC<Props> = ({ token, buttonCss, buttonProps }) => {
   const { addToast } = useContext(ToastContext)
   const { data: items, add, remove, clear } = useCart((cart) => cart.items)
-  const { data: cartChain } = useCart((cart) => cart.chain)
   const { isConnected } = useAccount()
   const { openConnectModal } = useConnectModal()
   const marketplaceChain = useMarketplaceChain()
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
 
-  if (!token || (!('market' in token) && !('id' in token))) {
-    return null
-  }
-
   if (
-    'market' in token &&
-    (token?.market?.floorAsk?.price?.amount === null ||
-      token?.market?.floorAsk?.price?.amount === undefined)
+    !token ||
+    !token.asks?.[0]
   ) {
     return null
   }
 
-  let tokenKey = ''
-  if ('id' in token) {
-    tokenKey = token.id
-  } else {
-    tokenKey = `${token.token?.collection?.id}:${token.token?.tokenId}`
-  }
+  let tokenKey = token.id
+  
   const isInCart = items.find(
-    (item) => `${item.collection.id}:${item.token.id}` === tokenKey
+    (item) => `${item.token.collection}:${item.token.id}` === tokenKey
   )
 
   return (
@@ -59,10 +50,9 @@ const AddToCart: FC<Props> = ({ token, buttonCss, buttonProps }) => {
 
           if (isInCart) {
             remove([tokenKey])
-          } else if (cartChain && cartChain?.id !== marketplaceChain.id) {
-            setConfirmationOpen(true)
-          } else {
-            add([token], marketplaceChain.id).then(() => {
+          }
+          else {
+            add([token]).then(() => {
               addToast?.({
                 title: 'Added to cart',
               })
@@ -85,7 +75,7 @@ const AddToCart: FC<Props> = ({ token, buttonCss, buttonProps }) => {
         onConfirmed={(confirmed) => {
           if (confirmed) {
             clear()
-            add([token], marketplaceChain.id)
+            add([token])
           }
         }}
       />

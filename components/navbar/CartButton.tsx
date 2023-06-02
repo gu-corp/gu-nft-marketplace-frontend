@@ -1,7 +1,8 @@
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
-import { CartPopover, useCart } from '@reservoir0x/reservoir-kit-ui'
+import CartPopover from 'components/@reservoir0x/components/Cart/CartPopover'
+import useCart from 'components/@reservoir0x/hooks/useCart'
 import { Flex, Button, Text } from 'components/primitives'
 
 const CartButton = () => {

@@ -129,7 +129,7 @@ export const TokenActions: FC<Props> = ({
             buttonProps={{ corners: 'square' }}
             mutate={mutate}
           />
-          {/* <AddToCart
+          <AddToCart
             token={token}
             buttonCss={{
               width: 52,
@@ -137,7 +137,7 @@ export const TokenActions: FC<Props> = ({
               justifyContent: 'center',
             }}
             buttonProps={{ corners: 'square' }}
-          /> */}
+          />
         </Flex>
       )}
       {showAcceptOffer && (
