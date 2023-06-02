@@ -224,7 +224,6 @@ const IndexPage: NextPage<Props> = ({ address }) => {
                               collection={collections.find(c => c.id === token.collection)}
                               address={account.address?.toLowerCase() as Address}
                               rarityEnabled={false}
-                              addToCartEnabled={false}
                               onMediaPlayed={(e) => {
                                 if (
                                   playingElement &&
