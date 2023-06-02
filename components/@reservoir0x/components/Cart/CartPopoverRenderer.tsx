@@ -89,13 +89,10 @@ export const CartPopoverRenderer: FC<Props> = ({ open, children }) => {
 
   useEffect(() => {
     if (balance) {
-      const totalPriceTruncated = parseUnits(totalPrice, currency?.decimals || 18)
       if (!balance.value) {
         setHasEnoughCurrency(false)
       } else if (
-        balance.value.lt(
-          utils.parseUnits(`${totalPriceTruncated}`, currency?.decimals)
-        )
+        balance.value.lt(totalPrice)
       ) {
         setHasEnoughCurrency(false)
       } else {

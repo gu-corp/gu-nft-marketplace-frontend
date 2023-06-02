@@ -3,6 +3,7 @@ import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Collection, Token } from '__generated__/graphql'
 import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
+import useCart from 'components/@reservoir0x/hooks/useCart'
 
 import AddToCart from 'components/buttons/AddToCart'
 import BuyNow from 'components/buttons/BuyNow'
@@ -51,8 +52,13 @@ export default ({
   // const mediaType = extractMediaType(token?.token)
   const showPreview =
     mediaType === 'other' || mediaType === 'html' || mediaType === null
-  const { routePrefix, proxyApi } = useMarketplaceChain()
-  // const tokenIsInCart = token && token?.isInCart
+  
+  const { data: items } = useCart((cart) => cart.items)
+  let tokenKey = `${token.collection}:${token.tokenId}`
+  const tokenIsInCart = items.find(
+    (item) => `${item.token.collection}:${item.token.id}` === tokenKey
+  )
+
   const isOwner = token?.owner?.toLowerCase() === address?.toLowerCase()
 
   const collectionId = token.collection
@@ -135,7 +141,7 @@ export default ({
           </Text>
         </Flex>
       )}
-      {/* <Flex
+      <Flex
         justify="center"
         align="center"
         css={{
@@ -146,17 +152,17 @@ export default ({
           position: 'absolute',
           right: '$2',
           zIndex: 1,
-          // transition: `visibility 0s linear ${
-          //   tokenIsInCart ? '' : '250ms'
-          // }, opacity 250ms ease-in-out, top 250ms ease-in-out`,
-          // opacity: tokenIsInCart ? 1 : 0,
-          // top: tokenIsInCart ? '$2' : 50,
-          // visibility: tokenIsInCart ? 'visible' : 'hidden',
+          transition: `visibility 0s linear ${
+            tokenIsInCart ? '' : '250ms'
+          }, opacity 250ms ease-in-out, top 250ms ease-in-out`,
+          opacity: tokenIsInCart ? 1 : 0,
+          top: tokenIsInCart ? '$2' : 50,
+          visibility: tokenIsInCart ? 'visible' : 'hidden',
           color: 'white',
         }}
       >
         <FontAwesomeIcon icon={faCheck} width={20} height={20} />
-      </Flex> */}
+      </Flex>
       <Link
         passHref
         href={`/collection/${collectionId}/${tokenId}`}

@@ -32,7 +32,7 @@ const AddToCart: FC<Props> = ({ token, buttonCss, buttonProps }) => {
     return null
   }
 
-  let tokenKey = token.id
+  let tokenKey = `${token.collection}:${token.tokenId}`
   
   const isInCart = items.find(
     (item) => `${item.token.collection}:${item.token.id}` === tokenKey

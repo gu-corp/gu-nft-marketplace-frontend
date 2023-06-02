@@ -172,7 +172,6 @@ function cartStore({
 
   const getCartCurrency = useCallback(
     (items: CartItem[]): Currency | undefined => {
-      console.log(items)
       return currencyOptions.find(currency => currency.contract === items?.[0]?.currency)
     },
     [chains]
@@ -180,7 +179,6 @@ function cartStore({
 
   const convertTokenToItem = useCallback(
     (token: Token): CartItem | undefined => { 
-      console.log(token)
       const ask = token.asks?.[0]
 
       if (!token?.tokenId || !token.collection) {
