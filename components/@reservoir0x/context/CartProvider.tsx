@@ -11,6 +11,8 @@ import { BigNumber } from 'ethers'
 import { Token } from '__generated__/graphql'
 import { Currency } from 'types/currency'
 import currencyOptions from '../lib/defaultCurrencyOptions'
+import { useApolloClient } from '@apollo/client'
+import { GET_TOKEN } from 'graphql/queries/tokens'
 
 export enum CheckoutStatus {
   Idle,
@@ -70,6 +72,7 @@ function cartStore({
   referrerFeeBps,
   persist = true,
 }: CartStoreProps) {
+  const apolloClient = useApolloClient()
   const { address } = useAccount()
   const { chains } = useNetwork()
   const { switchNetworkAsync } = useSwitchNetwork()
@@ -197,6 +200,31 @@ function cartStore({
       }
     },
     []
+  )
+
+  const fetchTokens = useCallback(
+    async (tokenIds: string[]) => {
+      if (!tokenIds || tokenIds.length === 0) {
+        return []
+      }
+
+      const queries = tokenIds.map((tokenId) =>
+        apolloClient.query({
+          query: GET_TOKEN,
+          variables: {
+            id: tokenId
+          },
+        }))
+      
+      const promises = await Promise.allSettled(queries)
+      const tokens = promises
+        .map((promise) =>
+          promise.status === 'fulfilled' ? promise.value?.data?.token : null
+        )
+
+      return tokens
+    },
+    [apolloClient]
   )
 
   const clear = useCallback(() => {
@@ -332,8 +360,95 @@ function cartStore({
   }, [])
 
   const validate = useCallback(async () => {
-    // To-do: disable validate now, update later
-    return true
+    try {
+      if (cartData.current.items.length === 0) {
+        return false
+      }
+      cartData.current = { ...cartData.current, isValidating: true }
+      commit()
+
+      const items = [...cartData.current.items]
+
+      const positionMap =
+        cartData.current.items.reduce((items, item, index) => {
+          if (item.token.collection && item.token?.id) {
+            items[`${item.token.collection}:${item.token.id}`] = index
+          }
+          return items
+        }, {} as Record<string, number>) || {}
+      
+      const tokensToFetch: string[] = []
+
+      //find tokens and order ids to fetch
+      cartData.current.items.map((item) => {
+        const contract = item.token.collection.split(':')[0]
+        tokensToFetch.push(`${contract}-${item.token.id}`)
+      })
+
+      const tokens = await fetchTokens(tokensToFetch)
+      // hashmap of items to remove { orderId/tokenId: item index }
+      let itemsToRemove: Record<string, number> = {}
+
+      tokens.forEach(token => {
+        if (token) {
+          const index = positionMap[`${token?.collection}:${token?.tokenId}`]
+          if (
+            address &&
+            (token?.owner?.toLowerCase() === address?.toLowerCase()) 
+          ) {
+            if (token?.collection && token?.tokenId) {
+              itemsToRemove[`${token.collection}:${token.tokenId}`] =
+                index
+            }
+          } else {
+            const ask = token.asks?.[0]
+            if (ask) {
+              items[index] = {
+                ...items[index],
+                price: ask?.price
+              }
+            } else {
+              itemsToRemove[`${token.collection}:${token.tokenId}`] =
+                index
+            }
+
+            if (token?.name) {
+              items[index].token.name = token.name
+            }
+          }
+        }
+      })
+
+      // Remove all items in itemsToRemove
+      if (Object.values(itemsToRemove).length > 0) {
+        Object.values(itemsToRemove).map((index) => {
+          items.splice(index, 1)
+        })
+      }
+
+      const currency = getCartCurrency(items)
+      const { totalPrice, referrerFee } = calculatePricing(
+        items
+      )
+      cartData.current = {
+        ...cartData.current,
+        items,
+        isValidating: false,
+        totalPrice,
+        referrerFee,
+        currency,
+      }
+
+      commit()
+      return true
+      
+    } catch (e) {
+      if (cartData.current.isValidating) {
+        cartData.current.isValidating = false
+        commit()
+      }
+      throw e
+    }
   }, [address])
 
   const checkout = useCallback(
