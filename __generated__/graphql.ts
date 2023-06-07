@@ -373,7 +373,13 @@ export type TokenAttribute = {
   value: Scalars['String'];
 };
 
+export type TokenAttribute_FilterArgs = {
+  key: Scalars['String'];
+  values: Array<Scalars['String']>;
+};
+
 export type Token_FilterArgs = {
+  attributes?: InputMaybe<Array<TokenAttribute_FilterArgs>>;
   collection?: InputMaybe<Scalars['String']>;
   owner?: InputMaybe<Scalars['String']>;
 };

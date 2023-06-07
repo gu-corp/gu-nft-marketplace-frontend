@@ -94,7 +94,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
 
   const offer = data?.orders?.[0] as Order
 
-  const hasAttributes = false
+  const hasAttributes = token?.attributes && token?.attributes?.length > 0
   const is1155 = false
   const isOwner = account.address?.toLowerCase() === token?.owner?.toLowerCase()
   const owner = isOwner ? account.address?.toLowerCase() : token?.owner?.toLowerCase()
@@ -415,8 +415,8 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
                   <TabsTrigger value="info">Info</TabsTrigger>
                   <TabsTrigger value="activity">Activity</TabsTrigger>
                 </TabsList>
-                {/* <TabsContent value="attributes">
-                  {token?.tokenID?.attributes && (
+                <TabsContent value="attributes">
+                  {token?.attributes && (
                     <Grid
                       css={{
                         gap: '$3',
@@ -427,17 +427,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
                         },
                       }}
                     >
-                      {token?.token?.attributes?.map((attribute) => (
+                      {token?.attributes?.map((attribute) => (
                         <AttributeCard
                           key={`${attribute.key}-${attribute.value}`}
                           attribute={attribute}
-                          collectionTokenCount={collection?.tokenCount || 0}
+                          collectionTokenCount={collection?.totalTokens || 0}
                           collectionId={collection?.id}
                         />
                       ))}
                     </Grid>
                   )}
-                </TabsContent> */}
+                </TabsContent>
                 <TabsContent value="info">
                   {collection && (
                     <TokenInfo token={token} collection={collection} />

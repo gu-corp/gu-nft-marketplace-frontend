@@ -76,18 +76,26 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
 
   const orderDirection = router.query['orderDirection']?.toString() || OrderDirection.Asc
   const orderBy = router.query['orderBy']?.toString() || Order_OrderBy.Price
-
-    // Extract all queries of attribute type
-    Object.keys({ ...router.query }).map((key) => {
-      if (
-        key.startsWith('attributes[') &&
-        key.endsWith(']') &&
-        router.query[key] !== ''
-      ) {
-        //@ts-ignore
-        // console.log(key, router.query[key])
+  
+  // Extract all queries of attribute type
+  const attributesQueryMap = new Map()
+  Object.keys({ ...router.query }).forEach((key) => {
+    if (
+      key.startsWith('attributes[') &&
+      key.endsWith(']') &&
+      router.query[key] !== ''
+    ) {
+      const attributeKey = /attributes\[(.*?)\]/.exec(key)?.[1]
+      const attributeValue = router.query[key];
+      
+      if (attributeKey) {
+        const values = attributesQueryMap.get(attributeKey) || []
+        values.push(attributeValue);
+        attributesQueryMap.set(attributeKey, values)
       }
-    })
+    }
+  })
+  const attributesQuery = Array.from(attributesQueryMap).map(([key, values]) => ({key, values}))
 
   const { data, loading, fetchMore, refetch } = useQuery(GET_TOKENS, {
     variables: {
@@ -95,6 +103,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
       skip: 0,
       where: {
         collection: collection?.id,
+        attributes: attributesQuery.length ? attributesQuery : undefined
       },
       orderDirection: orderDirection as OrderDirection,
       token_OrderBy: orderBy as Token_OrderBy
