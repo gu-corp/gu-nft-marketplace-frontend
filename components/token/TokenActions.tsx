@@ -1,7 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { faGasPump } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useBids, useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { Order, OrderDirection, Order_OrderBy, Token } from '__generated__/graphql'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
 import AddToCart from 'components/buttons/AddToCart'

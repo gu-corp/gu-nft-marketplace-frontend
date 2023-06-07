@@ -23,6 +23,11 @@ export const GET_TOKEN = gql(/* GraphQL */`
         price
         currencyAddress
       }
+      attributes {
+        key
+        value
+        tokenCount
+      }
     }
   }
 `);
