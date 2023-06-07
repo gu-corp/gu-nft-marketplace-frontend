@@ -1,13 +1,13 @@
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
+import { Attribute } from '__generated__/graphql'
 import { Box, Flex, Switch, Text } from 'components/primitives'
 import { useRouter } from 'next/router'
 import { FC, useState } from 'react'
 import { addParam, hasParam, removeParam } from 'utils/router'
 
 type Props = {
-  attribute: NonNullable<ReturnType<typeof useAttributes>['data']>[0]
+  attribute: Attribute
   scrollToTop: () => void
 }
 
@@ -55,10 +55,10 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
         {attribute.values &&
           attribute.values
             .sort((a, b) => {
-              if (!a.count || !b.count) {
+              if (!a.tokenCount || !b.tokenCount) {
                 return 0
               } else {
-                return b.count - a.count
+                return b.tokenCount - a.tokenCount
               }
             })
             .map((value) => (
@@ -102,7 +102,7 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
                 </Text>
 
                 <Text style="body2" css={{ color: '$gray11' }}>
-                  {value.count}
+                  {value.tokenCount}
                 </Text>
                 <Flex align="center">
                   <Switch

@@ -1,4 +1,3 @@
-import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
 import { Box, Flex } from 'components/primitives'
 import { FC } from 'react'
 import { AttributeSelector } from './AttributeSelector'
@@ -6,11 +5,12 @@ import * as Collapsible from '@radix-ui/react-collapsible'
 import { CollapsibleContent } from 'components/primitives/Collapsible'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import LoadingSpinner from 'components/common/LoadingSpinner'
+import { Attribute, AttributeKind } from '__generated__/graphql'
 
 type Props = {
   open: boolean
   setOpen: (open: boolean) => void
-  attributes: ReturnType<typeof useAttributes>['data'] | undefined
+  attributes: Attribute[]
   scrollToTop: () => void
 }
 
@@ -50,7 +50,7 @@ export const AttributeFilters: FC<Props> = ({
         >
           {attributes &&
             attributes
-              .filter((attribute) => attribute.kind != 'number')
+              .filter((attribute) => attribute.kind != AttributeKind.Number)
               .map((attribute) => (
                 <AttributeSelector
                   key={attribute.key}

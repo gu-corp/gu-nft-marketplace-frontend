@@ -14,6 +14,7 @@ import { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-node/
  */
 const documents = {
     "\n  query GetActivities($first: Int, $skip: Int, $where: Activity_FilterArgs) {\n    activities(first: $first, skip: $skip, where: $where) {\n      id\n      type\n      timestamp\n      to\n      from\n      tokenId\n      collection\n      txHash\n    }\n}\n": types.GetActivitiesDocument,
+    "\n  query attributes($where: Attribute_FilterArgs!) {\n    attributes(where: $where) {\n      kind\n      key\n      attributeCount\n      values {\n        tokenCount\n        value\n      }\n    }\n}\n": types.AttributesDocument,
     "\n  query GetCollections($first: Int, $skip: Int, $orderDirection: OrderDirection, $collection_OrderBy: Collection_OrderBy, $where: Collection_FilterArgs) {\n    collections(first: $first, skip: $skip, orderDirection: $orderDirection, collection_OrderBy: $collection_OrderBy, where: $where) {\n      id\n      name\n      symbol\n      totalTokens\n      image\n      description\n      volume  {\n        day1Volume\n        day7Volume\n        monthVolume\n        totalVolume\n      }\n      floor {\n        floorPrice\n      }\n    }\n  }\n": types.GetCollectionsDocument,
     "\nquery GetCollection($id: String!) {\n    collection(id: $id) {\n      id\n      name\n      symbol\n      totalTokens\n      image\n      description\n      volume  {\n        day1Volume\n        day7Volume\n        monthVolume\n        totalVolume\n      }\n      floor {\n        floorPrice\n      }\n    }\n  }\n": types.GetCollectionDocument,
     "\nquery GetUserRelativeCollections($first: Int, $skip: Int, $user: String!) {\n    relativeCollections(first: $first, skip: $skip, user: $user) {\n      id\n      name\n      symbol\n      totalTokens\n      image\n      description\n    }\n  }\n": types.GetUserRelativeCollectionsDocument,
@@ -45,6 +46,10 @@ export function gql(source: string): unknown;
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function gql(source: "\n  query GetActivities($first: Int, $skip: Int, $where: Activity_FilterArgs) {\n    activities(first: $first, skip: $skip, where: $where) {\n      id\n      type\n      timestamp\n      to\n      from\n      tokenId\n      collection\n      txHash\n    }\n}\n"): (typeof documents)["\n  query GetActivities($first: Int, $skip: Int, $where: Activity_FilterArgs) {\n    activities(first: $first, skip: $skip, where: $where) {\n      id\n      type\n      timestamp\n      to\n      from\n      tokenId\n      collection\n      txHash\n    }\n}\n"];
+/**
+ * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function gql(source: "\n  query attributes($where: Attribute_FilterArgs!) {\n    attributes(where: $where) {\n      kind\n      key\n      attributeCount\n      values {\n        tokenCount\n        value\n      }\n    }\n}\n"): (typeof documents)["\n  query attributes($where: Attribute_FilterArgs!) {\n    attributes(where: $where) {\n      kind\n      key\n      attributeCount\n      values {\n        tokenCount\n        value\n      }\n    }\n}\n"];
 /**
  * The gql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

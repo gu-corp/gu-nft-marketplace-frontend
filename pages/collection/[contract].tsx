@@ -42,9 +42,10 @@ import Link from 'next/link'
 import Img from 'components/primitives/Img'
 import { addApolloState, initializeApollo } from 'graphql/apollo-client'
 import { useQuery } from '@apollo/client'
-import { ActivityType, Collection, OrderDirection, Order_OrderBy, Token, Token_OrderBy } from '__generated__/graphql'
+import { ActivityType, AttributeKind, Collection, OrderDirection, Order_OrderBy, Token, Token_OrderBy } from '__generated__/graphql'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { GET_TOKENS } from 'graphql/queries/tokens'
+import { GET_ATTRIBUTES } from 'graphql/queries/attributes'
 
 type ActivityTypes = ActivityType[]
 
@@ -76,6 +77,18 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
   const orderDirection = router.query['orderDirection']?.toString() || OrderDirection.Asc
   const orderBy = router.query['orderBy']?.toString() || Order_OrderBy.Price
 
+    // Extract all queries of attribute type
+    Object.keys({ ...router.query }).map((key) => {
+      if (
+        key.startsWith('attributes[') &&
+        key.endsWith(']') &&
+        router.query[key] !== ''
+      ) {
+        //@ts-ignore
+        // console.log(key, router.query[key])
+      }
+    })
+
   const { data, loading, fetchMore, refetch } = useQuery(GET_TOKENS, {
     variables: {
       first: 10,
@@ -90,23 +103,27 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
 
   const tokens = (data?.tokens || []) as Token[]
 
-  // TO-DO: query attributes
-  // const attributesData = useAttributes(id)
+  const { data: attributesData } = useQuery(GET_ATTRIBUTES, {
+    variables: {
+      where: { collection: collection?.id } 
+    }
+  })
 
-  // const attributes = useMemo(() => {
-  //   if (!attributesData.data) {
-  //     return []
-  //   }
-  //   return attributesData.data
-  //     ?.filter(
-  //       (attribute) => attribute.kind != 'number' && attribute.kind != 'range'
-  //     )
-  //     .sort((a, b) => a.key.localeCompare(b.key))
-  // }, [attributesData.data])
 
-  // if (attributeFiltersOpen && attributesData.response && !attributes.length) {
-  //   setAttributeFiltersOpen(false)
-  // }
+  const attributes = useMemo(() => {
+    if (!attributesData?.attributes) {
+      return []
+    }
+    return attributesData.attributes
+      ?.filter(
+        (attribute) => attribute.kind != AttributeKind.Number
+      )
+      .sort((a, b) => a.key.localeCompare(b.key))
+  }, [attributesData?.attributes])
+
+  if (attributeFiltersOpen && attributesData?.attributes && !attributes.length) {
+    setAttributeFiltersOpen(false)
+  }
 
   // const rarityEnabledCollection = Boolean(
   //   collection?.tokenCount &&
@@ -114,9 +131,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
   //     attributes &&
   //     attributes?.length >= 2
   // )
-
-  const attributes = [] as any
-
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -309,7 +323,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
                 }}
                 ref={scrollRef}
               >
-                {/* {isSmallDevice ? (
+                {isSmallDevice ? (
                   <MobileAttributeFilters
                     attributes={attributes}
                     scrollToTop={scrollToTop}
@@ -321,7 +335,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
                     setOpen={setAttributeFiltersOpen}
                     scrollToTop={scrollToTop}
                   />
-                )} */}
+                )}
                 <Box
                   css={{
                     flex: 1,

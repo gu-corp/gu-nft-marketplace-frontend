@@ -4,14 +4,14 @@ import { Box, Button, Flex, Text } from 'components/primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { useRouter } from 'next/router'
-import { useAttributes } from '@reservoir0x/reservoir-kit-ui'
 import { AttributeSelector } from './AttributeSelector'
 import { clearAllAttributes } from 'utils/router'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { NAVBAR_HEIGHT_MOBILE } from 'components/navbar'
+import { Attribute, AttributeKind } from '__generated__/graphql'
 
 type Props = {
-  attributes: ReturnType<typeof useAttributes>['data'] | undefined
+  attributes: Attribute[]
   scrollToTop: () => void
 }
 
@@ -186,7 +186,7 @@ export const MobileAttributeFilters: FC<Props> = ({
           >
             {attributes &&
               attributes
-                .filter((attribute) => attribute.kind != 'number')
+                .filter((attribute) => attribute.kind != AttributeKind.Number)
                 .map((attribute) => (
                   <AttributeSelector
                     key={attribute.key}
