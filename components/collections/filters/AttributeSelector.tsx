@@ -53,7 +53,7 @@ export const AttributeSelector: FC<Props> = ({ attribute, scrollToTop }) => {
         }}
       >
         {attribute.values &&
-          attribute.values
+          [...attribute.values]
             .sort((a, b) => {
               if (!a.tokenCount || !b.tokenCount) {
                 return 0

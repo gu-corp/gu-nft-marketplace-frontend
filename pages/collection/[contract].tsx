@@ -87,16 +87,15 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
     ) {
       const attributeKey = /attributes\[(.*?)\]/.exec(key)?.[1]
       const attributeValue = router.query[key];
-      
-      if (attributeKey) {
-        const values = attributesQueryMap.get(attributeKey) || []
-        values.push(attributeValue);
-        attributesQueryMap.set(attributeKey, values)
-      }
+      attributesQueryMap.set(attributeKey, attributeValue)
     }
   })
-  const attributesQuery = Array.from(attributesQueryMap).map(([key, values]) => ({key, values}))
 
+  const attributesQuery = Array.from(attributesQueryMap.keys()).map((key) => ({
+    key,
+    values: attributesQueryMap.get(key)
+  }))
+  
   const { data, loading, fetchMore, refetch } = useQuery(GET_TOKENS, {
     variables: {
       first: 10,
