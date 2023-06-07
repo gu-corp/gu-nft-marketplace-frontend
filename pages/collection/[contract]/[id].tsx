@@ -93,8 +93,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
   })
 
   const offer = data?.orders?.[0] as Order
-  // TO-DO: attributes
-  // const attributesData = useAttributes(collectionId)
 
   const hasAttributes = false
   const is1155 = false
@@ -103,9 +101,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
   const { displayName: ownerFormatted } = useENSResolver(token?.owner)
 
   const tokenName = `${`#${token?.tokenId}`}`
-
-  // const hasAttributes =
-  //   token?.attributes && token?.attributes.length > 0
   
   const trigger = (
     <Button
@@ -264,7 +259,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
             <FullscreenMedia token={token} />
           </Box>
 
-          {/* {token?.attributes && !isSmallDevice && (
+          {token?.attributes && !isSmallDevice && (
             <Grid
               css={{
                 maxWidth: '100%',
@@ -283,7 +278,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
                 />
               ))}
             </Grid>
-          )} */}
+          )}
         </Flex>
         <Flex
           direction="column"

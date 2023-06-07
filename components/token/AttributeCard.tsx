@@ -1,15 +1,11 @@
 import { Flex, FormatCryptoCurrency, Text } from 'components/primitives'
-import { useTokens } from '@reservoir0x/reservoir-kit-ui'
 import { formatNumber } from 'utils/numbers'
 import Link from 'next/link'
 import { useMarketplaceChain } from '../../hooks'
-
-type Token = NonNullable<
-  NonNullable<ReturnType<typeof useTokens>['data']>[0]
->['token']
+import { TokenAttribute } from '__generated__/graphql'
 
 type Props = {
-  attribute: NonNullable<NonNullable<Token>['attributes']>[0]
+  attribute: TokenAttribute
   collectionTokenCount: number | string
   collectionId?: string
 }
@@ -45,12 +41,12 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
           <Text style="subtitle2" ellipsify>
             {attribute.value}
           </Text>
-          <FormatCryptoCurrency
+          {/* <FormatCryptoCurrency
             amount={attribute.floorAskPrice}
             logoHeight={16}
             textStyle="subtitle2"
             maximumFractionDigits={2}
-          />
+          /> */}
         </Flex>
         <Flex justify="between">
           <Text style="body2" css={{ color: '$gray11' }}>
