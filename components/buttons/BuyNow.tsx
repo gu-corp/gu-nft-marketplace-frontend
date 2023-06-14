@@ -9,13 +9,14 @@ import { useMarketplaceChain } from 'hooks'
 import { BuyStep } from 'components/@reservoir0x/components/Modal/Buy/BuyModalRenderer'
 import { BuyModal } from 'components/@reservoir0x/components/Modal/Buy/BuyModal'
 import { Token } from '__generated__/graphql'
+import { QueryResult } from '@apollo/client'
 
 type Props = {
   token?: Token
   orderId?: string
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
-  mutate?: SWRResponse['mutate']
+  mutate?: QueryResult["refetch"]
 }
 
 const BuyNow: FC<Props> = ({ token, orderId, mutate, buttonCss, buttonProps = {} }) => {

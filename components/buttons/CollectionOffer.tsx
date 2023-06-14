@@ -9,10 +9,11 @@ import { CSS } from '@stitches/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
+import { QueryResult } from '@apollo/client'
 
 type Props = {
   collection: NonNullable<ReturnType<typeof useCollections>['data']>[0]
-  mutate?: SWRResponse['mutate']
+  mutate?: QueryResult["refetch"]
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
 }

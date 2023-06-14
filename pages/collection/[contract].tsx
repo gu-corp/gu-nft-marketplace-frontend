@@ -96,7 +96,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
     values: attributesQueryMap.get(key)
   }))
   
-  const { data, loading, fetchMore, refetch } = useQuery(GET_TOKENS, {
+  const { data, loading, fetchMore, refetch: mutate } = useQuery(GET_TOKENS, {
     variables: {
       first: 10,
       skip: 0,
@@ -154,7 +154,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
   }, [router.query])
 
   useEffect(() => {
-    refetch()
+    mutate()
   }, [orderBy, orderDirection])
   return (
     <Layout>
@@ -309,14 +309,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
           <StatHeader collection={collection} tokens={tokens} />
           <Tabs.Root
             defaultValue="items"
-            // TO-DO: update later
-            // onValueChange={(value) => {
-            //   if (value === 'items') {
-            //     resetCache()
-            //     setSize(1)
-            //     mutate()
-            //   }
-            // }}
+            onValueChange={(value) => {
+              if (value === 'items') {
+                mutate()
+              }
+            }}
           >
             <TabsList>
               <TabsTrigger value="items">Items</TabsTrigger>
@@ -409,8 +406,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
                             collection={collection}
                             orderQuantity={1}
                             address={address as Address}
-                            // mutate={mutate}
-                            // TO-DO: later
+                            mutate={mutate}
                             rarityEnabled={false}
                             onMediaPlayed={(e) => {
                               if (

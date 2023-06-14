@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { QueryResult, useQuery } from '@apollo/client'
 import { faGasPump } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Order, OrderDirection, Order_OrderBy, Token } from '__generated__/graphql'
@@ -10,14 +10,13 @@ import { Button, Flex, Grid, Tooltip, Text } from 'components/primitives'
 import { GET_ORDERS } from 'graphql/queries/orders'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
-import { MutatorCallback } from 'swr'
 import { useAccount } from 'wagmi'
 
 type Props = {
   token: Token
   offer?: Order
   isOwner: boolean
-  mutate?: MutatorCallback
+  mutate?: QueryResult["refetch"]
   account: ReturnType<typeof useAccount>
 }
 
@@ -237,6 +236,7 @@ export const TokenActions: FC<Props> = ({
                 </Tooltip>
             </Flex>
           }
+          mutate={mutate}
         />
       )}
     </Grid>

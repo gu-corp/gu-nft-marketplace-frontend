@@ -23,7 +23,7 @@ import Link from 'next/link'
 import { Address } from 'wagmi'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
-import { useQuery } from '@apollo/client'
+import { QueryResult, useQuery } from '@apollo/client'
 import { Token } from '__generated__/graphql'
 import { GET_TOKENS } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
@@ -47,7 +47,7 @@ export const TokenTable: FC<Props> = ({
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const { data, loading, fetchMore } = useQuery(GET_TOKENS, {
+  const { data, loading, fetchMore, refetch: mutate } = useQuery(GET_TOKENS, {
     variables: {
       first: 20,
       where: {
@@ -94,6 +94,7 @@ export const TokenTable: FC<Props> = ({
               <TokenTableRow
                 key={token.id}
                 token={token}
+                mutate={mutate}
               />
             )
           })}
@@ -106,9 +107,10 @@ export const TokenTable: FC<Props> = ({
 
 type TokenTableRowProps = {
   token: Token
+  mutate: QueryResult["refetch"]
 }
 
-const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
+const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   const { data } = useQuery(GET_COLLECTION, {
@@ -207,6 +209,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
                 },
               }}
               buttonChildren="List"
+              mutate={mutate}
             />
           </Flex>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
@@ -240,6 +243,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
                     Sell
                   </Flex>
                 }
+                mutate={mutate}
               />
             )}
           </Flex>
@@ -355,6 +359,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token }) => {
                   Sell
                 </Flex>
               }
+              mutate={mutate}
             />
           )}
           <List

@@ -6,12 +6,13 @@ import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import { CancelListingModal } from 'components/@reservoir0x/components/Modal/CancelListing/CancelListingModal'
 import { CancelStep } from 'components/@reservoir0x/components/Modal/CancelListing/CancelListingModalRenderer'
+import { QueryResult } from '@apollo/client'
 
 type Props = {
   listingId: string
   openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   trigger: ReactElement<any>
-  mutate?: SWRResponse['mutate']
+  mutate?: QueryResult["refetch"]
 }
 
 const CancelListing: FC<Props> = ({
