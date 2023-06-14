@@ -16,7 +16,6 @@ import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import Link from 'next/link'
-import { MutatorCallback } from 'swr'
 import { useMarketplaceChain, useTimeSince } from 'hooks'
 import CancelBid from 'components/buttons/CancelBid'
 import { Address } from 'wagmi'
@@ -25,7 +24,7 @@ import { faGasPump, faHand } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { GET_ORDERS } from 'graphql/queries/orders'
 import { Order, OrderDirection, Order_OrderBy, Token } from '__generated__/graphql'
-import { useQuery } from '@apollo/client'
+import { QueryResult, useQuery } from '@apollo/client'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { GET_TOKEN } from 'graphql/queries/tokens'
 
@@ -108,7 +107,7 @@ export const OffersTable: FC<Props> = ({ address }) => {
 
 type OfferTableRowProps = {
   offer: Order
-  mutate?: MutatorCallback
+  mutate?: QueryResult["refetch"]
 }
 
 const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {

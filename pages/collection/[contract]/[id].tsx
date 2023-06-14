@@ -73,12 +73,17 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
   const [activityFiltersOpen, setActivityFiltersOpen] = useState(true)
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>([])
 
-  const { proxyApi } = useMarketplaceChain()
   const contract = collectionId ? collectionId?.split(':')[0] : undefined
   
-  const { token, collection } = ssr
-
   const [refreshTokenMetadata, { loading: isRefreshing }] = useMutation(REFRESH_TOKEN_METADATA);
+
+  const { data: tokenData, refetch: mutate } = useQuery(GET_TOKEN, {
+    variables: { id: `${contract?.toLowerCase()}-${id}` }
+  });
+
+  const { data: collectionData } = useQuery(GET_COLLECTION, {
+    variables: { id: contract as string }
+  })
 
   const { data } = useQuery(GET_ORDERS, {
     variables: {
@@ -87,10 +92,14 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
       order_OrderBy: Order_OrderBy.Price,
       orderDirection: OrderDirection.Desc,
       where: {
-        isOrderAsk: false
+        isOrderAsk: false,
+        collectionAddress: contract?.toLowerCase(),
+        tokenId: id as string
       }
     }
   })
+  const token = (tokenData?.token || ssr.token) as Token
+  const collection = (collectionData?.collection || ssr.collection) as Collection
 
   const offer = data?.orders?.[0] as Order
 
@@ -247,15 +256,13 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
                 overflow: 'hidden',
               }}
               onRefreshToken={() => {
-                // TO-DO: later
-                // mutate?.()
+                mutate?.()
                 addToast?.({
                   title: 'Refresh token',
                   description: 'Request to refresh this token was accepted.',
                 })
               }}
             />
-            {/* TO-DO: later */}
             <FullscreenMedia token={token} />
           </Box>
 
@@ -325,6 +332,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
                   e.preventDefault()
                   return
                 }
+                mutate?.()
                 refreshTokenMetadata({
                   variables: {
                     args: {
@@ -396,7 +404,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
                   token={token}
                   offer={offer}
                   isOwner={isOwner}
-                  // mutate={mutate}
+                  mutate={mutate}
                   account={account}
                 />
               )}

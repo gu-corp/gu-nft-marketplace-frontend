@@ -8,20 +8,21 @@ import {
   useContext,
 } from 'react'
 import { CSS } from '@stitches/react'
-import { SWRResponse } from 'swr'
 import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import { ListModal } from 'components/@reservoir0x/components/Modal/List/ListModal'
 import { Token } from '__generated__/graphql'
+import { ListingStep } from 'components/@reservoir0x/components/Modal/List/ListModalRenderer'
+import { QueryResult } from '@apollo/client'
 
 type Props = {
   token?: Token
   buttonCss?: CSS
   buttonChildren?: ReactNode
   buttonProps?: ComponentProps<typeof Button>
-  mutate?: SWRResponse['mutate']
+  mutate?: QueryResult["refetch"]
 }
 
 const List: FC<Props> = ({
@@ -89,6 +90,9 @@ const List: FC<Props> = ({
             title: 'Could not list token',
             description: 'The transaction was not completed.',
           })
+        }}
+        onClose={(currentStep) => {
+          if (mutate && currentStep == ListingStep.Complete) mutate()
         }}
       />
     )

@@ -16,14 +16,13 @@ import Image from 'next/image'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from '../common/LoadingSpinner'
 import Link from 'next/link'
-import { MutatorCallback } from 'swr'
 import { useTimeSince } from 'hooks'
 import CancelListing from 'components/buttons/CancelListing'
 import { Address } from 'wagmi'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faGasPump, faTag } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT } from 'components/navbar'
-import { useQuery } from '@apollo/client'
+import { QueryResult, useQuery } from '@apollo/client'
 import { GET_ORDERS } from 'graphql/queries/orders'
 import { Order, OrderDirection, Order_OrderBy } from '__generated__/graphql'
 import { GET_TOKEN } from 'graphql/queries/tokens'
@@ -39,7 +38,7 @@ export const ListingsTable: FC<Props> = ({ address }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
-  const { data, loading, fetchMore, refetch } = useQuery(GET_ORDERS, {
+  const { data, loading, fetchMore, refetch: mutate } = useQuery(GET_ORDERS, {
     variables: { 
       first: 10,
       skip: 0,
@@ -66,7 +65,7 @@ export const ListingsTable: FC<Props> = ({ address }) => {
   }, [loadMoreObserver?.isIntersecting])
 
   useEffect(() => {
-    refetch()
+    mutate()
   }, [])
 
   return (
@@ -88,6 +87,7 @@ export const ListingsTable: FC<Props> = ({ address }) => {
           {listings.map((listing, i) => {
             return (
               <ListingTableRow
+                mutate={mutate}
                 key={listing.hash}
                 listing={listing as Order}
               />
@@ -107,7 +107,7 @@ export const ListingsTable: FC<Props> = ({ address }) => {
 
 type ListingTableRowProps = {
   listing: Order
-  mutate?: MutatorCallback
+  mutate?: QueryResult["refetch"]
 }
 
 const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {

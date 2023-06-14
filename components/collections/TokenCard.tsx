@@ -1,4 +1,4 @@
-import { useQuery } from '@apollo/client'
+import { QueryResult, useQuery } from '@apollo/client'
 import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Collection, Token } from '__generated__/graphql'
@@ -19,7 +19,6 @@ import { BigNumber } from 'ethers'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
-import { MutatorCallback } from 'swr'
 import { formatNumber } from 'utils/numbers'
 import { Address } from 'wagmi'
 
@@ -27,7 +26,7 @@ type TokenCardProps = {
   token: Token
   address: Address
   rarityEnabled: boolean
-  mutate?: MutatorCallback
+  mutate?: QueryResult["refetch"]
   onMediaPlayed?: (
     e: SyntheticEvent<HTMLAudioElement | HTMLVideoElement, Event>
   ) => void

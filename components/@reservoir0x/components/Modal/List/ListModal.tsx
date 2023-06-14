@@ -42,6 +42,9 @@ type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   tokenId?: string
   collectionId?: string
   onListingError?: (error: Error) => void
+  onClose?: (
+    currentStep: ListingStep
+  ) => void
 }
 
 const Image = styled('img', {})
@@ -75,6 +78,7 @@ export function ListModal({
   tokenId,
   collectionId,
   onListingError,
+  onClose
 }: Props): ReactElement {
   const [open, setOpen] = useFallbackState(
     openState ? openState[0] : false,
@@ -124,6 +128,9 @@ export function ListModal({
             title="List Item for sale"
             open={open}
             onOpenChange={(open) => {
+              if (!open && onClose) {
+                onClose(listingStep)
+              }
               setOpen(open)
             }}
             loading={loading}
