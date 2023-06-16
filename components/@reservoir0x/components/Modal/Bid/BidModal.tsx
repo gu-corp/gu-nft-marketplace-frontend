@@ -139,7 +139,7 @@ export function BidModal({
           ? +collection.totalTokens
           : undefined
 
-        const itemImage = token?.image as string
+        const itemImage = token?.image || collection?.image as string
 
         useEffect(() => {
           if (requestUserStep) {
@@ -227,7 +227,7 @@ export function BidModal({
                     <Input
                       type="number"
                       value={bidAmount}
-                      onChange={(e) => {
+                      onChange={(e: any) => {
                         setBidAmount(e.target.value)
                       }}
                       placeholder="Enter price here"

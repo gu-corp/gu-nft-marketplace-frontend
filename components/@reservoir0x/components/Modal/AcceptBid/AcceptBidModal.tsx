@@ -129,7 +129,7 @@ export function AcceptBidModal({
             ? `${difference}% lower than floor price`
             : undefined
 
-        const tokenImage = token?.image as string
+        const tokenImage = token?.image || collection?.image as string
 
         const expires = useTimeSince(
           bid?.endTime ? Number(bid.endTime) : 0

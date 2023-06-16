@@ -113,7 +113,7 @@ export function ListModal({
         requestUserStep,
         steps
       }) => {
-        const tokenImage = token?.image as string
+        const tokenImage = token?.image || collection?.image as string
 
         useEffect(() => {
           if (transactionError && onListingError) {
