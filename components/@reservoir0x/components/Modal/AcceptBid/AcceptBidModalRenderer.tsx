@@ -18,6 +18,7 @@ import { Currency } from 'types/currency'
 import { MakerOrder, isApprovedForAll } from "@cuonghx.gu-tech/looksrare-sdk"
 import { GET_TOKEN } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
+import { constants } from 'ethers'
 
 export enum AcceptBidStep {
   Checkout,
@@ -87,10 +88,7 @@ export const AcceptBidModalRenderer: FC<Props> = ({
   const bid = data?.order as Order
   const currency = useCurrency(bid?.currencyAddress)
 
-  // TO-DO: strategyOptions
-  const strategy = looksRareSdk.addresses.STRATEGY_STANDARD_SALE_DEPRECATED;
-  
-  const protocolFee = useStrategyFee(strategy)
+  const protocolFee = useStrategyFee(bid?.strategy)
   const royaltyFee = useRoyaltyFee(collectionId as string, tokenId as string)
 
   const fees = {
@@ -143,7 +141,7 @@ export const AcceptBidModalRenderer: FC<Props> = ({
         signer: bid.signer,
         collection: bid.collectionAddress,
         price: bid.price,
-        tokenId: bid.tokenId,
+        tokenId: bid.tokenId ? bid.tokenId : constants.Zero, // collection offer sign with tokenId is Zero
         amount: bid.amount,
         strategy: bid.strategy,
         currency: bid.currencyAddress,
@@ -154,9 +152,17 @@ export const AcceptBidModalRenderer: FC<Props> = ({
         params: bid.params
       };
   
-      const taker = looksRareSdk.createTaker(maker, {
-        taker: address as Address
-      })
+      let taker
+      const takerInput = {
+        taker: address as string
+      }
+
+      // collection offer
+      if (!bid.tokenId) {
+        taker = looksRareSdk.createTakerCollectionOffer(maker, tokenId, takerInput)
+      } else { // token offer
+        taker = looksRareSdk.createTaker(maker, takerInput)
+      }
   
       const tx = await looksRareSdk.executeOrder(maker, taker, bid.signature).call()
       setTxHash(tx.hash)

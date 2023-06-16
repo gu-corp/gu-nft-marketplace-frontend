@@ -131,13 +131,14 @@ export type CreateOrderInput = {
   /** The strategy address. See Addresses | LooksRare SDK for the possible values. */
   strategy: Scalars['String'];
   /** The id of the asset. If the order is a collection offer, this field will be null. */
-  tokenId: Scalars['String'];
+  tokenId?: InputMaybe<Scalars['String']>;
 };
 
 export enum EventKind {
   CancelAllOrders = 'CancelAllOrders',
   CancelMultipleOrders = 'CancelMultipleOrders',
   Erc20Approval = 'ERC20Approval',
+  Erc20Transfer = 'ERC20Transfer',
   Erc721ApprovalForAll = 'ERC721ApprovalForAll',
   Erc721Transfer = 'ERC721Transfer',
   TakerAsk = 'TakerAsk',
@@ -219,7 +220,7 @@ export type Order = {
   /** The strategy address. See Addresses | LooksRare SDK for the possible values. */
   strategy: Scalars['String'];
   /** The id of the asset. If the order is a collection offer, this field will be null. */
-  tokenId: Scalars['String'];
+  tokenId?: Maybe<Scalars['String']>;
   updatedAt: Scalars['Int'];
   /** The v parameter of the EIP-712 signature. */
   v: Scalars['String'];
@@ -233,6 +234,7 @@ export enum OrderDirection {
 export enum OrderStatus {
   Cancelled = 'CANCELLED',
   Erc20Approval = 'ERC20_APPROVAL',
+  Erc20Balance = 'ERC20_BALANCE',
   ErcApproval = 'ERC_APPROVAL',
   Executed = 'EXECUTED',
   Expired = 'EXPIRED',
@@ -461,14 +463,14 @@ export type OrdersQueryVariables = Exact<{
 }>;
 
 
-export type OrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'Order', hash: string, collectionAddress: string, tokenId: string, price: string, startTime: number, endTime: number, nonce: string, currencyAddress: string, amount: number, isOrderAsk: boolean, signer: string, strategy: string, minPercentageToAsk: number, params: string, signature: string }> };
+export type OrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'Order', hash: string, collectionAddress: string, tokenId?: string | null, price: string, startTime: number, endTime: number, nonce: string, currencyAddress: string, amount: number, isOrderAsk: boolean, signer: string, strategy: string, minPercentageToAsk: number, params: string, signature: string }> };
 
 export type GetOrderByHashQueryVariables = Exact<{
   hash: Scalars['ID'];
 }>;
 
 
-export type GetOrderByHashQuery = { __typename?: 'Query', order: { __typename?: 'Order', hash: string, collectionAddress: string, tokenId: string, price: string, startTime: number, endTime: number, nonce: string, currencyAddress: string, amount: number, isOrderAsk: boolean, signer: string, strategy: string, minPercentageToAsk: number, params: string, signature: string } };
+export type GetOrderByHashQuery = { __typename?: 'Query', order: { __typename?: 'Order', hash: string, collectionAddress: string, tokenId?: string | null, price: string, startTime: number, endTime: number, nonce: string, currencyAddress: string, amount: number, isOrderAsk: boolean, signer: string, strategy: string, minPercentageToAsk: number, params: string, signature: string } };
 
 export type GetTokenQueryVariables = Exact<{
   id: Scalars['String'];

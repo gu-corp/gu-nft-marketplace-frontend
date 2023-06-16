@@ -223,6 +223,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             />
             {highestBid && (
               <AcceptBid
+                bidId={highestBid.hash} 
                 token={token}
                 collectionId={token?.collection}
                 buttonCss={{
@@ -343,6 +344,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
         <Flex justify="end" css={{ gap: '$3' }}>
           {highestBid && (
             <AcceptBid
+              bidId={highestBid.hash}
               token={token}
               collectionId={token?.collection}
               buttonCss={{

@@ -20,7 +20,7 @@ type Props = {
 
 const TokenStatsHeader: FC<Props> = ({ token, collection }) => {
   const img = optimizeImage(
-    token?.image as string,
+    token?.image || collection.image as string,
     600
   )
 
@@ -52,7 +52,7 @@ const TokenStatsHeader: FC<Props> = ({ token, collection }) => {
         }}
       />
       <Text style="h6" css={{ flex: 1 }} as="h6" ellipsify>
-        {`#${token?.tokenId}`}
+        {token ? `#${token?.tokenId}` : collection.name}
       </Text>
       {collection && (
         <Box>

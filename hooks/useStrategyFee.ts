@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import IExecutionStrategyAbi from "@cuonghx.gu-tech/looksrare-sdk/dist/abis/IExecutionStrategy.json"
 
-// TO-DO: support other strategy
 export default function (strategy: string) {
   const sdk = useLooksRareSDK()
   const provider = useProvider()

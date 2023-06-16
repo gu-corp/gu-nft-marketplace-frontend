@@ -51,7 +51,7 @@ type ActivityTypes = ActivityType[]
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
+const CollectionPage: NextPage<Props> = ({ id, ssr}) => {
   const router = useRouter()
   const { address } = useAccount()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
@@ -68,6 +68,10 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
+
+  const { data: collectionData } = useQuery(GET_COLLECTION, {
+    variables: { id: id as string },
+  })
 
   const scrollToTop = () => {
     let top = (scrollRef.current?.offsetTop || 0) - (NAVBAR_HEIGHT + 16)
@@ -101,7 +105,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
       first: 10,
       skip: 0,
       where: {
-        collection: collection?.id,
+        collection: id,
         attributes: attributesQuery.length ? attributesQuery : undefined
       },
       orderDirection: orderDirection as OrderDirection,
@@ -113,10 +117,11 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
 
   const { data: attributesData } = useQuery(GET_ATTRIBUTES, {
     variables: {
-      where: { collection: collection?.id } 
+      where: { collection: id as string } 
     }
   })
 
+  const collection = collectionData?.collection || ssr.collection
 
   const attributes = useMemo(() => {
     if (!attributesData?.attributes) {
@@ -368,7 +373,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
                       }}
                     >
                       <SortTokens />
-                      {/* <CollectionOffer
+                      {isMounted && <CollectionOffer
                         collection={collection}
                         buttonCss={{
                           width: '100%',
@@ -377,7 +382,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr: { collection } }) => {
                             maxWidth: '220px',
                           },
                         }}
-                      /> */}
+                      />}
                     </Flex>
                   </Flex>
                   {!isSmallDevice && <SelectedAttributes />}
@@ -530,13 +535,13 @@ export const getStaticProps: GetStaticProps<{
     },
   })
 
-  return addApolloState(apolloClient, {
+  return {
     props: {
       ssr: { collection: data.collection },
       id 
     },
     revalidate: 30
-  })
+  }
 }
 
 export default CollectionPage

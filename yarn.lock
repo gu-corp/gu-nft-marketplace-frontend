@@ -735,9 +735,9 @@
     "@jridgewell/trace-mapping" "0.3.9"
 
 "@cuonghx.gu-tech/looksrare-sdk@^0.9.4":
-  "integrity" "sha512-9JKogVg2J1xrdaTRJbih5tby9ur6/AvZ4KSsLXXVILjor4kW2jaipajaXU+N4D+QN+rpWlcuAP/Qr4qSJFunNQ=="
-  "resolved" "https://registry.npmjs.org/@cuonghx.gu-tech/looksrare-sdk/-/looksrare-sdk-0.9.4.tgz"
-  "version" "0.9.4"
+  "integrity" "sha512-oEiDb3h/1kIyte7xyHjiMv6w/yzUrBYFwUiAnut/ucl71YFwycPdAesBLJWvEYIVKHfmlQ4tJ1oI5GD8xNtkqw=="
+  "resolved" "https://registry.npmjs.org/@cuonghx.gu-tech/looksrare-sdk/-/looksrare-sdk-0.9.5.tgz"
+  "version" "0.9.5"
   dependencies:
     "@0xsequence/multicall" "^0.43.25"
     "@looksrare/contracts-exchange-v1" "^1.4.1"

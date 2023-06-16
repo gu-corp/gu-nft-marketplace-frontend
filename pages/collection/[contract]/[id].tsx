@@ -57,6 +57,7 @@ import { GET_TOKEN, REFRESH_TOKEN_METADATA } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { useMutation, useQuery } from '@apollo/client'
 import { GET_ORDERS } from 'graphql/queries/orders'
+import { BigNumber } from 'ethers'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -85,23 +86,10 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
     variables: { id: contract as string }
   })
 
-  const { data } = useQuery(GET_ORDERS, {
-    variables: {
-      skip: 0,
-      first: 1,
-      order_OrderBy: Order_OrderBy.Price,
-      orderDirection: OrderDirection.Desc,
-      where: {
-        isOrderAsk: false,
-        collectionAddress: contract?.toLowerCase(),
-        tokenId: id as string
-      }
-    }
-  })
   const token = (tokenData?.token || ssr.token) as Token
   const collection = (collectionData?.collection || ssr.collection) as Collection
 
-  const offer = data?.orders?.[0] as Order
+  const highestBid = [...token?.bids || []].sort((a, b) => BigNumber.from(a.price).gt(BigNumber.from(b.price)) ? -1 : 1)?.[0]
 
   const hasAttributes = token?.attributes && token?.attributes?.length > 0
   const is1155 = false
@@ -402,7 +390,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
               {isMounted && (
                 <TokenActions
                   token={token}
-                  offer={offer}
+                  offer={highestBid}
                   isOwner={isOwner}
                   mutate={mutate}
                   account={account}
