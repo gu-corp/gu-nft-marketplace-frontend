@@ -16,12 +16,14 @@ export const GET_TOKEN = gql(/* GraphQL */`
         collectionAddress
         price
         currencyAddress
+        signer
       }
       asks {
         hash
         collectionAddress
         price
         currencyAddress
+        signer
       }
       attributes {
         key
@@ -47,16 +49,19 @@ export const GET_TOKENS = gql(/* GraphQL */`
         hash
         price
         currencyAddress
+        signer
       }
       asks {
         hash
         price
         currencyAddress
+        signer
       }
       sales {
         hash
         price
         updatedAt
+        signer
       }
     }
   }
