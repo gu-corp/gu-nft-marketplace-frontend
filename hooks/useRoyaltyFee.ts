@@ -1,10 +1,9 @@
-import { useContract, useProvider } from "wagmi";
+import { useProvider } from "wagmi";
 import { useLooksRareSDK } from "../context/LooksRareSDKProvider";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import IRoyaltyFeeManagerAbi from "@cuonghx.gu-tech/looksrare-sdk/dist/abis/IRoyaltyFeeManager.json"
 
-// TO-DO: support other strategy
 export default function (collectionAddress: string, tokenId: string, amount = 1) {
   const sdk = useLooksRareSDK()
   const provider = useProvider()

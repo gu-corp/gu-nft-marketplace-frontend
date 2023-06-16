@@ -20,7 +20,7 @@ import { Currency } from 'types/currency'
 import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
 import { GET_TOKEN } from 'graphql/queries/tokens'
 import { useMutation, useQuery } from '@apollo/client'
-import { MakerOrder } from '@cuonghx.gu-tech/looksrare-sdk'
+import { CreateMakerBidOutput, MakerOrder } from '@cuonghx.gu-tech/looksrare-sdk'
 import { CREATE_ORDER } from 'graphql/queries/orders'
 import currencyOptions from '../../../lib/defaultCurrencyOptions'
 import { GET_NONCE } from 'graphql/queries/nonces'
@@ -94,9 +94,6 @@ export const BidModalRenderer: FC<Props> = ({
   )
   const looksRareSdk = useLooksRareSDK()
 
-  // TO-DO: strategyOptions
-  const strategy = looksRareSdk.addresses.STRATEGY_STANDARD_SALE_DEPRECATED;
-
   const { data: tokenData, refetch: refetchToken } = useQuery(GET_TOKEN, {
     variables: { id: `${collectionId}-${tokenId}`}
   })
@@ -167,33 +164,46 @@ export const BidModalRenderer: FC<Props> = ({
         throw error
       }
   
-      if (!tokenId) {
-        const error = new Error('Missing collection id')
-        setTransactionError(error)
-        throw error
-      }
-  
       setBidStep(BidStep.Offering)
       setTransactionError(null)
       
       const expirationTime = dayjs()
         .add(expirationOption.relativeTime, expirationOption.relativeTimeUnit)
         .unix()
+     
+      let makerBidOutput: CreateMakerBidOutput
+      if (!tokenId) {
+        // collection offer
+        makerBidOutput = await looksRareSdk.createMakerCollectionOffer({
+          collection: collectionId,
+          price: parseUnits(bidAmount, currencyOption?.decimals),
+          amount: 1,
+          strategy: looksRareSdk.addresses.STRATEGY_COLLECTION_SALE_DEPRECATED,
+          currency: currencyOption?.contract,
+          nonce: nonce || 0,
+          startTime: dayjs().unix(),
+          endTime: expirationTime,
+          minPercentageToAsk: 0,
+          params: []
+        })
+      } else {
+        // token offer
+        makerBidOutput = await looksRareSdk.createMakerBid({
+          collection: collectionId,
+          price: parseUnits(bidAmount, currencyOption?.decimals),
+          tokenId: tokenId,
+          amount: 1,
+          strategy: looksRareSdk.addresses.STRATEGY_STANDARD_SALE_DEPRECATED,
+          currency: currencyOption?.contract,
+          nonce: nonce || 0,
+          startTime: dayjs().unix(),
+          endTime: expirationTime,
+          minPercentageToAsk: 0,
+          params: []
+        })
+      }
       
-      const { maker, isCurrencyApproved } = await looksRareSdk.createMakerBid({
-        collection: collectionId,
-        price: parseUnits(bidAmount, currencyOption?.decimals),
-        tokenId: tokenId,
-        amount: 1,
-        strategy,
-        currency: currencyOption?.contract,
-        nonce: nonce || 0,
-        startTime: dayjs().unix(),
-        endTime: expirationTime,
-        minPercentageToAsk: 0, // TO-DO: update later
-        params: []
-      })
-  
+      const { maker, isCurrencyApproved } = makerBidOutput
       setBidData(maker)
       if (!isCurrencyApproved) {
         setSteps([RequestUserStep.APPROVAL, RequestUserStep.SIGN])
@@ -212,7 +222,7 @@ export const BidModalRenderer: FC<Props> = ({
       await createOrderMutation({ variables: { createOrderInput: {
         collectionAddress: maker.collection,
         price: maker.price.toString(),
-        tokenId: maker.tokenId.toString(),
+        tokenId: tokenId ? maker.tokenId.toString() : undefined,
         amount: Number(maker.amount),
         strategy: maker.strategy,
         currencyAddress: maker.currency,

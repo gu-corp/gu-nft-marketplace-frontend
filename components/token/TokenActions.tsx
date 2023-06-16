@@ -67,25 +67,9 @@ export const TokenActions: FC<Props> = ({
   const listing = data?.orders?.[0];
   const isListed = token && listing
 
-  const { data: bidData } = useQuery(GET_ORDERS, {
-    variables: { 
-      first: 1,
-      skip: 0,
-      order_OrderBy: Order_OrderBy.Price,
-      orderDirection: OrderDirection.Desc,
-      where: {
-        collectionAddress: token.collection,
-        tokenId: `${token.tokenId}`,
-        isOrderAsk: false
-      }
-    }
-  })
-
-  const topBid = bidData?.orders?.[0]
-
   const showAcceptOffer =
   !is1155 &&
-  topBid &&
+  offer &&
   isOwner &&
   token?.owner
     ? true
@@ -141,7 +125,7 @@ export const TokenActions: FC<Props> = ({
       {showAcceptOffer && (
         <AcceptBid
           token={token}
-          bidId={topBid?.hash}
+          bidId={offer?.hash}
           collectionId={token?.collection}
           openState={
             isOwner && (queryBidId || deeplinkToAcceptBid)
