@@ -124,10 +124,10 @@ export const AcceptBidModalRenderer: FC<Props> = ({
         provider,
         collectionId,
         address as Address,
-        looksRareSdk.addresses.EXCHANGE
+        looksRareSdk.addresses.TRANSFER_MANAGER_ERC721
       )
   
-      if (isCollectionApproved) {
+      if (!isCollectionApproved) {
         setAcceptBidStep(AcceptBidStep.ApproveMarketplace)
         const tx = await looksRareSdk.approveAllCollectionItems(collectionId, true)
         setTxHash(tx.hash)
