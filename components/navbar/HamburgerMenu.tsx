@@ -17,16 +17,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useAccount, useBalance, useDisconnect } from 'wagmi'
+import { Address, useAccount, useBalance, useDisconnect } from 'wagmi'
 import { ConnectWalletButton } from 'components/ConnectWalletButton'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver } from 'hooks'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
+import currencyOptions from 'components/@reservoir0x/lib/defaultCurrencyOptions'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
-  const { data: balance } = useBalance({ address })
+  const { data: balance } = useBalance({ address, token: currencyOptions[0].contract as Address })
   const {
     avatar: ensAvatar,
     shortAddress,

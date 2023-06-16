@@ -2,7 +2,7 @@ import { FC } from 'react'
 import { Dropdown, DropdownMenuItem } from 'components/primitives/Dropdown'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { Avatar } from 'components/primitives/Avatar'
-import { useAccount, useBalance, useDisconnect } from 'wagmi'
+import { Address, useAccount, useBalance, useDisconnect } from 'wagmi'
 import {
   Box,
   Button,
@@ -15,10 +15,11 @@ import { faCopy, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useENSResolver } from 'hooks'
 import CopyText from 'components/common/CopyText'
+import currencyOptions from 'components/@reservoir0x/lib/defaultCurrencyOptions'
 
 export const ProfileDropdown: FC = () => {
   const { address } = useAccount()
-  const { data: balance } = useBalance({ address })
+  const { data: balance } = useBalance({ address, token: currencyOptions[0].contract as Address, })
   const { disconnect } = useDisconnect()
   const {
     name: ensName,

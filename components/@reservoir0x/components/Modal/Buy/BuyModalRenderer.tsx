@@ -148,7 +148,7 @@ export const BuyModalRenderer: FC<Props> = ({
         signer: listing.signer,
         collection: listing.collectionAddress,
         price: listing.price,
-        tokenId: listing.tokenId,
+        tokenId: listing.tokenId as string,
         amount: listing.amount,
         strategy: listing.strategy,
         currency: listing.currencyAddress,
