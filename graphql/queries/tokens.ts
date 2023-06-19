@@ -29,6 +29,7 @@ export const GET_TOKEN = gql(/* GraphQL */`
         key
         value
         tokenCount
+        floorPrice
       }
     }
   }

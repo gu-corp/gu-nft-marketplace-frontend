@@ -41,12 +41,12 @@ export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
           <Text style="subtitle2" ellipsify>
             {attribute.value}
           </Text>
-          {/* <FormatCryptoCurrency
-            amount={attribute.floorAskPrice}
+          <FormatCryptoCurrency
+            amount={attribute.floorPrice}
             logoHeight={16}
             textStyle="subtitle2"
             maximumFractionDigits={2}
-          /> */}
+          />
         </Flex>
         <Flex justify="between">
           <Text style="body2" css={{ color: '$gray11' }}>
