@@ -95,11 +95,13 @@ export const BidModalRenderer: FC<Props> = ({
   const looksRareSdk = useLooksRareSDK()
 
   const { data: tokenData, refetch: refetchToken } = useQuery(GET_TOKEN, {
-    variables: { id: `${collectionId}-${tokenId}`}
+    variables: { id: `${collectionId}-${tokenId}` },
+    skip: !collectionId || !tokenId,
   })
 
   const { data: collectionData } = useQuery(GET_COLLECTION, {
-    variables: { id: collectionId as string }
+    variables: { id: collectionId as string },
+    skip: !collectionId
   })
 
   const collection = collectionData?.collection
@@ -115,6 +117,7 @@ export const BidModalRenderer: FC<Props> = ({
 
   const { data: dataNonce, refetch: refetchNonce } = useQuery(GET_NONCE, {
     variables: { signer: address?.toLowerCase() as string },
+    skip: !address
   })
   const nonce = dataNonce?.nonce?.nonce
 
@@ -142,8 +145,13 @@ export const BidModalRenderer: FC<Props> = ({
       setTransactionError(null)
     }
 
-    refetchNonce()
-    refetchToken()
+    if (address) {
+      refetchNonce()
+    }
+    
+    if (!collectionId || !tokenId) {
+      refetchToken()
+    }
   }, [open])
 
   useEffect(() => {

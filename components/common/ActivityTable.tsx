@@ -143,7 +143,8 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   const { data: tokenData } = useQuery(GET_TOKEN, {
     variables: {
       id: `${activity.collection}-${activity.tokenId}`
-    }
+    },
+    skip: !activity.collection || !activity.tokenId
   })
   const imageSrc = tokenData?.token?.image as string
   

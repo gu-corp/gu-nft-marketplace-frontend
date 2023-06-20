@@ -17,11 +17,14 @@ export const UserActivityTable: FC<Props> = ({ user, activityTypes }) => {
       where: {
         user: user?.toLowerCase(),
         types: !activityTypes.length ? undefined: activityTypes,
-      },      
-    }
+      },
+    },
+    skip: !user
   })
   useEffect(() => {
-    query.refetch()
+    if (user) {
+      query.refetch()
+    }
   }, [])
 
   return <ActivityTable query={query} />

@@ -48,7 +48,8 @@ export const ListingsTable: FC<Props> = ({ address }) => {
         signer: address?.toLowerCase(),
         isOrderAsk: true
       }
-    }
+    },
+    skip: !address
   })
 
   const listings = data?.orders || []
@@ -115,11 +116,13 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   const expiration = useTimeSince(listing?.endTime ? Number(listing.endTime) : 0)
 
   const { data: collectionData } = useQuery(GET_COLLECTION, {
-    variables: { id: listing.collectionAddress as string}
+    variables: { id: listing.collectionAddress as string },
+    skip: !listing.collectionAddress
   })
 
   const { data: tokenData } = useQuery(GET_TOKEN, {
-    variables: { id: `${listing.collectionAddress}-${listing.tokenId}`}
+    variables: { id: `${listing.collectionAddress}-${listing.tokenId}` },
+    skip: !listing.collectionAddress || !listing.tokenId
   })
 
   const collection = collectionData?.collection

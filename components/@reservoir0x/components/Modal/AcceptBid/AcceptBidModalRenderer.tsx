@@ -74,15 +74,18 @@ export const AcceptBidModalRenderer: FC<Props> = ({
 
   const { data: tokenData, loading: tokenLoading } = useQuery(GET_TOKEN, {
     variables: { id: `${collectionId}-${tokenId}` },
+    skip: !collectionId || !tokenId
   })
   const { data: collectionData, loading: collectionLoading } = useQuery(GET_COLLECTION, {
     variables: { id: collectionId as string },
+    skip: !collectionId
   })
   const token = tokenData?.token as Token
   const collection = collectionData?.collection;
 
   const { data, loading: bidLoading } = useQuery(GET_ORDER_BY_HASH, {
-    variables: { hash: bidId as string }
+    variables: { hash: bidId as string },
+    skip: !bidId
   })
 
   const bid = data?.order as Order

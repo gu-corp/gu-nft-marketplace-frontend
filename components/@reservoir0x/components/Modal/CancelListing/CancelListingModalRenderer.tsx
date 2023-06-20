@@ -50,7 +50,8 @@ export const CancelListingModalRenderer: FC<Props> = ({
 
   const looksRareSdk = useLooksRareSDK()
   const { data, loading } = useQuery(GET_ORDER_BY_HASH, {
-    variables: { hash: listingId as string }
+    variables: { hash: listingId as string },
+    skip: !listingId
   })
 
   const listing = data?.order as Order
@@ -59,10 +60,12 @@ export const CancelListingModalRenderer: FC<Props> = ({
 
   const { data: tokenData } = useQuery(GET_TOKEN, {
     variables: { id: `${listing?.collectionAddress}-${listing?.tokenId}` },
+    skip: !listing?.collectionAddress || !listing?.tokenId
   })
 
   const { data: collectionData } = useQuery(GET_COLLECTION, {
     variables: { id: listing?.collectionAddress as string },
+    skip: !listing?.collectionAddress
   })
 
   const token = tokenData?.token as Token

@@ -51,7 +51,8 @@ export const CancelBidModalRenderer: FC<Props> = ({
   const looksRareSdk = useLooksRareSDK()
 
   const { data, loading } = useQuery(GET_ORDER_BY_HASH, {
-    variables: { hash: bidId as string }
+    variables: { hash: bidId as string },
+    skip: !bidId
   })
 
   const bid = data?.order as Order
@@ -60,10 +61,12 @@ export const CancelBidModalRenderer: FC<Props> = ({
 
   const { data: tokenData } = useQuery(GET_TOKEN, {
     variables: { id: `${bid?.collectionAddress}-${bid?.tokenId}` },
+    skip: !bid?.collectionAddress || !bid?.tokenId
   })
 
   const { data: collectionData } = useQuery(GET_COLLECTION, {
     variables: { id: bid?.collectionAddress as string },
+    skip: !bid?.collectionAddress
   })
 
   const token = tokenData?.token as Token

@@ -57,7 +57,8 @@ export const TokenActivityTable: FC<TokenActivityTableProps> = ({
         tokenId,
         types: !activityTypes.length ? undefined: activityTypes,
       },      
-    }
+    },
+    skip: !collection || !tokenId
   })
   useEffect(() => {
     query.refetch()

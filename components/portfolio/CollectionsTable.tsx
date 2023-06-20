@@ -46,7 +46,8 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
       first: 10,
       skip: 0,
       user:  address?.toLocaleLowerCase() as string
-    }
+    },
+    skip: !address
   })
 
   const collections = data?.relativeCollections || []

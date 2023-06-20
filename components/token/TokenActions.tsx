@@ -61,7 +61,8 @@ export const TokenActions: FC<Props> = ({
         tokenId: `${token.tokenId}`,
         isOrderAsk: true
       }
-    }
+    },
+    skip: !token.collection || !token.tokenId
   })
 
   const listing = data?.orders?.[0];

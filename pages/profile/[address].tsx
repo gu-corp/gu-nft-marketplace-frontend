@@ -74,7 +74,8 @@ const IndexPage: NextPage<Props> = ({ address }) => {
     variables: {
       first: 100,
       user: address?.toLocaleLowerCase() as string
-    }
+    },
+    skip: !address
   })
 
   const { data: tokenData, loading: tokenLoading, fetchMore } = useQuery(GET_TOKENS, {
@@ -84,7 +85,8 @@ const IndexPage: NextPage<Props> = ({ address }) => {
         owner: address?.toLocaleLowerCase(),
         collection: filterCollection
       }
-    }
+    },
+    skip: !address
   })
 
   const tokens = (tokenData?.tokens || []) as Token[]

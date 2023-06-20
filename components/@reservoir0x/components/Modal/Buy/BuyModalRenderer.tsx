@@ -80,11 +80,13 @@ export const BuyModalRenderer: FC<Props> = ({
   const [txHash, setTxHash] = useState<string | undefined>(undefined)
 
   const { data: tokenData } = useQuery(GET_TOKEN, {
-    variables: { id: `${collectionId}-${tokenId}`}
+    variables: { id: `${collectionId}-${tokenId}` },
+    skip: !collectionId || !tokenId
   })
 
   const { data: collectionData } = useQuery(GET_COLLECTION, {
-    variables: { id: collectionId as string }
+    variables: { id: collectionId as string },
+    skip: !collectionId
   })
 
 
@@ -107,7 +109,8 @@ export const BuyModalRenderer: FC<Props> = ({
   const collection = collectionData?.collection
 
   const { data, loading } = useQuery(GET_ORDER_BY_HASH, {
-    variables: { hash: orderId as string }
+    variables: { hash: orderId as string },
+    skip: !orderId
   })
 
   const listing = data?.order as Order

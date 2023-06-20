@@ -71,6 +71,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr}) => {
 
   const { data: collectionData } = useQuery(GET_COLLECTION, {
     variables: { id: id as string },
+    skip: !id
   })
 
   const scrollToTop = () => {
@@ -110,15 +111,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr}) => {
       },
       orderDirection: orderDirection as OrderDirection,
       token_OrderBy: orderBy as Token_OrderBy
-    }
+    },
+    skip: !id
   })
 
   const tokens = (data?.tokens || []) as Token[]
 
   const { data: attributesData } = useQuery(GET_ATTRIBUTES, {
     variables: {
-      where: { collection: id as string } 
-    }
+      where: { collection: id as string }
+    },
+    skip: !id
   })
 
   const collection = collectionData?.collection || ssr.collection

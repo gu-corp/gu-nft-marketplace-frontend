@@ -48,7 +48,8 @@ export const OffersTable: FC<Props> = ({ address }) => {
         signer: address?.toLowerCase(),
         isOrderAsk: false
       }
-    }
+    },
+    skip: !address
   })
 
   const offers = data?.orders || [] 
@@ -66,7 +67,9 @@ export const OffersTable: FC<Props> = ({ address }) => {
   }, [loadMoreObserver?.isIntersecting])
 
   useEffect(() => {
-    refetch()
+    if (address) {
+      refetch()
+    }
   }, [])
 
   return (
@@ -117,11 +120,13 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   )
 
   const { data: tokenData } = useQuery(GET_TOKEN, {
-    variables: { id: `${offer.collectionAddress}-${offer.tokenId}`}
+    variables: { id: `${offer.collectionAddress}-${offer.tokenId}` },
+    skip: !offer.collectionAddress || !offer.tokenId
   })
 
   const { data: collectionData } = useQuery(GET_COLLECTION, {
-    variables: { id: offer.collectionAddress as string}
+    variables: { id: offer.collectionAddress as string },
+    skip: !offer.collectionAddress
   })
 
   const collection = collectionData?.collection

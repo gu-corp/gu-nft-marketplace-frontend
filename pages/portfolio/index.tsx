@@ -42,7 +42,8 @@ const IndexPage: NextPage = () => {
     variables: {
       first: 100,
       user: address?.toLocaleLowerCase() as string
-    }
+    },
+    skip: !address
   })
   const collections = data?.relativeCollections || []
 

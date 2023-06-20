@@ -18,11 +18,14 @@ export const CollectionActivityTable: FC<Props> = ({ id, activityTypes }) => {
         collection: id,
         types: !activityTypes.length ? undefined: activityTypes,
       },      
-    }
+    },
+    skip: !id
   })
 
   useEffect(() => {
-    query.refetch()
+    if (id) {
+      query.refetch()
+    }
   }, [])
 
   return <ActivityTable query={query} />

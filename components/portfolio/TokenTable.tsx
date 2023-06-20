@@ -54,7 +54,8 @@ export const TokenTable: FC<Props> = ({
         owner: address?.toLocaleLowerCase(),
         collection: filterCollection
       }
-    }
+    },
+    skip: !address
   })
 
   const tokens = (data?.tokens || []) as Token[]
@@ -116,7 +117,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   const { data } = useQuery(GET_COLLECTION, {
     variables: {
       id: token.collection
-    }
+    },
+    skip: !token.collection
   })
 
   const collection = data?.collection

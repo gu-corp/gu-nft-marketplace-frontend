@@ -79,11 +79,13 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
   const [refreshTokenMetadata, { loading: isRefreshing }] = useMutation(REFRESH_TOKEN_METADATA);
 
   const { data: tokenData, refetch: mutate } = useQuery(GET_TOKEN, {
-    variables: { id: `${contract?.toLowerCase()}-${id}` }
+    variables: { id: `${contract?.toLowerCase()}-${id}` },
+    skip: !contract || !id
   });
 
   const { data: collectionData } = useQuery(GET_COLLECTION, {
-    variables: { id: contract as string }
+    variables: { id: contract as string },
+    skip: !id
   })
 
   const token = (tokenData?.token || ssr.token) as Token

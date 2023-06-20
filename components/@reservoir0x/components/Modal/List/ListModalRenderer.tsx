@@ -100,6 +100,7 @@ export const ListModalRenderer: FC<Props> = ({
 
   const { data: dataNonce, refetch: refetchNonce } = useQuery(GET_NONCE, {
     variables: { signer: account.address?.toLowerCase() as string },
+    skip: !account?.address
   })
 
   const nonce = dataNonce?.nonce?.nonce
@@ -115,7 +116,8 @@ export const ListModalRenderer: FC<Props> = ({
         tokenId: `${tokenId}`,
         isOrderAsk: true
       }
-    }
+    },
+    skip: !tokenId
   })
 
   const existListing = orderData?.orders?.[0];
@@ -132,9 +134,15 @@ export const ListModalRenderer: FC<Props> = ({
     setCurrencyOption(currencyOptions[0])
     setRequestUserStep(RequestUserStep.APPROVAL)
 
-    refetchListed()
-    refetchNonce()
-    refetchToken()
+    if (tokenId) {
+      refetchListed()
+    }
+    if (account?.address) {
+      refetchNonce()
+    }
+    if (!collectionId || !tokenId) {
+      refetchToken()
+    }
   }, [open])
 
   const listToken = useCallback(async () => {
@@ -239,10 +247,12 @@ export const ListModalRenderer: FC<Props> = ({
 
 
   const { data: tokenData, loading, refetch: refetchToken } = useQuery(GET_TOKEN, {
-    variables: { id: `${collectionId}-${tokenId}`}
+    variables: { id: `${collectionId}-${tokenId}` },
+    skip: !collectionId || !tokenId
   })
   const { data: collectionData } = useQuery(GET_COLLECTION, {
-    variables: { id: `${collectionId}-${tokenId}`}
+    variables: { id: collectionId as string },
+    skip: !collectionId
   })
 
   const token = tokenData?.token as Token
@@ -252,9 +262,15 @@ export const ListModalRenderer: FC<Props> = ({
   const royaltyFee = useRoyaltyFee(token?.collection as string, token?.tokenId as string)
 
   useEffect(() => {
-    refetchListed()
-    refetchNonce()
-    refetchToken()
+    if (tokenId) {
+      refetchListed()
+    }
+    if (account?.address) {
+      refetchNonce()
+    }
+    if (!collectionId || !tokenId) {
+      refetchToken()
+    }
   }, [transactionError])
   return <>{children({
     token,
