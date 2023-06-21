@@ -133,7 +133,7 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
   const token = tokenData?.token as Token
   
   let imageSrc: string = (
-    token?.image
+    token?.image || collection?.image
   ) as string
 
   if (isSmallDevice) {
@@ -153,7 +153,10 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
       >
         <Flex justify="between" css={{ width: '100%' }}>
           <Link
-            href={`/collection/${offer?.collectionAddress}/${offer?.tokenId}`}
+            href={offer.tokenId ?
+              `/collection/${offer?.collectionAddress}/${offer?.tokenId}` :
+              `/collection/${offer?.collectionAddress}`
+            }
           >
             <Flex align="center">
               {imageSrc && (
@@ -181,9 +184,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
                 <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
                   {collection?.name}
                 </Text>
-                <Text style="subtitle2" ellipsify>
+                {token?.tokenId && <Text style="subtitle2" ellipsify>
                   #{token?.tokenId}
-                </Text>
+                </Text>}
               </Flex>
             </Flex>
           </Link>
@@ -243,7 +246,10 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
     >
       <TableCell css={{ minWidth: 0 }}>
         <Link
-          href={`/collection/${offer?.collectionAddress}/${offer?.tokenId}`}
+          href={offer.tokenId ?
+            `/collection/${offer?.collectionAddress}/${offer?.tokenId}` :
+            `/collection/${offer?.collectionAddress}`
+          }
         >
           <Flex align="center">
             {imageSrc && (
@@ -270,9 +276,9 @@ const OfferTableRow: FC<OfferTableRowProps> = ({ offer, mutate }) => {
               <Text style="subtitle3" ellipsify css={{ color: '$gray11' }}>
                 {collection?.name}
               </Text>
-              <Text style="subtitle2" ellipsify>
+              {token?.tokenId && <Text style="subtitle2" ellipsify>
                 #{token?.tokenId}
-              </Text>
+              </Text>}
             </Flex>
           </Flex>
         </Link>
