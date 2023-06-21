@@ -45,14 +45,23 @@ query GetCollection($id: String!) {
 `);
 
 export const GET_USER_RELATIVE_COLLECTIONS = gql(/* GraphQL */`
-query GetUserRelativeCollections($first: Int, $skip: Int, $user: String!) {
-    relativeCollections(first: $first, skip: $skip, user: $user) {
+query GetUserRelativeCollections($first: Int, $skip: Int, $where: RelativeCollection_FilterArgs!, $orderBy: RelativeCollection_OrderBy, $orderDirection: OrderDirection) {
+    relativeCollections(first: $first, skip: $skip, where: $where, relativeCollection_OrderBy: $orderBy, orderDirection: $orderDirection) {
       id
       name
       symbol
       totalTokens
       image
       description
+      volume  {
+        day1Volume
+        day7Volume
+        monthVolume
+        totalVolume
+      }
+      floor {
+        floorPrice
+      }
     }
   }
 `);

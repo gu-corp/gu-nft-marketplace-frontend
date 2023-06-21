@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { ComponentPropsWithoutRef, FC, useEffect, useRef, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import {
   Text,
@@ -23,7 +23,7 @@ import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { PercentChange } from 'components/primitives/PercentChange'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useQuery } from '@apollo/client'
-import { Collection } from '__generated__/graphql'
+import { Collection, OrderDirection, RelativeCollection_OrderBy } from '__generated__/graphql'
 import { GET_USER_RELATIVE_COLLECTIONS } from 'graphql/queries/collections'
 
 type Props = {
@@ -36,7 +36,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] =
-    useState<CollectionsTableSortingOption>('1day')
+    useState<CollectionsTableSortingOption>(RelativeCollection_OrderBy.Volume1d)
 
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
@@ -45,13 +45,36 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
     variables: {
       first: 10,
       skip: 0,
-      user:  address?.toLocaleLowerCase() as string
+      where: {
+        user: address?.toLocaleLowerCase() as string
+      },
+      orderBy: sortByTime,
+      orderDirection: OrderDirection.Desc
     },
     skip: !address
   })
 
   const collections = data?.relativeCollections || []
 
+  let volumeKey: ComponentPropsWithoutRef<
+    typeof CollectionTableRow
+    >['volumeKey'] = 'totalVolume'
+  
+  switch (sortByTime) {
+    case RelativeCollection_OrderBy.Volume1d:
+      volumeKey = 'day1Volume'
+      break
+    case RelativeCollection_OrderBy.Volume7d:
+      volumeKey = 'day7Volume'
+      break
+    case RelativeCollection_OrderBy.Volume1m:
+      volumeKey = 'monthVolume'
+      break
+    case RelativeCollection_OrderBy.VolumeMax:
+      volumeKey = 'totalVolume'
+      break
+  }
+  
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
@@ -89,7 +112,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
               <CollectionTableRow
                 key={`${collection?.id}-${i}`}
                 collection={collection}
-                sortByTime={sortByTime}
+                volumeKey={volumeKey}
               />
             )
           })}
@@ -107,12 +130,12 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
 
 type CollectionTableRowProps = {
   collection: Collection
-  sortByTime: CollectionsTableSortingOption
+  volumeKey: 'day1Volume' | 'day7Volume' | 'monthVolume' | 'totalVolume'
 }
 
 const CollectionTableRow: FC<CollectionTableRowProps> = ({
   collection,
-  sortByTime,
+  volumeKey
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
@@ -160,8 +183,8 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
               whiteSpace: 'nowrap',
             }}
           >
-            {/* <FormatCryptoCurrency
-              amount={collection?.volume?.[sortByTime]}
+            <FormatCryptoCurrency
+              amount={collection?.volume?.[volumeKey]}
               maximumFractionDigits={3}
               textStyle="subtitle2"
               logoHeight={14}
@@ -171,7 +194,7 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
                 whiteSpace: 'nowrap',
               }}
             />
-            {sortByTime != 'allTime' &&
+            {/* {sortByTime != 'allTime' &&
               collection?.volumeChange && (
                 <PercentChange
                   value={collection?.volumeChange[sortByTime]}
@@ -228,12 +251,12 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
           justify="start"
           css={{ height: '100%' }}
         >
-          {/* <FormatCryptoCurrency
-            amount={collection?.volume?.[sortByTime]}
+          <FormatCryptoCurrency
+            amount={collection?.volume?.[volumeKey]}
             textStyle="subtitle2"
             logoHeight={14}
           />
-          {sortByTime != 'allTime' && collection?.volumeChange && (
+          {/* {sortByTime != 'allTime' && collection?.volumeChange && (
             <PercentChange
               value={collection?.volumeChange[sortByTime]}
             />
@@ -250,11 +273,11 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
         </Text>
       </TableCell>
       <TableCell>
-        {/* <FormatCryptoCurrency
-          amount={collection?.floorAskPrice}
+        <FormatCryptoCurrency
+          amount={collection?.floor?.floorPrice}
           textStyle="subtitle2"
           logoHeight={14}
-        /> */}
+        />
       </TableCell>
       <TableCell>
         <Text style="subtitle2">{collection?.totalTokens}</Text>

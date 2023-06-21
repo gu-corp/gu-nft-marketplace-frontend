@@ -41,7 +41,9 @@ const IndexPage: NextPage = () => {
   const { data, loading } = useQuery(GET_USER_RELATIVE_COLLECTIONS, {
     variables: {
       first: 100,
-      user: address?.toLocaleLowerCase() as string
+      where: {
+        user: address?.toLocaleLowerCase() as string
+      }
     },
     skip: !address
   })

@@ -1,22 +1,28 @@
+import { RelativeCollection_OrderBy } from '__generated__/graphql'
 import { ToggleGroup, ToggleGroupItem, Text } from '../primitives'
 import { FC } from 'react'
 
 export type CollectionsTableSortingOption = typeof sortingOptions[number]
 
-const sortingOptions = ['1day', '7day', '30day', 'allTime'] as const
+const sortingOptions = [
+  RelativeCollection_OrderBy.Volume1d,
+  RelativeCollection_OrderBy.Volume7d,
+  RelativeCollection_OrderBy.Volume1m,
+  RelativeCollection_OrderBy.VolumeMax
+] as const
 
 const nameForSortingOption = (
   option: CollectionsTableSortingOption,
   compact: boolean
 ) => {
   switch (option) {
-    case '1day':
+    case RelativeCollection_OrderBy.Volume1d:
       return compact ? '24h' : '24 hours'
-    case '7day':
+    case RelativeCollection_OrderBy.Volume7d:
       return compact ? '7d' : '7 days'
-    case '30day':
+    case RelativeCollection_OrderBy.Volume1m:
       return compact ? '30d' : '30 days'
-    case 'allTime':
+    case RelativeCollection_OrderBy.VolumeMax:
       return compact ? 'All' : 'All Time'
   }
 }
