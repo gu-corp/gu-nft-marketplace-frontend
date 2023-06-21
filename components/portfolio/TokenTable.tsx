@@ -183,19 +183,11 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
             <Text style="subtitle3" color="subtle">
               Net Floor
             </Text>
-            {/* <FormatCryptoCurrency
-              amount={
-                token?.collection?.floorAskPrice?.netAmount?.decimal
-              }
-              address={
-                token?.collection?.floorAskPrice?.currency?.contract
-              }
-              decimals={
-                token?.collection?.floorAskPrice?.currency?.decimals
-              }
+            <FormatCryptoCurrency
+              amount={collection?.floor?.floorPrice}
               textStyle="subtitle2"
               logoHeight={14}
-            /> */}
+            />
             <List
               token={token}
               buttonCss={{
@@ -327,12 +319,11 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
         />
       </TableCell>
       <TableCell>
-        {/* <FormatCryptoCurrency
-          amount={ask?.price}
-          address={ask?.currencyAddress}
-          textStyle="subtitle1"
+        <FormatCryptoCurrency
+          amount={collection?.floor?.floorPrice}
+          textStyle="subtitle2"
           logoHeight={14}
-        /> */}
+        />
       </TableCell>
       <TableCell>
         <FormatCryptoCurrency
