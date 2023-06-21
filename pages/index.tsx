@@ -45,7 +45,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
       break
   }
 
-  const { data, loading, refetch } = useQuery(GET_COLLECTIONS, {
+  const { data, loading } = useQuery(GET_COLLECTIONS, {
     variables: {
       skip: 0,
       first: 10, 
@@ -55,10 +55,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   })
 
   const collections = data?.collections || ssr.collections
-
-  useEffect(() => {
-    refetch()
-  }, [sortByTime])
   
   return (
     <Layout>

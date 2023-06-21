@@ -32,7 +32,7 @@ function createApolloClient() {
       typePolicies: {
         Query: {
           fields: {
-            collections: offsetLimitPagination(["where", "collection_orderBy"]),
+            collections: offsetLimitPagination(["where", "collection_OrderBy", "orderDirection"]),
             tokens: offsetLimitPagination(["where"]),
             orders: offsetLimitPagination(["where"]),
             activities: offsetLimitPagination(["where"])

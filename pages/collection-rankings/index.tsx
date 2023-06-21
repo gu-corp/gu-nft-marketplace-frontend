@@ -53,7 +53,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   }, [router.query])
 
 
-  const { data, loading, fetchMore, refetch } = useQuery(GET_COLLECTIONS, {
+  const { data, loading, fetchMore } = useQuery(GET_COLLECTIONS, {
     variables: {
       skip: 0,
       first: 10,
@@ -92,10 +92,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
       volumeKey = 'totalVolume'
       break
   }
-
-  useEffect(() => {
-    refetch()
-  }, [sortByTime])
   
   return (
     <Layout>
