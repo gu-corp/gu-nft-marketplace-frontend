@@ -140,7 +140,7 @@ export const ListModalRenderer: FC<Props> = ({
     if (account?.address) {
       refetchNonce()
     }
-    if (!collectionId || !tokenId) {
+    if (collectionId && tokenId) {
       refetchToken()
     }
   }, [open])
@@ -268,7 +268,7 @@ export const ListModalRenderer: FC<Props> = ({
     if (account?.address) {
       refetchNonce()
     }
-    if (!collectionId || !tokenId) {
+    if (collectionId && tokenId) {
       refetchToken()
     }
   }, [transactionError])

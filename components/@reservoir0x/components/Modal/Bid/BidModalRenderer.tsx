@@ -149,7 +149,7 @@ export const BidModalRenderer: FC<Props> = ({
       refetchNonce()
     }
     
-    if (!collectionId || !tokenId) {
+    if (collectionId && tokenId) {
       refetchToken()
     }
   }, [open])
