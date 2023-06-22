@@ -1,6 +1,8 @@
+import { useQuery } from '@apollo/client'
 import { Token } from '__generated__/graphql'
 import { Flex, FormatCryptoCurrency, Text } from 'components/primitives'
 import { BigNumber } from 'ethers'
+import { GET_HIGHEST_BID, GET_LISTED } from 'graphql/queries/orders'
 import { useMarketplaceChain } from 'hooks'
 import { FC } from 'react'
 import { formatDollar } from 'utils/numbers'
@@ -40,8 +42,30 @@ export const PriceData: FC<Props> = ({ token }) => {
   // const offerSourceRedirect = `${reservoirBaseUrl}/redirect/sources/${
   //   offerSourceDomain || offerSourceName
   // }/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
-  const ask = token?.asks?.[0]
-  const highestBid = [...token?.bids || []].sort((a, b) => BigNumber.from(a.price).gt(BigNumber.from(b.price)) ? -1 : 1)?.[0]
+
+  const { data: listedData, refetch: refetchListed } = useQuery(GET_LISTED, {
+    variables: {
+      where: {
+        collectionAddress: token.collection,
+        tokenId: token.tokenId
+      }
+    },
+    skip: !token.tokenId || !token.collection
+  })
+
+  const ask = listedData?.listed;
+
+  const { data: highestBidData } = useQuery(GET_HIGHEST_BID, {
+    variables: {
+      where: {
+        collectionAddress: token.collection,
+        tokenId: token.tokenId
+      }
+    },
+    skip: !token.collection || !token.tokenId
+  })
+
+  const highestBid = highestBidData?.highestBid
 
   return (
     <Flex css={{ gap: '$6', pt: '$4', pb: '$5' }}>

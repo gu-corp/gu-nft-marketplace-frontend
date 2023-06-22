@@ -16,6 +16,7 @@ import {
 } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
 import { BigNumber } from 'ethers'
+import { GET_LISTED } from 'graphql/queries/orders'
 import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
@@ -63,7 +64,18 @@ export default ({
   const collectionId = token.collection
   const tokenId = token.tokenId
 
-  const ask = token?.asks?.[0]
+
+  const { data: listedData, refetch: refetchListed } = useQuery(GET_LISTED, {
+    variables: {
+      where: {
+        collectionAddress: collectionId as string,
+        tokenId: `${tokenId}`
+      }
+    },
+    skip: !tokenId || !collectionId
+  })
+
+  const ask = listedData?.listed;
   const lastSale = [...(token?.sales || []) ]?.sort((a, b) => b.updatedAt - a.updatedAt)?.[0]
 
   return (

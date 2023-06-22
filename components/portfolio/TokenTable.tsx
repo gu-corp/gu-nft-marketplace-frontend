@@ -28,6 +28,7 @@ import { Token } from '__generated__/graphql'
 import { GET_TOKENS } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { BigNumber } from 'ethers'
+import { GET_HIGHEST_BID, GET_LISTED } from 'graphql/queries/orders'
 
 type Props = {
   address: Address | undefined
@@ -123,10 +124,31 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
 
   const collection = data?.collection
 
-  let imageSrc = token?.image as string
+  let imageSrc = token?.image || collection?.image as string
 
-  const ask = token?.asks?.[0]
-  const highestBid = [...token?.bids || []].sort((a, b) => BigNumber.from(a.price).gt(BigNumber.from(b.price)) ? -1 : 1)?.[0]
+  const { data: listedData, refetch } = useQuery(GET_LISTED, {
+    variables: {
+      where: {
+        collectionAddress: token.collection ,
+        tokenId: token.tokenId
+      }
+    },
+    skip: !token.tokenId || !token.collection
+  })
+
+  const ask = listedData?.listed;
+  
+  const { data: highestBidData } = useQuery(GET_HIGHEST_BID, {
+    variables: {
+      where: {
+        collectionAddress: token.collection,
+        tokenId: token.tokenId
+      }
+    },
+    skip: !token.collection || !token.tokenId
+  })
+  
+  const highestBid = highestBidData?.highestBid
 
   if (isSmallDevice) {
     return (

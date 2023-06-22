@@ -6,7 +6,7 @@ import React, {
   useEffect,
 } from 'react'
 
-import { useAccount, useSigner } from 'wagmi'
+import { useAccount } from 'wagmi'
 
 import dayjs from 'dayjs'
 import { ExpirationOption } from 'types/ExpirationOption'
@@ -20,10 +20,8 @@ import { useMutation, useQuery } from '@apollo/client'
 import { useRoyaltyFee, useStrategyFee  } from 'hooks'
 import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
 import { MakerOrder } from "@cuonghx.gu-tech/looksrare-sdk"
-import { CREATE_ORDER } from 'graphql/queries/orders'
+import { CREATE_ORDER, GET_LISTED } from 'graphql/queries/orders'
 import { parseUnits } from 'ethers/lib/utils.js'
-import { GET_ORDERS } from 'graphql/queries/orders'
-import { OrderDirection, Order_OrderBy } from '__generated__/graphql'
 import { GET_NONCE } from 'graphql/queries/nonces'
 import { GET_TOKEN } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
@@ -104,23 +102,18 @@ export const ListModalRenderer: FC<Props> = ({
   })
 
   const nonce = dataNonce?.nonce?.nonce
-
-  const { data: orderData, refetch: refetchListed } = useQuery(GET_ORDERS, {
-    variables: { 
-      first: 1,
-      skip: 0,
-      order_OrderBy: Order_OrderBy.CreatedAt,
-      orderDirection: OrderDirection.Desc,
+  
+  const { data: listedData, refetch: refetchListed } = useQuery(GET_LISTED, {
+    variables: {
       where: {
-        collectionAddress: collectionId,
-        tokenId: `${tokenId}`,
-        isOrderAsk: true
+        collectionAddress: collectionId as string,
+        tokenId: `${tokenId}`
       }
     },
-    skip: !tokenId
+    skip: !tokenId || !collectionId
   })
 
-  const existListing = orderData?.orders?.[0];
+  const existListing = listedData?.listed;
 
   useEffect(() => {
     if (!open) {

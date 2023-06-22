@@ -56,7 +56,6 @@ import { ActivityType, Collection, Order, OrderDirection, Order_OrderBy, Token }
 import { GET_TOKEN, REFRESH_TOKEN_METADATA } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { useMutation, useQuery } from '@apollo/client'
-import { GET_ORDERS } from 'graphql/queries/orders'
 import { BigNumber } from 'ethers'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>

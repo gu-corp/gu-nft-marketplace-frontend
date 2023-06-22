@@ -1,13 +1,13 @@
 import { QueryResult, useQuery } from '@apollo/client'
 import { faGasPump } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Order, OrderDirection, Order_OrderBy, Token } from '__generated__/graphql'
+import { Order, Token } from '__generated__/graphql'
 import { AcceptBid, Bid, BuyNow, List } from 'components/buttons'
 import AddToCart from 'components/buttons/AddToCart'
 import CancelBid from 'components/buttons/CancelBid'
 import CancelListing from 'components/buttons/CancelListing'
 import { Button, Flex, Grid, Tooltip, Text } from 'components/primitives'
-import { GET_ORDERS } from 'graphql/queries/orders'
+import { GET_LISTED } from 'graphql/queries/orders'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { useAccount } from 'wagmi'
@@ -50,32 +50,42 @@ export const TokenActions: FC<Props> = ({
     },
   }
 
-  const { data } = useQuery(GET_ORDERS, {
-    variables: { 
-      first: 1,
-      skip: 0,
-      order_OrderBy: Order_OrderBy.CreatedAt,
-      orderDirection: OrderDirection.Desc,
+  const { data: listedData, refetch: refetchListed } = useQuery(GET_LISTED, {
+    variables: {
       where: {
-        collectionAddress: token.collection,
-        tokenId: `${token.tokenId}`,
-        isOrderAsk: true
+        collectionAddress: token?.collection as string,
+        tokenId: token?.tokenId as string
       }
     },
-    skip: !token.collection || !token.tokenId
+    skip: !token?.tokenId || !token?.collection
   })
 
-  const listing = data?.orders?.[0];
+  const listing = listedData?.listed
   const isListed = token && listing
 
   const showAcceptOffer =
-  !is1155 &&
-  offer &&
-  isOwner &&
-  token?.owner
-    ? true
-    : false
+    offer &&
+    isOwner &&
+    token?.owner?.toLowerCase() !== offer?.signer?.toLowerCase()
+      ? true
+      : false
 
+  const showList =
+    isOwner
+  
+  const showBuy =
+    !isOwner &&
+    isListed
+  
+  const showBid =
+    !isOwner
+  
+  const showCancelBid =
+    isTopBidder
+  
+  const showCancelList =
+    isOwner && isListed
+  
   return (
     <Grid
       align="center"
@@ -89,7 +99,7 @@ export const TokenActions: FC<Props> = ({
         },
       }}
     >
-      {isOwner && !is1155 && (
+      {showList && (
         <List
           token={token}
           mutate={mutate}
@@ -101,7 +111,7 @@ export const TokenActions: FC<Props> = ({
           }
         />
       )}
-      {(!isOwner || is1155) && isListed && (
+      {showBuy && (
         <Flex
           css={{ ...buttonCss, borderRadius: 8, overflow: 'hidden', gap: 1 }}
         >
@@ -138,8 +148,7 @@ export const TokenActions: FC<Props> = ({
           buttonChildren="Accept Offer"
         />
       )}
-
-      {(!isOwner || is1155) && (
+      {showBid && (
         <Bid
           tokenId={token?.tokenId}
           collectionId={token?.collection}
@@ -147,8 +156,7 @@ export const TokenActions: FC<Props> = ({
           buttonCss={buttonCss}
         />
       )}
-
-      {isTopBidder && !is1155 && (
+      {showCancelBid && (
         <CancelBid
           bidId={offer?.hash as string}
           mutate={mutate}
@@ -189,8 +197,7 @@ export const TokenActions: FC<Props> = ({
           }
         />
       )}
-
-      {isOwner && isListed && !is1155 && (
+      {showCancelList && (
         <CancelListing
           listingId={listing.hash}
           trigger={

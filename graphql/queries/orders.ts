@@ -55,3 +55,47 @@ query GetOrderByHash($hash: ID!) {
     }
   }
 `);
+
+export const GET_HIGHEST_BID = gql(/* GraphQL */`
+query GetHighBid($where: HighestBid_FilterArgs!) {
+    highestBid(where: $where) {
+      hash
+      collectionAddress
+      tokenId
+      price
+      startTime
+      endTime
+      nonce
+      currencyAddress
+      amount
+      isOrderAsk
+      signer
+      strategy
+      minPercentageToAsk
+      params
+      signature
+    }
+  }
+`);
+
+export const GET_LISTED = gql(/* GraphQL */`
+query GetListed($where: Listed_FilterArgs!) {
+    listed(where: $where) {
+      hash
+      collectionAddress
+      tokenId
+      price
+      startTime
+      endTime
+      nonce
+      currencyAddress
+      amount
+      isOrderAsk
+      signer
+      strategy
+      minPercentageToAsk
+      params
+      signature
+    }
+  }
+`);
