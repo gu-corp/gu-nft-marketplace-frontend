@@ -61,7 +61,7 @@ const Navbar = () => {
           <Link href="/">
             <Box css={{ width: 34, cursor: 'pointer' }}>
               <Image
-                src="/reservoirLogo.svg"
+                src="/guLogo.svg"
                 width={34}
                 height={39}
                 alt="Reservoir"
@@ -101,14 +101,14 @@ const Navbar = () => {
             <Box css={{ width: 112, cursor: 'pointer' }}>
               {theme == 'dark' ? (
                 <Image
-                  src="/reservoirMarketLogo.svg"
+                  src="/logoDark.svg"
                   width={112}
                   height={36}
                   alt="Reservoir"
                 />
               ) : (
                 <Image
-                  src="/reservoirMarketLogoLight.svg"
+                  src="/logoLight.svg"
                   width={112}
                   height={36}
                   alt="Reservoir"

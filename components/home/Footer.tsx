@@ -33,30 +33,26 @@ const SectionLink: FC<SectionLinkProps> = ({ name, href }) => (
 const developerSectionLinks = [
   {
     name: 'Docs',
-    href: 'https://docs.reservoir.tools/docs',
+    href: '#',
   },
   {
     name: 'API Reference',
-    href: 'https://docs.reservoir.tools/reference/overview',
+    href: '#',
   },
   {
     name: 'Github',
-    href: 'https://github.com/reservoirprotocol',
+    href: 'https://github.com/gulabs',
   },
 ]
 
 const companySectionLinks = [
   {
-    name: 'Jobs',
-    href: 'https://jobs.ashbyhq.com/reservoir',
-  },
-  {
     name: 'Terms of Use',
-    href: 'https://reservoir.tools/terms',
+    href: '#',
   },
   {
     name: 'Privacy Policy',
-    href: 'https://reservoir.tools/privacy',
+    href: '#',
   },
 ]
 
@@ -95,12 +91,12 @@ export const Footer = () => {
         direction="column"
         css={{ alignItems: 'flex-start', '@bp600': { alignItems: 'flex-end' } }}
       >
-        <SectionTitle title="Join Reservoir Community" />
+        <SectionTitle title="Join GU.Technologies Community" />
         <Flex css={{ gap: '$4', mt: 16 }}>
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://twitter.com/reservoir0x"
+            href="https://twitter.com/G_U_net"
           >
             <Button size="xs" color="gray3">
               <FontAwesomeIcon icon={faTwitter} width={14} height={14} />
