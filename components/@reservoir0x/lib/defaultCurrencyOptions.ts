@@ -1,18 +1,12 @@
+import { SupportedNetworkId, addressesByNetwork } from "@gulabs/gu-nft-marketplace-sdk"
 import { Currency } from "types/currency"
 
 const currencyOptions: Currency[] = [
-  // {
-  //   // description: pay by ETH that mean can pay by WETH
-  //   contract: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-  //   symbol: "ETH/WETH",
-  //   decimals: 18
-  // },
   {
-    // TO-DO: import from sdk
-    contract: "0x1559b550a5b35d3d5a76d7d7e4d07fd31ee96c00",
-    symbol: "USDT",
+    contract: addressesByNetwork[process.env.NEXT_PUBLIC_NETWORK_ID as SupportedNetworkId].WETH,
+    symbol: "WETH",
     decimals: 18,
-    logo: '/icons/currency/usdt.png'
+    logo: '/icons/currency/weth.png'
   },
 ]
 

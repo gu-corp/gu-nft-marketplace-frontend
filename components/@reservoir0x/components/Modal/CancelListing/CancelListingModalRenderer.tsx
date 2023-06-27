@@ -3,7 +3,7 @@ import { useNetwork } from 'wagmi'
 import { Token, Order, Collection } from '__generated__/graphql'
 import { useQuery } from '@apollo/client'
 import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
-import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
+import { useSdk } from 'context/sdkProvider'
 import { useCurrency } from 'hooks'
 import { Currency } from 'types/currency'
 import { GET_TOKEN } from 'graphql/queries/tokens'
@@ -48,7 +48,7 @@ export const CancelListingModalRenderer: FC<Props> = ({
   const blockExplorerBaseUrl =
     activeChain?.blockExplorers?.default.url || 'https://etherscan.io'
 
-  const looksRareSdk = useLooksRareSDK()
+  const sdk = useSdk()
   const { data, loading } = useQuery(GET_ORDER_BY_HASH, {
     variables: { hash: listingId as string },
     skip: !listingId
@@ -73,7 +73,7 @@ export const CancelListingModalRenderer: FC<Props> = ({
 
   const cancelOrder = useCallback(async () => {
     try {
-      if (!looksRareSdk.signer) {
+      if (!sdk.signer) {
         const error = new Error('Missing a signer')
         setTransactionError(error)
         throw error
@@ -87,7 +87,7 @@ export const CancelListingModalRenderer: FC<Props> = ({
 
       setCancelStep(CancelStep.Approving)
 
-      const tx = await looksRareSdk.cancelMultipleMakerOrders([listing?.nonce]).call()
+      const tx = await sdk.cancelMultipleMakerOrders([listing?.nonce]).call()
       setTxHash(tx.hash);
       await tx.wait()
   
@@ -106,7 +106,7 @@ export const CancelListingModalRenderer: FC<Props> = ({
         setCancelStep(CancelStep.Cancel)
         setTxHash(null);
     }
-  }, [listing, looksRareSdk])
+  }, [listing, sdk])
 
   useEffect(() => {
     if (!open) {

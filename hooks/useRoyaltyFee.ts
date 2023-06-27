@@ -1,11 +1,11 @@
 import { useProvider } from "wagmi";
-import { useLooksRareSDK } from "../context/LooksRareSDKProvider";
+import { useSdk } from "../context/sdkProvider";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import IRoyaltyFeeManagerAbi from "@cuonghx.gu-tech/looksrare-sdk/dist/abis/IRoyaltyFeeManager.json"
+import IRoyaltyFeeManagerAbi from "@gulabs/gu-nft-marketplace-sdk/dist/abis/IRoyaltyFeeManager.json"
 
 export default function (collectionAddress: string, tokenId: string, amount = 1) {
-  const sdk = useLooksRareSDK()
+  const sdk = useSdk()
   const provider = useProvider()
   
   const [fee, setFee] = useState(0)

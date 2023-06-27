@@ -2,41 +2,41 @@
 # yarn lockfile v1
 
 
-"@0xsequence/abi@^0.43.26":
-  "integrity" "sha512-libZgp7wA5DSf4QOmTQb5n1V1cvPXG/qxf8KdGoBEklSZtfbC+G2xcbCGQZOl0qg0j5GwX9B0UtaSXe6IObooQ=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/abi/-/abi-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/abi@^0.43.34":
+  "integrity" "sha512-wZ3JLA4kw2em8A7gFW5oESdo+F3G/WjIhCp/aZ0x3UgayBxrQjwBURoqDQPrY5k/BJ4R68LIEabLTrpSXesh1g=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/abi/-/abi-0.43.34.tgz"
+  "version" "0.43.34"
 
-"@0xsequence/api@^0.43.26":
-  "integrity" "sha512-+vOEwO/zHUtFai2qloxO5VK0k9t9MrKnOAQUamKLMupDac20GdUjPnaiVfHZ3X16v8yopf2W7Pn9zSMbg4nGBQ=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/api/-/api-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/api@^0.43.34":
+  "integrity" "sha512-YmV65zn9vZiprEXLfLVIWANK3WBag3d+N0Sc5Br19ezmCFBg52DdzumJIM+8S3maUE2JdL9RbgBLZ+9JOBKnEg=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/api/-/api-0.43.34.tgz"
+  "version" "0.43.34"
 
-"@0xsequence/auth@^0.43.26":
-  "integrity" "sha512-iiGJQf5pg+uAi2nyYxGMbUs3N295CLwg2MnqJbO71/5S/s3eBhSL+lm2hcJvTqh4wRYEmIYsGj2m7t5RATY9ug=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/auth/-/auth-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/auth@^0.43.34":
+  "integrity" "sha512-dw58nX2gc5QkIkzeVCheFZrRQgHwp4ZlJdg2e5gk7jU8eEu48oWP6faz30MFfiJfUCaysbGZ0o9+mGPqwpPG2g=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/auth/-/auth-0.43.34.tgz"
+  "version" "0.43.34"
   dependencies:
-    "@0xsequence/abi" "^0.43.26"
-    "@0xsequence/api" "^0.43.26"
-    "@0xsequence/config" "^0.43.26"
+    "@0xsequence/abi" "^0.43.34"
+    "@0xsequence/api" "^0.43.34"
+    "@0xsequence/config" "^0.43.34"
     "@0xsequence/ethauth" "^0.8.0"
-    "@0xsequence/indexer" "^0.43.26"
-    "@0xsequence/metadata" "^0.43.26"
-    "@0xsequence/network" "^0.43.26"
-    "@0xsequence/provider" "^0.43.26"
-    "@0xsequence/utils" "^0.43.26"
-    "@0xsequence/wallet" "^0.43.26"
+    "@0xsequence/indexer" "^0.43.34"
+    "@0xsequence/metadata" "^0.43.34"
+    "@0xsequence/network" "^0.43.34"
+    "@0xsequence/provider" "^0.43.34"
+    "@0xsequence/utils" "^0.43.34"
+    "@0xsequence/wallet" "^0.43.34"
 
-"@0xsequence/config@^0.43.26":
-  "integrity" "sha512-Iiip9gPFMOngxEalDgF6f2szJ6Xbme3aAgdW5Xwy4xv+aMPmQH1euEF0/2yD4vGpbG/5aeOR5H0H4zrsuU2/8Q=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/config/-/config-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/config@^0.43.34":
+  "integrity" "sha512-rOkNLB7z64ZkURzTXMF+4zTPo17VUei6vT5sp9Uzd5zamEneWGFdUJltzDc8sLdUWTEVdkyckaTSTS+8/sHuLw=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/config/-/config-0.43.34.tgz"
+  "version" "0.43.34"
   dependencies:
-    "@0xsequence/abi" "^0.43.26"
-    "@0xsequence/multicall" "^0.43.26"
-    "@0xsequence/network" "^0.43.26"
-    "@0xsequence/utils" "^0.43.26"
+    "@0xsequence/abi" "^0.43.34"
+    "@0xsequence/multicall" "^0.43.34"
+    "@0xsequence/network" "^0.43.34"
+    "@0xsequence/utils" "^0.43.34"
 
 "@0xsequence/ethauth@^0.8.0":
   "integrity" "sha512-P21cxRSS+2mDAqFVAJt0lwQFtbObX+Ewlj8DMyDELp81+QbfHFh6LCyu8dTXNdBx6UbmRFOCSBno5Txd50cJPQ=="
@@ -45,96 +45,96 @@
   dependencies:
     "js-base64" "^3.7.2"
 
-"@0xsequence/guard@^0.43.26":
-  "integrity" "sha512-C7fRENl+SLQTlrbU3BmxTcG6mB9VApxLLhXscXUEZmWhkGRncEQIPmJaT0RZ2ymchpKGUaKS9w59iyWnejfLzw=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/guard/-/guard-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/guard@^0.43.34":
+  "integrity" "sha512-U8uIjC8nifDgugo+4V3siu5fs86TqOmsb4Wvx0n6G/zbX2LaPGOYwHqCYkWrukETnk/FYiy8GoTuV11T9jIrSg=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/guard/-/guard-0.43.34.tgz"
+  "version" "0.43.34"
 
-"@0xsequence/indexer@^0.43.26":
-  "integrity" "sha512-mK9WoEvsQjLmVPrkFOdnH2pKCPLyZR6RA14pxgEj/sakmwqRWj9dQIjrNwMWak9Q0XJJ4enlKw/w5xg5HVJzHg=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/indexer/-/indexer-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/indexer@^0.43.34":
+  "integrity" "sha512-u7dnbLGH447Utph3Ebvfmi98kTebdc8+we1L6FSYpodpvN3q/lb5de8BL1Jbmry0m9MSLy1iGwdGA0AivwNgtA=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/indexer/-/indexer-0.43.34.tgz"
+  "version" "0.43.34"
 
-"@0xsequence/metadata@^0.43.26":
-  "integrity" "sha512-WaD2oInmtFSHHCF+BpQBkBuqBwxcLi7N2uRowhAaQj/vxLJYDz1yIOZS+iWqZnkm5l3ZuidTyfmn+HCw4BIxvw=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/metadata/-/metadata-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/metadata@^0.43.34":
+  "integrity" "sha512-ZJO+cerq2gQqktqyCsD1zfAAeOzsCDZXEDTO47oT5v42Bl4L50Vlj1PxNlo9iKzYooCA2LZjeWJkrvzfa0cvjA=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/metadata/-/metadata-0.43.34.tgz"
+  "version" "0.43.34"
 
-"@0xsequence/multicall@^0.43.25", "@0xsequence/multicall@^0.43.26":
-  "integrity" "sha512-N4QX5tI2EkFvQS8PR/kVj/RrE9TUFmhqBOv/c4nmZWeuf2X4GS38x55yicnVZmysEX9N5A0URNGa1t0ynGKjdg=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/multicall/-/multicall-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/multicall@^0.43.25", "@0xsequence/multicall@^0.43.34":
+  "integrity" "sha512-7gLlX3TOi+qZYe28DVdqkQJBeibl9JOdCcHaw9zkQYAZ+2WLouZl5Rlv0ZHEwX46gOiG1mCt/tZugoRkguKE0Q=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/multicall/-/multicall-0.43.34.tgz"
+  "version" "0.43.34"
   dependencies:
-    "@0xsequence/abi" "^0.43.26"
-    "@0xsequence/network" "^0.43.26"
-    "@0xsequence/utils" "^0.43.26"
+    "@0xsequence/abi" "^0.43.34"
+    "@0xsequence/network" "^0.43.34"
+    "@0xsequence/utils" "^0.43.34"
 
-"@0xsequence/network@^0.43.26":
-  "integrity" "sha512-e8DEwK5LV+u1TiTBBGHb7/MnTv33+X/0h3aIroMOmHqLjpeDqnJYEvonLYyFNKMX11sse4bvWVC+4PW3pD0k0g=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/network/-/network-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/network@^0.43.34":
+  "integrity" "sha512-KH2k4zEiXBHBathU+T7AXxzSDRm0XJ2+bJSSKci+RWesLPT2TwZY7YLfSWjSyp20EPqeyuaG7Snn86e60Zi/eg=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/network/-/network-0.43.34.tgz"
+  "version" "0.43.34"
   dependencies:
-    "@0xsequence/indexer" "^0.43.26"
-    "@0xsequence/provider" "^0.43.26"
-    "@0xsequence/relayer" "^0.43.26"
-    "@0xsequence/utils" "^0.43.26"
+    "@0xsequence/indexer" "^0.43.34"
+    "@0xsequence/provider" "^0.43.34"
+    "@0xsequence/relayer" "^0.43.34"
+    "@0xsequence/utils" "^0.43.34"
 
-"@0xsequence/provider@^0.43.26":
-  "integrity" "sha512-tpE7BDPNy+4o1KATB1FI25RT9Pj+RdD0wQtpshcrKLuFvWbcdbA/VgD7k0EgZWBnTCMjBc12MZ7pzIrJXxCWHA=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/provider/-/provider-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/provider@^0.43.34":
+  "integrity" "sha512-AuMiP3budYbtql1L8eemcmxknuN5QJcPirr4DtkCnifCMGDoF/savSuue6+7K65HGj/8yzdFrRlt0MYavYWVoA=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/provider/-/provider-0.43.34.tgz"
+  "version" "0.43.34"
   dependencies:
-    "@0xsequence/abi" "^0.43.26"
-    "@0xsequence/auth" "^0.43.26"
-    "@0xsequence/config" "^0.43.26"
-    "@0xsequence/network" "^0.43.26"
-    "@0xsequence/relayer" "^0.43.26"
-    "@0xsequence/transactions" "^0.43.26"
-    "@0xsequence/utils" "^0.43.26"
-    "@0xsequence/wallet" "^0.43.26"
+    "@0xsequence/abi" "^0.43.34"
+    "@0xsequence/auth" "^0.43.34"
+    "@0xsequence/config" "^0.43.34"
+    "@0xsequence/network" "^0.43.34"
+    "@0xsequence/relayer" "^0.43.34"
+    "@0xsequence/transactions" "^0.43.34"
+    "@0xsequence/utils" "^0.43.34"
+    "@0xsequence/wallet" "^0.43.34"
     "eventemitter2" "^6.4.5"
     "webextension-polyfill" "^0.10.0"
 
-"@0xsequence/relayer@^0.43.26":
-  "integrity" "sha512-cQ64XokGd7qLsc9tbWShS4AFCo4ikQLb7aitiuPo61GTE8oHaTjckWupBq/cC5zKte0qGVMZFeWI+x6K/yceKA=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/relayer/-/relayer-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/relayer@^0.43.34":
+  "integrity" "sha512-Kl6LitpG24i3ha6CxBRnFAD1/vAbC1+pub7yywhwH8jmnd7KncHAZNgYT48BZI6B2bOeQiY+tTevUcgYw0hSzA=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/relayer/-/relayer-0.43.34.tgz"
+  "version" "0.43.34"
   dependencies:
-    "@0xsequence/abi" "^0.43.26"
-    "@0xsequence/config" "^0.43.26"
-    "@0xsequence/network" "^0.43.26"
-    "@0xsequence/transactions" "^0.43.26"
-    "@0xsequence/utils" "^0.43.26"
+    "@0xsequence/abi" "^0.43.34"
+    "@0xsequence/config" "^0.43.34"
+    "@0xsequence/network" "^0.43.34"
+    "@0xsequence/transactions" "^0.43.34"
+    "@0xsequence/utils" "^0.43.34"
 
-"@0xsequence/transactions@^0.43.26":
-  "integrity" "sha512-b8bG8Y49YjyjnBKUcJV/H28MrNsnPagVkJgCFdTmQEb2XyHXAMqSDiNrRC3EG98H5yy9PT7wXkiaMI4YXaKgtQ=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/transactions/-/transactions-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/transactions@^0.43.34":
+  "integrity" "sha512-C6xDBqDOpx3+fuZ4OWStpAgAMKW7het1a6cwuQRalN8s+3n/SkjgzSK8Xc/5FT4FVExJuwo/D/AkvyOFz7AaCg=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/transactions/-/transactions-0.43.34.tgz"
+  "version" "0.43.34"
   dependencies:
-    "@0xsequence/abi" "^0.43.26"
-    "@0xsequence/config" "^0.43.26"
-    "@0xsequence/network" "^0.43.26"
-    "@0xsequence/utils" "^0.43.26"
+    "@0xsequence/abi" "^0.43.34"
+    "@0xsequence/config" "^0.43.34"
+    "@0xsequence/network" "^0.43.34"
+    "@0xsequence/utils" "^0.43.34"
 
-"@0xsequence/utils@^0.43.26":
-  "integrity" "sha512-952LB3mQO4qwA7USdl+75vnkuiiYuCFZ61J49T/jib7Oef/qM9JSlYEDBrZBB6DVtXAEH8zdKLjcewCmc+H2rg=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/utils/-/utils-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/utils@^0.43.34":
+  "integrity" "sha512-Rp0vVeBUeTmOSpXwy+Adlycitg0V4qjao1QvCqONgu9Rh1NIVpocVLx42iSopFQFIALhYB0ZrHp+ns6QsC08+A=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/utils/-/utils-0.43.34.tgz"
+  "version" "0.43.34"
   dependencies:
     "js-base64" "^3.7.2"
 
-"@0xsequence/wallet@^0.43.26":
-  "integrity" "sha512-oG/2W0kgtuTosg/5bRxpuooviytd7BgQi3U6x/OyygcKhYpo2CTsLKifU90GANI7aCe71Nj0EDlWZx3UAIrojA=="
-  "resolved" "https://registry.npmjs.org/@0xsequence/wallet/-/wallet-0.43.26.tgz"
-  "version" "0.43.26"
+"@0xsequence/wallet@^0.43.34":
+  "integrity" "sha512-8ZojYXcLnItXfmBy1PRR4qf25GKV5E0bcGLb3tuw/7M6QlFi1CqgRcHuuXYZ4XYyLxLBaKUC1+3sNqcFJGAirA=="
+  "resolved" "https://registry.npmjs.org/@0xsequence/wallet/-/wallet-0.43.34.tgz"
+  "version" "0.43.34"
   dependencies:
-    "@0xsequence/abi" "^0.43.26"
-    "@0xsequence/config" "^0.43.26"
-    "@0xsequence/guard" "^0.43.26"
-    "@0xsequence/network" "^0.43.26"
-    "@0xsequence/relayer" "^0.43.26"
-    "@0xsequence/transactions" "^0.43.26"
-    "@0xsequence/utils" "^0.43.26"
+    "@0xsequence/abi" "^0.43.34"
+    "@0xsequence/config" "^0.43.34"
+    "@0xsequence/guard" "^0.43.34"
+    "@0xsequence/network" "^0.43.34"
+    "@0xsequence/relayer" "^0.43.34"
+    "@0xsequence/transactions" "^0.43.34"
+    "@0xsequence/utils" "^0.43.34"
 
 "@ampproject/remapping@^2.2.0":
   "integrity" "sha512-lFMjJTrFL3j7L9yBxwYfCq2k6qqwHyzuUl/XBnif78PWTJYyL/dfowQHWE3sp6U6ZzqWiiIZnpTMO96zhkjwtg=="
@@ -733,14 +733,6 @@
   "version" "0.8.1"
   dependencies:
     "@jridgewell/trace-mapping" "0.3.9"
-
-"@cuonghx.gu-tech/looksrare-sdk@^0.9.4":
-  "integrity" "sha512-oEiDb3h/1kIyte7xyHjiMv6w/yzUrBYFwUiAnut/ucl71YFwycPdAesBLJWvEYIVKHfmlQ4tJ1oI5GD8xNtkqw=="
-  "resolved" "https://registry.npmjs.org/@cuonghx.gu-tech/looksrare-sdk/-/looksrare-sdk-0.9.5.tgz"
-  "version" "0.9.5"
-  dependencies:
-    "@0xsequence/multicall" "^0.43.25"
-    "@looksrare/contracts-exchange-v1" "^1.4.1"
 
 "@datadog/browser-core@4.30.1":
   "integrity" "sha512-f2ETFJgZTHH3gzAKNEy8wI22Ae9jFtMk6t7s1QIyHwdFsftC0E0GKuCdMv2maeKMm/z8UYvP27vvGgXjbW1twg=="
@@ -2003,6 +1995,22 @@
   "resolved" "https://registry.npmjs.org/@graphql-typed-document-node/core/-/core-3.2.0.tgz"
   "version" "3.2.0"
 
+"@gulabs/gu-nft-marketplace-contracts@^0.9.0":
+  "integrity" "sha512-u/KAmESvaDt7PdCtFrxzb9Lx2UVZCco83GDTfZgOKofWLY75kUFfxHkx8UnOCKCK9TukEZIUHS0kQztD4MTzQQ=="
+  "resolved" "https://npm.pkg.github.com/download/@gulabs/gu-nft-marketplace-contracts/0.9.0/436cf170f973ba5b7951ebf7fc5b10e1bc23f20f"
+  "version" "0.9.0"
+  dependencies:
+    "@openzeppelin/contracts" "4.4.2"
+    "envalid" "^7.3.1"
+
+"@gulabs/gu-nft-marketplace-sdk@^0.9.0":
+  "integrity" "sha512-VW0tgyLig9ssowfYVNptZwW4mvVqXhAzU8siZ79l/l6kfGHJNp7KenZ9pThp+raglNuwjX+b3V9Rkm9pwrufpw=="
+  "resolved" "https://npm.pkg.github.com/download/@gulabs/gu-nft-marketplace-sdk/0.9.0/88a29e1d3ad0163b827e7aa80c42807d3b3616f5"
+  "version" "0.9.0"
+  dependencies:
+    "@0xsequence/multicall" "^0.43.25"
+    "@gulabs/gu-nft-marketplace-contracts" "^0.9.0"
+
 "@jridgewell/gen-mapping@^0.3.0", "@jridgewell/gen-mapping@^0.3.2":
   "integrity" "sha512-mh65xKQAzI6iBcFzwv28KVWSmCkdRBWoOh+bYQGW3+6OZvbbN3TqMGo5hqYxQniRcH9F2VZIoJCm4pa3BPDK/A=="
   "resolved" "https://registry.npmjs.org/@jridgewell/gen-mapping/-/gen-mapping-0.3.2.tgz"
@@ -2084,13 +2092,6 @@
   "version" "1.6.1"
   dependencies:
     "@lit-labs/ssr-dom-shim" "^1.0.0"
-
-"@looksrare/contracts-exchange-v1@^1.4.1":
-  "integrity" "sha512-WVUmQfvx0GyJ1WC3FeTYha3y2o4stl59yES6T7IxYBmUTbBNs9R7U65eHbO2AySBgWAfu1xzV7OTXKHEXgSElA=="
-  "resolved" "https://registry.npmjs.org/@looksrare/contracts-exchange-v1/-/contracts-exchange-v1-1.4.1.tgz"
-  "version" "1.4.1"
-  dependencies:
-    "@openzeppelin/contracts" "4.4.2"
 
 "@metamask/safe-event-emitter@^2.0.0", "@metamask/safe-event-emitter@2.0.0":
   "integrity" "sha512-/kSXhY692qiV1MXu6EeOZvg5nECLclxNXcKCxJ3cXQgYuRymRHpdx/t7JXfsK+JLjwA1e1c1/SBrlQYpusC29Q=="
@@ -4911,6 +4912,13 @@
   "version" "1.4.4"
   dependencies:
     "once" "^1.4.0"
+
+"envalid@^7.3.1":
+  "integrity" "sha512-KL1YRwn8WcoF/Ty7t+yLLtZol01xr9ZJMTjzoGRM8NaSU+nQQjSWOQKKJhJP2P57bpdakJ9jbxqQX4fGTOicZg=="
+  "resolved" "https://registry.npmjs.org/envalid/-/envalid-7.3.1.tgz"
+  "version" "7.3.1"
+  dependencies:
+    "tslib" "2.3.1"
 
 "error-ex@^1.3.1":
   "integrity" "sha512-7dFHNmqeFSEt2ZBsCriorKnn3Z2pj+fd9kmI6QoWw4//DL+icEBfc0U7qJCisqrTsKTjw4fNFy2pW9OqStD84g=="
@@ -7925,6 +7933,11 @@
   "integrity" "sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg=="
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
   "version" "1.14.1"
+
+"tslib@2.3.1":
+  "integrity" "sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw=="
+  "resolved" "https://registry.npmjs.org/tslib/-/tslib-2.3.1.tgz"
+  "version" "2.3.1"
 
 "type-detect@^4.0.0", "type-detect@^4.0.5":
   "integrity" "sha512-0fr/mIH1dlO+x7TlcMy+bIDqKPsw/70tVyeHW787goQjhmqaZe10uwLujubK9q9Lg6Fiho1KUKDYz0Z7k7g5/g=="

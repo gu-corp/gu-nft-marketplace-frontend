@@ -18,8 +18,8 @@ import { Currency } from 'types/currency'
 import { gql } from '__generated__'
 import { useMutation, useQuery } from '@apollo/client'
 import { useRoyaltyFee, useStrategyFee  } from 'hooks'
-import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
-import { MakerOrder } from "@cuonghx.gu-tech/looksrare-sdk"
+import { useSdk } from 'context/sdkProvider'
+import { MakerOrder } from "@gulabs/gu-nft-marketplace-sdk"
 import { CREATE_ORDER, GET_LISTED } from 'graphql/queries/orders'
 import { parseUnits } from 'ethers/lib/utils.js'
 import { GET_NONCE } from 'graphql/queries/nonces'
@@ -77,7 +77,7 @@ export const ListModalRenderer: FC<Props> = ({
   collectionId,
   children,
 }) => {
-  const looksRareSdk = useLooksRareSDK()
+  const sdk = useSdk()
   const account = useAccount()
   const [listingStep, setListingStep] = useState<ListingStep>(ListingStep.SelectMarkets)
   const [listingData, setListingData] = useState<ListingData>(null)
@@ -90,7 +90,7 @@ export const ListModalRenderer: FC<Props> = ({
     currencyOptions[0]
   )
   // TO-DO: strategyOptions
-  const strategy = looksRareSdk.addresses.STRATEGY_STANDARD_SALE_DEPRECATED;
+  const strategy = sdk.addresses.STRATEGY_STANDARD_SALE_DEPRECATED;
   const [createOrderMutation] = useMutation(CREATE_ORDER);
 
   const [requestUserStep, setRequestUserStep] = useState<RequestUserStep>(RequestUserStep.APPROVAL)
@@ -140,7 +140,7 @@ export const ListModalRenderer: FC<Props> = ({
 
   const listToken = useCallback(async () => {
     try {
-      if (!looksRareSdk.signer) {
+      if (!sdk.signer) {
         const error = new Error('Missing a signer')
         setTransactionError(error)
         throw error
@@ -164,7 +164,7 @@ export const ListModalRenderer: FC<Props> = ({
       
       setListingStep(ListingStep.ListItem)
   
-      const { maker, isCollectionApproved } = await looksRareSdk.createMakerAsk({
+      const { maker, isCollectionApproved } = await sdk.createMakerAsk({
         collection: collectionId,
         price: parseUnits(`${price}`, currencyOption?.decimals).toString(),
         tokenId,
@@ -192,18 +192,18 @@ export const ListModalRenderer: FC<Props> = ({
 
       if (!isCollectionApproved) {
         setRequestUserStep(RequestUserStep.APPROVAL)
-        const tx = await looksRareSdk.approveAllCollectionItems(collectionId, true)
+        const tx = await sdk.approveAllCollectionItems(collectionId, true)
         await tx.wait()
       }
 
       if (existListing) {
         setRequestUserStep(RequestUserStep.CANCEL_LIST)
-        const tx = await looksRareSdk.cancelMultipleMakerOrders([existListing?.nonce]).call()
+        const tx = await sdk.cancelMultipleMakerOrders([existListing?.nonce]).call()
         await tx.wait()
       }
   
       setRequestUserStep(RequestUserStep.SIGN)
-      const signature = await looksRareSdk.signMakerOrder(maker)
+      const signature = await sdk.signMakerOrder(maker)
 
       await createOrderMutation({ variables: { createOrderInput: {
         collectionAddress: maker.collection,

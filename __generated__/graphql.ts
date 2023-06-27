@@ -108,7 +108,7 @@ export type CreateOrderInput = {
   amount: Scalars['Int'];
   /** The address of the collection. */
   collectionAddress: Scalars['String'];
-  /** The currency address. See Addresses | LooksRare SDK for the possible values. */
+  /** The currency address. See Addresses | SDK for the possible values. */
   currencyAddress: Scalars['String'];
   /** End time timestamp in seconds (when the order becomes invalid). */
   endTime: Scalars['Int'];
@@ -128,7 +128,7 @@ export type CreateOrderInput = {
   signer: Scalars['String'];
   /** Start time timestamp in seconds (when the order starts to be valid). */
   startTime: Scalars['Int'];
-  /** The strategy address. See Addresses | LooksRare SDK for the possible values. */
+  /** The strategy address. See Addresses | SDK for the possible values. */
   strategy: Scalars['String'];
   /** The id of the asset. If the order is a collection offer, this field will be null. */
   tokenId?: InputMaybe<Scalars['String']>;
@@ -199,7 +199,7 @@ export type Order = {
   /** The address of the collection. */
   collectionAddress: Scalars['String'];
   createdAt: Scalars['Int'];
-  /** The currency address. See Addresses | LooksRare SDK for the possible values. */
+  /** The currency address. See Addresses | SDK for the possible values. */
   currencyAddress: Scalars['String'];
   /** End time timestamp in seconds (when the order becomes invalid). */
   endTime: Scalars['Int'];
@@ -227,7 +227,7 @@ export type Order = {
   startTime: Scalars['Int'];
   /** The order status. Only VALID orders can be matched with a TakerOrder. */
   status: OrderStatus;
-  /** The strategy address. See Addresses | LooksRare SDK for the possible values. */
+  /** The strategy address. See Addresses | SDK for the possible values. */
   strategy: Scalars['String'];
   /** The id of the asset. If the order is a collection offer, this field will be null. */
   tokenId?: Maybe<Scalars['String']>;
@@ -381,9 +381,9 @@ export enum RelativeCollection_OrderBy {
 
 export type SyncEventInput = {
   backfill: Scalars['Boolean'];
-  fromBlock: Scalars['Int'];
+  fromBlock?: InputMaybe<Scalars['Int']>;
   kinds?: InputMaybe<Array<EventKind>>;
-  toBlock: Scalars['Int'];
+  toBlock?: InputMaybe<Scalars['Int']>;
 };
 
 export type Token = {

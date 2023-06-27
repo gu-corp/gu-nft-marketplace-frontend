@@ -12,10 +12,10 @@ import Fees from './Fees'
 import { useQuery } from '@apollo/client'
 import { Collection, Order, Token } from '__generated__/graphql'
 import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
-import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
+import { useSdk } from 'context/sdkProvider'
 import { useCurrency, useRoyaltyFee, useStrategyFee } from 'hooks'
 import { Currency } from 'types/currency'
-import { MakerOrder, isApprovedForAll } from "@cuonghx.gu-tech/looksrare-sdk"
+import { MakerOrder, isApprovedForAll } from "@gulabs/gu-nft-marketplace-sdk"
 import { GET_TOKEN } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { constants } from 'ethers'
@@ -70,7 +70,7 @@ export const AcceptBidModalRenderer: FC<Props> = ({
   const { chain: activeChain } = useNetwork()
   const etherscanBaseUrl =
     activeChain?.blockExplorers?.default?.url || 'https://etherscan.io'
-  const looksRareSdk = useLooksRareSDK()
+  const sdk = useSdk()
 
   const { data: tokenData, loading: tokenLoading } = useQuery(GET_TOKEN, {
     variables: { id: `${collectionId}-${tokenId}` },
@@ -109,7 +109,7 @@ export const AcceptBidModalRenderer: FC<Props> = ({
 
   const acceptBid = useCallback(async () => {
     try {
-      if (!looksRareSdk.signer) {
+      if (!sdk.signer) {
         const error = new Error('Missing a signer')
         setTransactionError(error)
         throw error
@@ -127,12 +127,12 @@ export const AcceptBidModalRenderer: FC<Props> = ({
         provider,
         collectionId,
         address as Address,
-        looksRareSdk.addresses.TRANSFER_MANAGER_ERC721
+        sdk.addresses.TRANSFER_MANAGER_ERC721
       )
   
       if (!isCollectionApproved) {
         setAcceptBidStep(AcceptBidStep.ApproveMarketplace)
-        const tx = await looksRareSdk.approveAllCollectionItems(collectionId, true)
+        const tx = await sdk.approveAllCollectionItems(collectionId, true)
         setTxHash(tx.hash)
         setAcceptBidStep(AcceptBidStep.Finalizing)
         await tx.wait()
@@ -162,12 +162,12 @@ export const AcceptBidModalRenderer: FC<Props> = ({
 
       // collection offer
       if (!bid.tokenId) {
-        taker = looksRareSdk.createTakerCollectionOffer(maker, tokenId, takerInput)
+        taker = sdk.createTakerCollectionOffer(maker, tokenId, takerInput)
       } else { // token offer
-        taker = looksRareSdk.createTaker(maker, takerInput)
+        taker = sdk.createTaker(maker, takerInput)
       }
   
-      const tx = await looksRareSdk.executeOrder(maker, taker, bid.signature).call()
+      const tx = await sdk.executeOrder(maker, taker, bid.signature).call()
       setTxHash(tx.hash)
       setAcceptBidStep(AcceptBidStep.Finalizing)
       await tx.wait()
@@ -179,7 +179,7 @@ export const AcceptBidModalRenderer: FC<Props> = ({
   }, [
     tokenId,
     collectionId,
-    looksRareSdk,
+    sdk,
     bid
   ])
 

@@ -34,8 +34,8 @@ import { useMarketplaceChain } from 'hooks'
 import ChainContextProvider from 'context/ChainContextProvider'
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from 'graphql/apollo-client'
-import { LooksRareSDKProvider } from 'context/LooksRareSDKProvider'
-import { Signer } from "@cuonghx.gu-tech/looksrare-sdk"
+import { SdkProvider } from 'context/sdkProvider'
+import { Signer, SupportedNetworkId } from "@gulabs/gu-nft-marketplace-sdk"
 import { CartProvider } from 'components/@reservoir0x/context/CartProvider'
 
 //CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
@@ -180,13 +180,14 @@ function MyApp({
                 modalSize="compact"
               >
                 <ToastContextProvider>
-                  <LooksRareSDKProvider options={{
+                  <SdkProvider options={{
                     chainId: marketplaceChain.id,
+                    networkId: process.env.NEXT_PUBLIC_NETWORK_ID as SupportedNetworkId,
                     provider,
                     signer
                   }}>
                     <FunctionalComponent {...pageProps} />
-                  </LooksRareSDKProvider>
+                  </SdkProvider>
                 </ToastContextProvider>
               </RainbowKitProvider>
             </Tooltip.Provider>

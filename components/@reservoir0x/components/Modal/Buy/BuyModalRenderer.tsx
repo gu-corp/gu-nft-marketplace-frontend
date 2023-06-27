@@ -16,8 +16,8 @@ import { Address } from 'wagmi'
 import { useQuery } from '@apollo/client'
 import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
 import currencyOptions from '../../../lib/defaultCurrencyOptions'
-import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
-import { MakerOrder, allowance } from '@cuonghx.gu-tech/looksrare-sdk'
+import { useSdk } from 'context/sdkProvider'
+import { MakerOrder, allowance } from '@gulabs/gu-nft-marketplace-sdk'
 import { GET_TOKEN } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 
@@ -65,7 +65,7 @@ export const BuyModalRenderer: FC<Props> = ({
   orderId,
   children,
 }) => {
-  const looksRareSdk = useLooksRareSDK()
+  const sdk = useSdk()
   const provider = useProvider()
   const [currency, setCurrency] = useState<undefined | Currency>()
   const [buyStep, setBuyStep] = useState<BuyStep>(BuyStep.Checkout)
@@ -117,7 +117,7 @@ export const BuyModalRenderer: FC<Props> = ({
 
   const buyToken = useCallback(async () => {
     try {
-      if (!looksRareSdk.signer) {
+      if (!sdk.signer) {
         const error = new Error('Missing a signer')
         setTransactionError(error)
         throw error
@@ -135,11 +135,11 @@ export const BuyModalRenderer: FC<Props> = ({
           provider, 
           listing.currencyAddress,
           address as string,
-          looksRareSdk.addresses.EXCHANGE
+          sdk.addresses.EXCHANGE
         )
         
         if (BigNumber.from(listing.price).gt(erc20Allowance.toString())) {
-          const tx = await looksRareSdk.approveErc20(listing.currencyAddress)
+          const tx = await sdk.approveErc20(listing.currencyAddress)
           await tx.wait() 
         }
       }
@@ -162,15 +162,15 @@ export const BuyModalRenderer: FC<Props> = ({
         params: listing.params
       };
   
-      const taker = looksRareSdk.createTaker(maker, {
+      const taker = sdk.createTaker(maker, {
         taker: address as string
       })
   
       let tx: ContractTransaction | null = null;
       if (mixedCurrencies) {
-        tx = await looksRareSdk.executeOrder(maker, taker, listing.signature, { value: listing.price }).call()
+        tx = await sdk.executeOrder(maker, taker, listing.signature, { value: listing.price }).call()
       } else {
-        tx = await looksRareSdk.executeOrder(maker, taker, listing.signature).call()
+        tx = await sdk.executeOrder(maker, taker, listing.signature).call()
       }
       setTxHash(tx.hash)
       await tx.wait()
@@ -184,7 +184,7 @@ export const BuyModalRenderer: FC<Props> = ({
     token,
     collection,
     mixedCurrencies,
-    looksRareSdk
+    sdk
   ])
 
   useEffect(() => {

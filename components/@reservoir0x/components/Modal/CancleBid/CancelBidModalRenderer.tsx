@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { Collection, Order } from '__generated__/graphql'
-import { useLooksRareSDK } from 'context/LooksRareSDKProvider'
+import { useSdk } from 'context/sdkProvider'
 import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
 import { useCurrency } from 'hooks'
 import React, { FC, useEffect, useState, useCallback, ReactNode } from 'react'
@@ -48,7 +48,7 @@ export const CancelBidModalRenderer: FC<Props> = ({
   const { chain: activeChain } = useNetwork()
   const blockExplorerBaseUrl =
     activeChain?.blockExplorers?.default.url || 'https://etherscan.io'
-  const looksRareSdk = useLooksRareSDK()
+  const sdk = useSdk()
 
   const { data, loading } = useQuery(GET_ORDER_BY_HASH, {
     variables: { hash: bidId as string },
@@ -74,7 +74,7 @@ export const CancelBidModalRenderer: FC<Props> = ({
 
   const cancelOrder = useCallback(async () => {
     try {
-      if (!looksRareSdk.signer) {
+      if (!sdk.signer) {
         const error = new Error('Missing a signer')
         setTransactionError(error)
         throw error
@@ -88,7 +88,7 @@ export const CancelBidModalRenderer: FC<Props> = ({
   
       setCancelStep(CancelStep.Approving)
       
-      const tx = await looksRareSdk.cancelMultipleMakerOrders([bid?.nonce]).call()
+      const tx = await sdk.cancelMultipleMakerOrders([bid?.nonce]).call()
       setTxHash(tx.hash);
       await tx.wait()
   
@@ -107,7 +107,7 @@ export const CancelBidModalRenderer: FC<Props> = ({
         setCancelStep(CancelStep.Cancel)
         setTxHash(null);
     }
-  }, [bid, looksRareSdk])
+  }, [bid, sdk])
 
   useEffect(() => {
     if (!open) {
