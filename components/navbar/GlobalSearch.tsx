@@ -109,8 +109,7 @@ const CollectionItem: FC<Props> = ({ collection, handleSelectResult }) => {
               amount={collection?.volume?.totalVolume}
               maximumFractionDigits={2}
             />
-            {/* {collection.volumeCurrencySymbol} */}
-            USDT
+            WETH
           </Flex>
         )}
       </Flex>
