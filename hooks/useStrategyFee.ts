@@ -1,11 +1,11 @@
 import { useContract, useProvider } from "wagmi";
-import { useLooksRareSDK } from "../context/LooksRareSDKProvider";
+import { useSdk } from "../context/sdkProvider";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import IExecutionStrategyAbi from "@cuonghx.gu-tech/looksrare-sdk/dist/abis/IExecutionStrategy.json"
+import IExecutionStrategyAbi from "@gulabs/gu-nft-marketplace-sdk/dist/abis/IExecutionStrategy.json"
 
 export default function (strategy?: string) {
-  const sdk = useLooksRareSDK()
+  const sdk = useSdk()
   const provider = useProvider()
   
   const [fee, setFee] = useState(0)
