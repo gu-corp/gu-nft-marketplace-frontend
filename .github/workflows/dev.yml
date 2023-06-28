@@ -17,15 +17,14 @@ jobs:
         node-version: [16.x]
 
     steps:
-      - uses: actions/labeler@v4
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - run: npm install
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: npm run build
         env:
           NEXT_PUBLIC_API_URL: 'https://gu-nft-marketplace-dev.an.r.appspot.com/graphql'
