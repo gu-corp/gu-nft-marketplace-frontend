@@ -22,9 +22,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
+      - name: Add .npmrc
+        run: |
+          echo "@gulabs:registry=https://npm.pkg.github.com" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
       - run: npm install
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: npm run build
         env:
           NEXT_PUBLIC_API_URL: 'https://gu-nft-marketplace-dev.an.r.appspot.com/graphql'
