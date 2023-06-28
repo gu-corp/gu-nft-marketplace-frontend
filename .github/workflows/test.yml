@@ -1,0 +1,45 @@
+name: Deploy to Test
+
+on:
+  push:
+    tags: ['v*']
+
+env:
+  PROJECT_ID: 'gu-nft-marketplace-dev'
+  SERVICE_ID: 'gu-nft-marketplace-frontend-test'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - name: Add .npmrc
+        run: |
+          echo "@gulabs:registry=https://npm.pkg.github.com" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
+      - run: npm install
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: 'https://gu-nft-marketplace-backend-test-dot-gu-nft-marketplace-dev.an.r.appspot.com/graphql'
+          NEXT_PUBLIC_BASE_URL: 'https://gu-nft-marketplace-frontend-test-dot-gu-nft-marketplace-dev.an.r.appspot.com'
+          NEXT_PUBLIC_NETWORK_ID: 'gu-sandbox-test'
+
+      - name: Setup Cloud SDK
+        uses: google-github-actions/setup-gcloud@v0
+        with:
+          project_id: ${{ env.PROJECT_ID }}
+          service_account_key: ${{ secrets.GCLOUD_SERVICE_KEY }}
+      - name: Deploy to App Engine
+        run: gcloud app deploy app.test.yaml
+      - name: Delete old versions
+        run: gcloud app versions list --filter="service=${{env.SERVICE_ID}}" --format="value(version.id)" --sort-by="~version.createTime" | tail -n +6 | xargs -r gcloud app versions delete 
+
