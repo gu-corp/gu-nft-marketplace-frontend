@@ -2004,9 +2004,9 @@
     "envalid" "^7.3.1"
 
 "@gulabs/gu-nft-marketplace-sdk@^0.9.0":
-  "integrity" "sha512-VW0tgyLig9ssowfYVNptZwW4mvVqXhAzU8siZ79l/l6kfGHJNp7KenZ9pThp+raglNuwjX+b3V9Rkm9pwrufpw=="
-  "resolved" "https://npm.pkg.github.com/download/@gulabs/gu-nft-marketplace-sdk/0.9.0/88a29e1d3ad0163b827e7aa80c42807d3b3616f5"
-  "version" "0.9.0"
+  "integrity" "sha512-WD/7yrW6oI1b8ZACJDbjw5ZqB8r5rY05vgt4VHUVRgw3A0DsLjmtsB6TJznq2ZWavsgPL3w2j5Lb+jOrUUrUkg=="
+  "resolved" "https://npm.pkg.github.com/download/@gulabs/gu-nft-marketplace-sdk/0.9.1/acbbf13516de36c0d5a5583a462c616fe19b0ffa"
+  "version" "0.9.1"
   dependencies:
     "@0xsequence/multicall" "^0.43.25"
     "@gulabs/gu-nft-marketplace-contracts" "^0.9.0"
