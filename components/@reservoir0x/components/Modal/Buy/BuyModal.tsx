@@ -140,7 +140,7 @@ export function BuyModal({
                   collection={collection}
                   usdConversion={0}
                   isUnavailable={true}
-                  price={+(listing?.price || 0)}
+                  price={listing?.price}
                   currency={currency}
                   priceSubtitle={quantity > 1 ? 'Average Price' : undefined}
                   showRoyalties={true}
@@ -182,7 +182,7 @@ export function BuyModal({
                   tokenDetails={token}
                   collection={collection}
                   usdConversion={0}
-                  price={+(listing?.price || 0)}
+                  price={listing?.price}
                   currency={currency}
                   css={{ border: 0 }}
                   priceSubtitle={quantity > 1 ? 'Average Price' : undefined}
@@ -262,7 +262,7 @@ export function BuyModal({
                   tokenDetails={token}
                   collection={collection}
                   usdConversion={0}
-                  price={+(listing?.price || 0)}
+                  price={listing?.price}
                   currency={currency}
                   priceSubtitle={quantity > 1 ? 'Average Price' : undefined}
                   quantity={quantity}
