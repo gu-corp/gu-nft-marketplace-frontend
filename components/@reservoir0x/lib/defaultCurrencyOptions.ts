@@ -1,9 +1,9 @@
-import { SupportedNetworkId, addressesByNetwork } from "@gulabs/gu-nft-marketplace-sdk"
+import { Addresses } from "constants/addresses"
 import { Currency } from "types/currency"
 
 const currencyOptions: Currency[] = [
   {
-    contract: addressesByNetwork[process.env.NEXT_PUBLIC_NETWORK_ID as SupportedNetworkId].WETH,
+    contract: Addresses.WETH,
     symbol: "WETH",
     decimals: 18,
     logo: '/icons/currency/weth.png'
