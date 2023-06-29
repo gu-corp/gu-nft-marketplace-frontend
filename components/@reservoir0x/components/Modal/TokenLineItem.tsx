@@ -10,7 +10,7 @@ type TokenLineItemProps = {
   usdConversion?: number
   isUnavailable?: boolean
   warning?: string
-  price: number
+  price?: string
   priceSubtitle?: string
   currency?: {
     contract?: string
@@ -40,8 +40,6 @@ const TokenLineItem: FC<TokenLineItemProps> = ({
     return null
   }
 
-  const usdPrice = price * usdConversion
-
   const name = `#${tokenDetails?.tokenId}`
   const collectionName = collection?.name || ""
 
@@ -52,8 +50,8 @@ const TokenLineItem: FC<TokenLineItemProps> = ({
       <TokenPrimitive
         img={tokenDetails?.image as string}
         name={name}
-        price={price.toString()}
-        usdPrice={usdPrice}
+        price={price}
+        usdPrice={0}
         collection={collectionName}
         currencyContract={currency?.contract}
         currencyDecimals={currency?.decimals}

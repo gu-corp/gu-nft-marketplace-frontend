@@ -155,7 +155,7 @@ export function AcceptBidModal({
                   collection={collection}
                   usdConversion={0}
                   isUnavailable={true}
-                  price={+(bid?.price || 0)}
+                  price={bid?.price}
                   warning={warning}
                   currency={currency}
                   expires={expires}
@@ -194,7 +194,7 @@ export function AcceptBidModal({
                   collection={collection}
                   usdConversion={0}
                   isUnavailable={true}
-                  price={+(bid?.price || 0)}
+                  price={bid?.price}
                   warning={warning}
                   currency={currency}
                   expires={expires}
@@ -250,7 +250,7 @@ export function AcceptBidModal({
                   collection={collection}
                   usdConversion={0}
                   isUnavailable={true}
-                  price={+(bid?.price || 0)}
+                  price={bid?.price}
                   warning={warning}
                   currency={currency}
                   expires={expires}
