@@ -37,7 +37,7 @@ jobs:
         uses: google-github-actions/setup-gcloud@v0
         with:
           project_id: ${{ env.PROJECT_ID }}
-          service_account_key: ${{ secrets.GCLOUD_SERVICE_KEY }}
+          service_account_key: ${{ secrets.GCLOUD_SERVICE_KEY_TEST }}
       - name: Deploy to App Engine
         run: gcloud app deploy app.test.yaml
       - name: Delete old versions
