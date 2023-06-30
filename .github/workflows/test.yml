@@ -5,8 +5,8 @@ on:
     tags: ['v*']
 
 env:
-  PROJECT_ID: 'gu-nft-marketplace-dev'
-  SERVICE_ID: 'gu-nft-marketplace-frontend-test'
+  PROJECT_ID: 'gu-nft-marketplace-test'
+  SERVICE_ID: 'frontend'
 
 jobs:
   deploy:
@@ -29,8 +29,8 @@ jobs:
       - run: npm install
       - run: npm run build
         env:
-          NEXT_PUBLIC_API_URL: 'https://gu-nft-marketplace-backend-test-dot-gu-nft-marketplace-dev.an.r.appspot.com/graphql'
-          NEXT_PUBLIC_BASE_URL: 'https://gu-nft-marketplace-frontend-test-dot-gu-nft-marketplace-dev.an.r.appspot.com'
+          NEXT_PUBLIC_API_URL: 'https://api.test.nft-marketplace.gu.net/graphql'
+          NEXT_PUBLIC_BASE_URL: https://app.test.nft-marketplace.gu.net'
           NEXT_PUBLIC_NETWORK_ID: 'gu-sandbox-test'
 
       - name: Setup Cloud SDK

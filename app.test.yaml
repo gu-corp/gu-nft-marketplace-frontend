@@ -1,6 +1,6 @@
 runtime: nodejs16
 env: standard
-service: gu-nft-marketplace-frontend-test
+service: frontend
 handlers:
   - url: /.*
     secure: always
