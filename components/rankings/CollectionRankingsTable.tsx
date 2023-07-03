@@ -1,7 +1,6 @@
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Collection } from '__generated__/graphql'
-import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import {
   Box,
@@ -13,8 +12,6 @@ import {
   Text,
 } from 'components/primitives'
 import Img from 'components/primitives/Img'
-import { PercentChange } from 'components/primitives/PercentChange'
-import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -127,11 +124,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               >
                 {collection?.name}
               </Text>
-              {/* <OpenSeaVerified
-                openseaVerificationStatus={
-                  collection?.openseaVerificationStatus
-                }
-              /> */}
             </Flex>
             <Flex align="center">
               <Text css={{ mr: '$1', color: '$gray11' }} style="body2">
@@ -153,12 +145,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               logoHeight={16}
               textStyle="subtitle1"
             />
-            {/* {volumeKey !== 'allTime' && (
-              <PercentChange
-                value={collection?.volumeChange?.[volumeKey]}
-                decimals={1}
-              />
-            )} */}
           </Flex>
         </Flex>
       </Link>
@@ -213,11 +199,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               >
                 {collection?.name}
               </Text>
-              {/* <OpenSeaVerified
-                openseaVerificationStatus={
-                  collection?.openseaVerificationStatus
-                }
-              /> */}
             </Flex>
           </Link>
         </TableCell>
@@ -228,25 +209,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               minWidth: 0,
             }}
           >
-            {/* {collection?.sampleImages?.map((image, i) =>
-              image ? (
-                <img
-                  key={image + i}
-                  src={image}
-                  style={{
-                    borderRadius: 8,
-                    width: 56,
-                    height: 56,
-                    objectFit: 'cover',
-                  }}
-                  onError={(
-                    e: React.SyntheticEvent<HTMLImageElement, Event>
-                  ) => {
-                    e.currentTarget.style.visibility = 'hidden'
-                  }}
-                />
-              ) : null
-            )} */}
           </Flex>
         </TableCell>
         <TableCell>
@@ -261,9 +223,6 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               textStyle="subtitle2"
               logoHeight={14}
             />
-            {/* {volumeKey != 'allTime' && collection?.volumeChange && (
-              <PercentChange value={collection?.volumeChange[volumeKey]} />
-            )} */}
           </Flex>
         </TableCell>
         <TableCell>
@@ -278,18 +237,9 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
               textStyle="subtitle2"
               logoHeight={14}
             />
-            {/* {volumeKey != 'allTime' && collection?.floorSaleChange && (
-              <PercentChange value={collection?.floorSaleChange[volumeKey]} />
-            )} */}
           </Flex>
         </TableCell>
         <TableCell>
-          {/* <FormatCryptoCurrency
-            amount={collection?.topBid?.price?.amount?.decimal}
-            textStyle="subtitle2"
-            logoHeight={14}
-            address={collection?.topBid?.price?.currency?.contract}
-          /> */}
         </TableCell>
       </TableRow>
     )

@@ -44,17 +44,22 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
       break
   }
 
-  const { data, loading } = useQuery(GET_COLLECTIONS, {
+  const { data, loading, refetch } = useQuery(GET_COLLECTIONS, {
     variables: {
       skip: 0,
       first: 10, 
       collection_OrderBy: sortByTime,
       orderDirection: OrderDirection.Desc
-    }
+    },
   })
 
   const collections = data?.collections || ssr.collections
   
+  // prevent using cached values from collections page
+  useEffect(() => {
+    refetch()
+  }, [])
+
   return (
     <Layout>
       <Head />
