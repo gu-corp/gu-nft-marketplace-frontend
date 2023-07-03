@@ -22,7 +22,7 @@ type Props = {
   buttonCss?: CSS
   buttonChildren?: ReactNode
   buttonProps?: ComponentProps<typeof Button>
-  mutate?: QueryResult["refetch"]
+  mutate?: () => void
 }
 
 const List: FC<Props> = ({

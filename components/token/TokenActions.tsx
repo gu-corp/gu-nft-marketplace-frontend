@@ -1,4 +1,4 @@
-import { QueryResult, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { faGasPump } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Order, Token } from '__generated__/graphql'
@@ -16,7 +16,7 @@ type Props = {
   token: Token
   offer?: Order
   isOwner: boolean
-  mutate?: QueryResult["refetch"]
+  mutate?: () => void
   account: ReturnType<typeof useAccount>
 }
 
@@ -33,8 +33,6 @@ export const TokenActions: FC<Props> = ({
   const queryBidId = router.query.bidId as string
   const deeplinkToAcceptBid = router.query.acceptBid === 'true'
   
-  const is1155 = false
-
   const isTopBidder =
     account.isConnected &&
     offer?.signer?.toLowerCase() ===

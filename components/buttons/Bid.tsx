@@ -8,7 +8,6 @@ import { ToastContext } from 'context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import { BidModal } from 'components/@reservoir0x/components/Modal/Bid/BidModal'
 import { BidStep } from 'components/@reservoir0x/components/Modal/Bid/BidModalRenderer'
-import { QueryResult } from '@apollo/client'
 
 type Props = {
   tokenId?: string | undefined
@@ -17,7 +16,7 @@ type Props = {
   openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   buttonCss?: CSS
   buttonProps?: ComponentProps<typeof Button>
-  mutate?: QueryResult["refetch"]
+  mutate?: () => void
 }
 
 const Bid: FC<Props> = ({

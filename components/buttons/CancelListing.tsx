@@ -1,18 +1,16 @@
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FC, ReactElement, useContext, cloneElement } from 'react'
-import { SWRResponse } from 'swr'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
 import { useMarketplaceChain } from 'hooks'
 import { CancelListingModal } from 'components/@reservoir0x/components/Modal/CancelListing/CancelListingModal'
 import { CancelStep } from 'components/@reservoir0x/components/Modal/CancelListing/CancelListingModalRenderer'
-import { QueryResult } from '@apollo/client'
 
 type Props = {
   listingId: string
   openState?: [boolean, React.Dispatch<React.SetStateAction<boolean>>]
   trigger: ReactElement<any>
-  mutate?: QueryResult["refetch"]
+  mutate?: () => void
 }
 
 const CancelListing: FC<Props> = ({

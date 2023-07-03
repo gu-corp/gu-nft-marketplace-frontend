@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { Text, Box, Flex, Anchor, Button } from '../primitives'
+import { Text, Flex, Anchor, Button } from '../primitives'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 
@@ -32,12 +32,8 @@ const SectionLink: FC<SectionLinkProps> = ({ name, href }) => (
 
 const developerSectionLinks = [
   {
-    name: 'Docs',
-    href: '#',
-  },
-  {
     name: 'API Reference',
-    href: '#',
+    href: process.env.NEXT_PUBLIC_API_URL as string,
   },
   {
     name: 'Github',

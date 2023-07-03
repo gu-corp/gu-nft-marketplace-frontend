@@ -44,11 +44,12 @@ import { useAccount } from 'wagmi'
 import { Head } from 'components/Head'
 import { initializeApollo } from 'graphql/apollo-client'
 import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
-import { ActivityType, Collection, Token } from '__generated__/graphql'
+import { ActivityType, Collection, Order, Token } from '__generated__/graphql'
 import { GET_TOKEN, REFRESH_TOKEN_METADATA } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { useMutation, useQuery } from '@apollo/client'
 import { BigNumber } from 'ethers'
+import { GET_HIGHEST_BID, GET_LISTED } from 'graphql/queries/orders'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -69,7 +70,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
   
   const [refreshTokenMetadata, { loading: isRefreshing }] = useMutation(REFRESH_TOKEN_METADATA);
 
-  const { data: tokenData, refetch: mutate } = useQuery(GET_TOKEN, {
+  const { data: tokenData, refetch: refetchToken } = useQuery(GET_TOKEN, {
     variables: { id: `${contract?.toLowerCase()}-${id}` },
     skip: !contract || !id
   });
@@ -79,10 +80,32 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
     skip: !id
   })
 
+  const { data: listedData, refetch: refetchListed } = useQuery(GET_LISTED, {
+    variables: {
+      where: {
+        collectionAddress: contract?.toLowerCase() as string,
+        tokenId: id as string
+      }
+    },
+    skip: !contract || !id
+  })
+
+
+  const { data: highestBidData, refetch: refetchHighestBid } = useQuery(GET_HIGHEST_BID, {
+    variables: {
+      where: {
+        collectionAddress: contract?.toLowerCase() as string,
+        tokenId: id as string
+      }
+    },
+    skip: !contract || !id
+  })
+
+  const highestBid = highestBidData?.highestBid as Order
+  const ask = listedData?.listed as Order
+
   const token = (tokenData?.token || ssr.token) as Token
   const collection = (collectionData?.collection || ssr.collection) as Collection
-
-  const highestBid = [...token?.bids || []].sort((a, b) => BigNumber.from(a.price).gt(BigNumber.from(b.price)) ? -1 : 1)?.[0]
 
   const hasAttributes = token?.attributes && token?.attributes?.length > 0
   const is1155 = false
@@ -91,6 +114,12 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
   const { displayName: ownerFormatted } = useENSResolver(token?.owner)
 
   const tokenName = `${`#${token?.tokenId}`}`
+  
+  const mutate = () => {
+    refetchToken()
+    refetchHighestBid()
+    refetchListed()
+  }
   
   const trigger = (
     <Button
@@ -152,9 +181,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
     router.push(router, undefined, { shallow: true })
   }, [tabValue])
 
-  // const pageTitle = token?.name
-  //   ? token.collection.name
-  //   : `${token?.tokenID} - ${token?.collection?.name}`
   const pageTitle = `${collection.symbol}-${token.tokenId}`
 
   return (
@@ -301,11 +327,6 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
                   </Text>
                 </Anchor>
               </Link>
-              {/* <OpenSeaVerified
-                openseaVerificationStatus={
-                  collection?.openseaVerificationStatus
-                }
-              /> */}
             </Flex>
             <Button
               onClick={(e) => {
@@ -374,16 +395,11 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
                   </Link>
                 </Flex>
               )}
-              {/* <RarityRank
-                token={token}
-                collection={collection}
-                collectionAttributes={attributesData?.data}
-              /> */}
-              <PriceData token={token} />
+              <PriceData highestBid={highestBid} ask={ask} />
               {isMounted && (
                 <TokenActions
                   token={token}
-                  offer={highestBid}
+                  offer={highestBid as Order}
                   isOwner={isOwner}
                   mutate={mutate}
                   account={account}

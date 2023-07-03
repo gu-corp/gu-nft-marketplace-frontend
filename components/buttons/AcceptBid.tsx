@@ -9,7 +9,6 @@ import { useMarketplaceChain } from 'hooks'
 import { AcceptBidModal } from 'components/@reservoir0x/components/Modal/AcceptBid/AcceptBidModal'
 import { AcceptBidStep } from 'components/@reservoir0x/components/Modal/AcceptBid/AcceptBidModalRenderer'
 import { Token } from '__generated__/graphql'
-import { QueryResult } from '@apollo/client'
 
 type Props = {
   token?: Token
@@ -20,7 +19,7 @@ type Props = {
   buttonCss?: CSS
   buttonChildren?: ReactNode
   buttonProps?: ComponentProps<typeof Button>
-  mutate?: QueryResult["refetch"]
+  mutate?: () => void
 }
 
 const AcceptBid: FC<Props> = ({
