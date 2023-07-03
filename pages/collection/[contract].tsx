@@ -47,7 +47,7 @@ type ActivityTypes = ActivityType[]
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
-const CollectionPage: NextPage<Props> = ({ id, ssr}) => {
+const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
   const router = useRouter()
   const { address } = useAccount()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
@@ -136,13 +136,6 @@ const CollectionPage: NextPage<Props> = ({ id, ssr}) => {
   if (attributeFiltersOpen && attributesData?.attributes && !attributes.length) {
     setAttributeFiltersOpen(false)
   }
-
-  // const rarityEnabledCollection = Boolean(
-  //   collection?.tokenCount &&
-  //     +collection.tokenCount >= 2 &&
-  //     attributes &&
-  //     attributes?.length >= 2
-  // )
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
@@ -428,25 +421,14 @@ const CollectionPage: NextPage<Props> = ({ id, ssr}) => {
                             }}
                           />
                         ))}
-                    {/* <Box
+                    <Box
                       ref={loadMoreRef}
                       css={{
                         display: loading ? 'none' : 'block',
                       }}
                     >
-                      {!loading && <LoadingCard />}
-                    </Box> */}
-                    {/* TO-DOs: has more update later */}
-                    {/* {
-                      !loading && (
-                        <>
-                          {Array(6)
-                            .fill(null)
-                            .map((_, index) => (
-                              <LoadingCard key={`loading-card-${index}`} />
-                            ))}
-                        </>
-                      )} */}
+                      {loading && <LoadingCard />}
+                    </Box>
                   </Grid>
                   {tokens.length == 0 && !loading && (
                     <Flex
@@ -523,6 +505,7 @@ export const getStaticProps: GetStaticProps<{
   ssr: { collection: Collection }
   id: string | undefined
 }> = async ({ params }) => {
+  console.log(params)
   const id = params?.contract?.toString()
 
   const apolloClient = initializeApollo()
