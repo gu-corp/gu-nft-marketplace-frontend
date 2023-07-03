@@ -31,12 +31,6 @@ class MyDocument extends Document {
         <meta name="keywords" content="nft, ethereum, protocol" />
         <meta name="keywords" content="NFT, API, Protocol" />
 
-        {/* Favicon */}
-        <link
-          rel="shortcut icon"
-          type="image/svg"
-          href="./guLogo.svg"
-        />
 
         {/* meta tags */}
         <meta property="title" content="G.U.NFT marketplace" />
