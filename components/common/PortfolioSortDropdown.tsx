@@ -1,4 +1,3 @@
-import { useUserTokens } from '@reservoir0x/reservoir-kit-ui'
 import { Text, Button, Box } from '../primitives'
 import {
   DropdownMenuItem,
@@ -10,9 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { useMediaQuery } from 'react-responsive'
 
-export type PortfolioSortingOption = NonNullable<
-  Exclude<Parameters<typeof useUserTokens>[1], false | undefined>['sortBy']
->
+export type PortfolioSortingOption = any
 
 const sortingOptions: PortfolioSortingOption[] = [
   'acquiredAt',
