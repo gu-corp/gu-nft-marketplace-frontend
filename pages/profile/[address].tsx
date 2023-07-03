@@ -8,7 +8,7 @@ import { Text, Flex, Box, Grid } from '../../components/primitives'
 import Layout from 'components/Layout'
 import { useIntersectionObserver } from 'usehooks-ts'
 import { useMediaQuery } from 'react-responsive'
-import { useContext, useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Avatar } from 'components/primitives/Avatar'
 import Jazzicon, { jsNumberForAddress } from 'react-jazzicon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -29,7 +29,6 @@ import { useENSResolver } from 'hooks'
 import { Head } from 'components/Head'
 import CopyText from 'components/common/CopyText'
 import { Address, useAccount } from 'wagmi'
-import ChainToggle from 'components/common/ChainToggle'
 import { GET_USER_RELATIVE_COLLECTIONS } from 'graphql/queries/collections'
 import { useQuery } from '@apollo/client'
 import { ActivityType, Token } from '__generated__/graphql'
@@ -151,7 +150,6 @@ const IndexPage: NextPage<Props> = ({ address }) => {
               </CopyText>
             </Flex>
           </Flex>
-          <ChainToggle />
         </Flex>
         <Tabs.Root defaultValue="items">
           <TabsList>

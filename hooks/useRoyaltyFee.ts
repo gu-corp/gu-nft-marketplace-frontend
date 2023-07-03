@@ -1,5 +1,5 @@
 import { useProvider } from "wagmi";
-import { useSdk } from "../context/sdkProvider";
+import { useSdk } from "../context/SDKProvider";
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import IRoyaltyFeeManagerAbi from "@gulabs/gu-nft-marketplace-sdk/dist/abis/IRoyaltyFeeManager.json"

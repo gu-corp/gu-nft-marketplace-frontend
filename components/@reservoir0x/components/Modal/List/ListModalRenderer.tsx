@@ -18,7 +18,7 @@ import { Currency } from 'types/currency'
 import { gql } from '__generated__'
 import { useMutation, useQuery } from '@apollo/client'
 import { useRoyaltyFee, useStrategyFee  } from 'hooks'
-import { useSdk } from 'context/sdkProvider'
+import { useSdk } from 'context/SDKProvider'
 import { MakerOrder } from "@gulabs/gu-nft-marketplace-sdk"
 import { CREATE_ORDER, GET_LISTED } from 'graphql/queries/orders'
 import { parseUnits } from 'ethers/lib/utils.js'

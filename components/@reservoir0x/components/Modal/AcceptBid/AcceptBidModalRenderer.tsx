@@ -12,7 +12,7 @@ import Fees from './Fees'
 import { useQuery } from '@apollo/client'
 import { Collection, Order, Token } from '__generated__/graphql'
 import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
-import { useSdk } from 'context/sdkProvider'
+import { useSdk } from 'context/SDKProvider'
 import { useCurrency, useRoyaltyFee, useStrategyFee } from 'hooks'
 import { Currency } from 'types/currency'
 import { MakerOrder, isApprovedForAll } from "@gulabs/gu-nft-marketplace-sdk"

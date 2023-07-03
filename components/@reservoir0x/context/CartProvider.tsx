@@ -59,7 +59,7 @@ export type Cart = {
   } | null
 }
 
-const CartStorageKey = `reservoirkit.cart`
+const CartStorageKey = `nft-marketplace.cart`
 
 type CartStoreProps = {
   referrer?: string

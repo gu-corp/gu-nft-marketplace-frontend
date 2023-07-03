@@ -10,17 +10,13 @@ import {
 } from 'react'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from 'hooks'
-import supportedChains from 'utils/chains'
 import { CollectionRankingsTable } from 'components/rankings/CollectionRankingsTable'
 import { useIntersectionObserver } from 'usehooks-ts'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import CollectionsTimeDropdown, {
   CollectionsSortingOption,
 } from 'components/common/CollectionsTimeDropdown'
-import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
-import { ChainContext } from 'context/ChainContextProvider'
-import { useRouter } from 'next/router'
 import { useQuery } from '@apollo/client'
 import { GET_COLLECTIONS } from 'graphql/queries/collections'
 import { Collection, Collection_OrderBy, OrderDirection } from '__generated__/graphql'
@@ -29,29 +25,11 @@ import { initializeApollo } from 'graphql/apollo-client'
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
-  const router = useRouter()
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
   const [sortByTime, setSortByTime] =
     useState<CollectionsSortingOption>(Collection_OrderBy.Volume1d)
-
-  const { chain, switchCurrentChain } = useContext(ChainContext)
-
-  useEffect(() => {
-    if (router.query.chain) {
-      let chainIndex: number | undefined
-      for (let i = 0; i < supportedChains.length; i++) {
-        if (supportedChains[i].routePrefix == router.query.chain) {
-          chainIndex = supportedChains[i].id
-        }
-      }
-      if (chainIndex !== -1 && chainIndex) {
-        switchCurrentChain(chainIndex)
-      }
-    }
-  }, [router.query])
-
 
   const { data, loading, fetchMore } = useQuery(GET_COLLECTIONS, {
     variables: {
@@ -129,7 +107,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                   setSortByTime(option)
                 }}
               />
-              <ChainToggle />
             </Flex>
           </Flex>
           {isSSR || !isMounted ? null : (

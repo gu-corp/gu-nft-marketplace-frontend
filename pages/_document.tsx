@@ -38,21 +38,9 @@ class MyDocument extends Document {
           href="./guLogo.svg"
         />
 
-        {/* Reservoir meta tags */}
-        <meta property="title" content="Reservoir Market" />
+        {/* meta tags */}
+        <meta property="title" content="G.U.NFT marketplace" />
         <meta property="icon" content="/guLogo.svg" />
-        <meta
-          property="token-url-mainnet"
-          content="/collection/ethereum/${contract}/${tokenId}"
-        />
-        <meta
-          property="token-url-goerli"
-          content="/collection/goerli/${contract}/${tokenId}"
-        />
-        <meta
-          property="token-url-polygon"
-          content="/collection/polygon/${contract}/${tokenId}"
-        />
         <body>
           <Main />
           <NextScript />

@@ -13,7 +13,6 @@ import { motion } from 'framer-motion'
 import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
 import { Token } from '__generated__/graphql'
 
-
 type Props = {
   token?: Token
 }

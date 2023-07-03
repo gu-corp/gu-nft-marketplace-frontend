@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client'
 import { Collection, Order } from '__generated__/graphql'
-import { useSdk } from 'context/sdkProvider'
+import { useSdk } from 'context/SDKProvider'
 import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
 import { useCurrency } from 'hooks'
 import React, { FC, useEffect, useState, useCallback, ReactNode } from 'react'

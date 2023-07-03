@@ -64,7 +64,7 @@ const Navbar = () => {
                 src="/guLogo.svg"
                 width={34}
                 height={39}
-                alt="Reservoir"
+                alt="G.U.NFT marketplace"
               />
             </Box>
           </Link>
@@ -104,14 +104,14 @@ const Navbar = () => {
                   src="/logoDark.svg"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="G.U.NFT marketplace"
                 />
               ) : (
                 <Image
                   src="/logoLight.svg"
                   width={112}
                   height={36}
-                  alt="Reservoir"
+                  alt="G.U.NFT marketplace"
                 />
               )}
             </Box>

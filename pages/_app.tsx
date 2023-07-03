@@ -1,8 +1,3 @@
-import AnalyticsProvider, {
-  initializeAnalytics,
-} from 'components/AnalyticsProvider'
-initializeAnalytics()
-
 import { Inter } from '@next/font/google'
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
@@ -18,35 +13,23 @@ import {
 import { WagmiConfig, createClient, configureChains, useProvider, useSigner } from 'wagmi'
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
-import { alchemyProvider } from 'wagmi/providers/alchemy'
 import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
 import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
 import { useMarketplaceChain } from 'hooks'
-import ChainContextProvider from 'context/ChainContextProvider'
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from 'graphql/apollo-client'
-import { SdkProvider } from 'context/sdkProvider'
+import { SdkProvider } from 'context/SDKProvider'
 import { Signer, SupportedNetworkId } from "@gulabs/gu-nft-marketplace-sdk"
 import { CartProvider } from 'components/@reservoir0x/context/CartProvider'
 
-//CONFIGURABLE: Use nextjs to load your own custom font: https://nextjs.org/docs/basic-features/font-optimization
-const inter = Inter({
-  subsets: ['latin'],
-})
-
-export const NORMALIZE_ROYALTIES = process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES
-  ? process.env.NEXT_PUBLIC_NORMALIZE_ROYALTIES === 'true'
-  : false
-
 const { chains, provider } = configureChains(supportedChains, [
-  alchemyProvider({ apiKey: process.env.NEXT_PUBLIC_ALCHEMY_ID || '' }),
   publicProvider(),
 ])
 
 const { connectors } = getDefaultWallets({
-  appName: 'Reservoir Marketplace',
+  appName: 'G.U.NFT Marketplace',
   chains,
 })
 
@@ -55,14 +38,6 @@ const wagmiClient = createClient({
   connectors,
   provider,
 })
-
-//CONFIGURABLE: Here you can override any of the theme tokens provided by RK: https://docs.reservoir.tools/docs/reservoir-kit-theming-and-customization
-const reservoirKitThemeOverrides = {
-  headlineFont: inter.style.fontFamily,
-  font: inter.style.fontFamily,
-  primaryColor: '#6E56CB',
-  primaryHoverColor: '#644fc1',
-}
 
 function AppWrapper(props: AppProps & { baseUrl: string }) {
   const client = useApollo(props)
@@ -76,13 +51,9 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
       }}
     >
       <WagmiConfig client={wagmiClient}>
-        <ChainContextProvider>
-          <AnalyticsProvider>
-            <ApolloProvider client={client}>
-              <MyApp {...props} />
-            </ApolloProvider>
-          </AnalyticsProvider>
-        </ChainContextProvider>
+        <ApolloProvider client={client}>
+          <MyApp {...props} />
+        </ApolloProvider>
       </WagmiConfig>
     </ThemeProvider>
   )
@@ -91,7 +62,6 @@ function AppWrapper(props: AppProps & { baseUrl: string }) {
 function MyApp({
   Component,
   pageProps,
-  baseUrl,
 }: AppProps & { baseUrl: string }) {
   globalReset()
 
@@ -124,16 +94,6 @@ function MyApp({
   }, [theme])
 
   const FunctionalComponent = Component as FC
-
-  let source = process.env.NEXT_PUBLIC_MARKETPLACE_SOURCE
-
-  if (!source && process.env.NEXT_PUBLIC_HOST_URL) {
-    try {
-      const url = new URL(process.env.NEXT_PUBLIC_HOST_URL)
-      source = url.host
-    } catch (e) {}
-  }
-
   return (
     <HotkeysProvider>
       <ThemeProvider
@@ -177,8 +137,6 @@ AppWrapper.getInitialProps = async (appContext: AppContext) => {
   if (appContext.ctx.req?.headers.host) {
     const host = appContext.ctx.req?.headers.host
     baseUrl = `${host.includes('localhost') ? 'http' : 'https'}://${host}`
-  } else if (process.env.NEXT_PUBLIC_HOST_URL) {
-    baseUrl = process.env.NEXT_PUBLIC_HOST_URL || ''
   }
   baseUrl = baseUrl.replace(/\/$/, '')
 

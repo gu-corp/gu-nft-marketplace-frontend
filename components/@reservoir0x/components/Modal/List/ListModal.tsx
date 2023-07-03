@@ -170,7 +170,7 @@ export function ListModal({
                             side="bottom"
                             width={200}
                             content={
-                              'Listings made on this marketplace will be distributed across the reservoir ecosystem'
+                              'Listings made on this marketplace will be distributed across the ecosystem'
                             }
                           />
                         </Flex>

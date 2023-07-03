@@ -1,7 +1,6 @@
 import {
   faArrowLeft,
   faChevronDown,
-  faCircleExclamation,
   faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -9,7 +8,6 @@ import * as Tabs from '@radix-ui/react-tabs'
 import { ActivityFilters } from 'components/token/ActivityFilters'
 import { spin } from 'components/common/LoadingSpinner'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
-import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import Layout from 'components/Layout'
 import {
   Anchor,
@@ -18,19 +16,17 @@ import {
   Flex,
   Grid,
   Text,
-  Tooltip,
 } from 'components/primitives'
 import { Dropdown } from 'components/primitives/Dropdown'
 import { TabsContent, TabsList, TabsTrigger } from 'components/primitives/Tab'
 import AttributeCard from 'components/token/AttributeCard'
 import FullscreenMedia from 'components/token/FullscreenMedia'
 import { PriceData } from 'components/token/PriceData'
-import RarityRank from 'components/token/RarityRank'
 import { TokenActions } from 'components/token/TokenActions'
 import { TokenActivityTable } from 'components/token/ActivityTable'
 import { TokenInfo } from 'components/token/TokenInfo'
 import { ToastContext } from 'context/ToastContextProvider'
-import { useENSResolver, useMarketplaceChain, useMounted } from 'hooks'
+import { useENSResolver, useMounted } from 'hooks'
 import {
   GetStaticPaths,
   GetStaticProps,
@@ -39,20 +35,16 @@ import {
 } from 'next'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { NORMALIZE_ROYALTIES } from 'pages/_app'
 import { useContext, useEffect, useState } from 'react'
 import { jsNumberForAddress } from 'react-jazzicon'
 import Jazzicon from 'react-jazzicon/dist/Jazzicon'
 import { useMediaQuery } from 'react-responsive'
-import supportedChains, { DefaultChain } from 'utils/chains'
-import { DATE_REGEX, timeTill } from 'utils/till'
 import titleCase from 'utils/titleCase'
 import { useAccount } from 'wagmi'
 import { Head } from 'components/Head'
-import { gql } from '__generated__'
 import { initializeApollo } from 'graphql/apollo-client'
 import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
-import { ActivityType, Collection, Order, OrderDirection, Order_OrderBy, Token } from '__generated__/graphql'
+import { ActivityType, Collection, Token } from '__generated__/graphql'
 import { GET_TOKEN, REFRESH_TOKEN_METADATA } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { useMutation, useQuery } from '@apollo/client'

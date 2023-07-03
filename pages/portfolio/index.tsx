@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import { Text, Flex, Box, Button } from '../../components/primitives'
+import { Text, Flex, Box } from '../../components/primitives'
 import Layout from 'components/Layout'
 import { useMediaQuery } from 'react-responsive'
 import { useContext, useState } from 'react'
@@ -15,15 +15,12 @@ import { FilterButton } from 'components/common/FilterButton'
 import { ListingsTable } from 'components/portfolio/ListingsTable'
 import { OffersTable } from 'components/portfolio/OffersTable'
 import { CollectionsTable } from 'components/portfolio/CollectionsTable'
-import { faChevronDown, faWallet } from '@fortawesome/free-solid-svg-icons'
+import { faWallet } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import ChainToggle from 'components/common/ChainToggle'
 import { Head } from 'components/Head'
-import { ChainContext } from 'context/ChainContextProvider'
 import PortfolioSortDropdown, {
   PortfolioSortingOption,
 } from 'components/common/PortfolioSortDropdown'
-import { gql } from '__generated__'
 import { useQuery } from '@apollo/client'
 import { GET_USER_RELATIVE_COLLECTIONS } from 'graphql/queries/collections'
 
@@ -73,7 +70,6 @@ const IndexPage: NextPage = () => {
                 <Text style="h4" css={{}}>
                   Portfolio
                 </Text>
-                <ChainToggle />
               </Flex>
               <Tabs.Root defaultValue="items">
                 <Flex

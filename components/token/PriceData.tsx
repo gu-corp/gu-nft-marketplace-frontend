@@ -12,7 +12,6 @@ type Props = {
 }
 
 export const PriceData: FC<Props> = ({ token }) => {
-  const { reservoirBaseUrl } = useMarketplaceChain()
   // const listSourceName = token?.market?.floorAsk?.source?.name as
   //   | string
   //   | undefined
@@ -26,22 +25,6 @@ export const PriceData: FC<Props> = ({ token }) => {
   // const offerSourceDomain = token?.market?.topBid?.source?.domain as
   //   | string
   //   | undefined
-
-  // const listSourceLogo = `${reservoirBaseUrl}/redirect/sources/${
-  //   listSourceDomain || listSourceName
-  // }/logo/v2`
-
-  // const offerSourceLogo = `${reservoirBaseUrl}/redirect/sources/${
-  //   offerSourceDomain || offerSourceName
-  // }/logo/v2`
-
-  // const listSourceRedirect = `${reservoirBaseUrl}/redirect/sources/${
-  //   listSourceDomain || listSourceName
-  // }/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
-
-  // const offerSourceRedirect = `${reservoirBaseUrl}/redirect/sources/${
-  //   offerSourceDomain || offerSourceName
-  // }/tokens/${token?.token?.contract}:${token?.token?.tokenId}/link/v2`
 
   const { data: listedData, refetch: refetchListed } = useQuery(GET_LISTED, {
     variables: {

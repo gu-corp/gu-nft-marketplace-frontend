@@ -6,7 +6,6 @@ import { Footer } from 'components/home/Footer'
 import { useMediaQuery } from 'react-responsive'
 import { useMounted } from 'hooks'
 import Link from 'next/link'
-import ChainToggle from 'components/common/ChainToggle'
 import CollectionsTimeDropdown, {
   CollectionsSortingOption,
 } from 'components/common/CollectionsTimeDropdown'
@@ -92,7 +91,6 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                   setSortByTime(option)
                 }}
               />
-              <ChainToggle />
             </Flex>
           </Flex>
           {isSSR || !isMounted ? null : (
