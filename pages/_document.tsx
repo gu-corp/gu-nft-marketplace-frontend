@@ -39,18 +39,18 @@ class MyDocument extends Document {
         />
 
         {/* Reservoir meta tags */}
-        <meta property="reservoir:title" content="Reservoir Market" />
-        <meta property="reservoir:icon" content="/reservoir-source-icon.png" />
+        <meta property="title" content="Reservoir Market" />
+        <meta property="icon" content="/guLogo.svg" />
         <meta
-          property="reservoir:token-url-mainnet"
+          property="token-url-mainnet"
           content="/collection/ethereum/${contract}/${tokenId}"
         />
         <meta
-          property="reservoir:token-url-goerli"
+          property="token-url-goerli"
           content="/collection/goerli/${contract}/${tokenId}"
         />
         <meta
-          property="reservoir:token-url-polygon"
+          property="token-url-polygon"
           content="/collection/polygon/${contract}/${tokenId}"
         />
         <body>
