@@ -19,13 +19,6 @@ import { WagmiConfig, createClient, configureChains, useProvider, useSigner } fr
 import * as Tooltip from '@radix-ui/react-tooltip'
 import { publicProvider } from 'wagmi/providers/public'
 import { alchemyProvider } from 'wagmi/providers/alchemy'
-
-import {
-  ReservoirKitProvider,
-  darkTheme as reservoirDarkTheme,
-  lightTheme as reservoirLightTheme,
-  ReservoirKitTheme,
-} from '@reservoir0x/reservoir-kit-ui'
 import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
 import ToastContextProvider from 'context/ToastContextProvider'
@@ -107,9 +100,6 @@ function MyApp({
   const provider = useProvider()
   const { data: signer } = useSigner<Signer>()
   
-  const [reservoirKitTheme, setReservoirKitTheme] = useState<
-    ReservoirKitTheme | undefined
-  >()
 
   const [rainbowKitTheme, setRainbowKitTheme] = useState<
     | ReturnType<typeof rainbowDarkTheme>
@@ -119,14 +109,12 @@ function MyApp({
 
   useEffect(() => {
     if (theme == 'dark') {
-      setReservoirKitTheme(reservoirDarkTheme(reservoirKitThemeOverrides))
       setRainbowKitTheme(
         rainbowDarkTheme({
           borderRadius: 'small',
         })
       )
     } else {
-      setReservoirKitTheme(reservoirLightTheme(reservoirKitThemeOverrides))
       setRainbowKitTheme(
         rainbowLightTheme({
           borderRadius: 'small',
@@ -156,22 +144,6 @@ function MyApp({
           light: 'light',
         }}
       >
-        <ReservoirKitProvider
-          options={{
-            //CONFIGURABLE: Override any configuration available in RK: https://docs.reservoir.tools/docs/reservoirkit-ui#configuring-reservoirkit-ui
-            // Note that you should at the very least configure the source with your own domain
-            chains: supportedChains.map(({ proxyApi, id }) => {
-              return {
-                id,
-                baseApiUrl: `${baseUrl}${proxyApi}`,
-                default: marketplaceChain.id === id,
-              }
-            }),
-            source: source,
-            normalizeRoyalties: NORMALIZE_ROYALTIES,
-          }}
-          theme={reservoirKitTheme}
-        >
           <CartProvider>
             <Tooltip.Provider>
               <RainbowKitProvider
@@ -192,7 +164,6 @@ function MyApp({
               </RainbowKitProvider>
             </Tooltip.Provider>
           </CartProvider>
-        </ReservoirKitProvider>
       </ThemeProvider>
     </HotkeysProvider>
   )
