@@ -10,7 +10,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faClose, faChevronLeft } from '@fortawesome/free-solid-svg-icons'
 import { Anchor, Button, Flex, Text, Loader, Box } from 'components/primitives'
 import { Dialog } from 'components/primitives/Dialog'
-import ReservoirLogoWhiteText from '../../img/ReservoirLogoWhiteText'
 import { styled } from 'stitches.config'
 import { DialogListing } from 'components/primitives/DialogListing'
 
@@ -37,12 +36,6 @@ type Props = {
   | 'trigger'
   | 'onFocusCapture'
 >
-
-const Logo = styled(ReservoirLogoWhiteText, {
-  '& .letter': {
-    fill: '$reservoirLogoColor',
-  },
-})
 
 export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
   (
@@ -116,17 +109,16 @@ export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
               justifyContent: 'center',
               backgroundColor: '$footerBackground',
               py: 10.5,
-              visibility: '$poweredByReservoirVisibility',
               borderBottomRightRadius: '$borderRadius',
               borderBottomLeftRadius: '$borderRadius',
             }}
           >
-            <Anchor href="https://reservoir.tools/" target="_blank">
+            <Anchor href="https://www.gu-tech.com/" target="_blank">
               <Text
                 style="body2"
                 css={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
               >
-                Powered by <Logo />
+                Powered by G.U.Technologies
               </Text>
             </Anchor>
           </Flex>

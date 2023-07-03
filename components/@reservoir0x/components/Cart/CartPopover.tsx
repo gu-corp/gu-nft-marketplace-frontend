@@ -26,7 +26,6 @@ import {
   faRefresh,
   faShoppingCart,
 } from '@fortawesome/free-solid-svg-icons'
-import ReservoirLogoWhiteText from '../../img/ReservoirLogoWhiteText'
 import CartItem from './CartItem'
 import CartToast from './CartToast'
 import CartPopoverRenderer from './CartPopoverRenderer'
@@ -46,12 +45,6 @@ const scaleUp = keyframes({
 const scaleDown = keyframes({
   '0%': { opacity: 1, transform: 'scale(1) translateY(0)' },
   '100%': { opacity: 0, transform: 'scale(0.9) translateY(-10px)' },
-})
-
-const Logo = styled(ReservoirLogoWhiteText, {
-  '& .letter': {
-    fill: '$reservoirLogoColor',
-  },
 })
 
 type Props = {

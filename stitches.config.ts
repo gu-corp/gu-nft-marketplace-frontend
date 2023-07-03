@@ -31,7 +31,7 @@ const inter = Inter({
 export type CSS = Stitches.CSS<typeof config>
 export type CSSProps = { css?: CSS }
 
-// CONFIGURABLE: Here you can update all your theming (outside of ReservoirKit which can be configured in the app.tsx)
+// CONFIGURABLE: Here you can update all your theming
 // The theme colors are all already hooked up to stitches scales, so you just need to swap them.
 // Don't forget to check the dark mode themes below.
 // More on Stitches theme tokens: https://stitches.dev/docs/tokens
@@ -307,7 +307,7 @@ export const darkTheme = createTheme({
 
 
     // component colors
-    reservoirLogoColor: '#ECEDEE',
+    logoColor: '#ECEDEE',
     inputBackground: '$neutralBgHover',
     buttonTextColor: 'white',
     buttonTextHoverColor: 'white',
@@ -430,7 +430,7 @@ export const lightTheme = createTheme({
     successAccent: '$green10',
 
     // component colors
-    reservoirLogoColor: '#11181C',
+    logoColor: '#11181C',
     buttonTextColor: 'white',
     buttonTextHoverColor: 'white',
     inputBackground: '$neutralBgHover',
