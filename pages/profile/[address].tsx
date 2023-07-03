@@ -17,7 +17,7 @@ import { TabsList, TabsTrigger, TabsContent } from 'components/primitives/Tab'
 import * as Tabs from '@radix-ui/react-tabs'
 import TokenCard from 'components/collections/TokenCard'
 import { TokenFilters } from 'components/common/TokenFilters'
-import { useMounted, useMarketplaceChain } from '../../hooks'
+import { useMounted } from '../../hooks'
 import { FilterButton } from 'components/common/FilterButton'
 import { UserActivityTable } from 'components/profile/UserActivityTable'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
@@ -57,7 +57,6 @@ const IndexPage: NextPage<Props> = ({ address }) => {
   >()
   const isMounted = useMounted()
   const [activityTypes, setActivityTypes] = useState<ActivityTypes>([ActivityType.SaleEvent])
-  const marketplaceChain = useMarketplaceChain()
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
 

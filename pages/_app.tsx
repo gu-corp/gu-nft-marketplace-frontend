@@ -1,4 +1,3 @@
-import { Inter } from '@next/font/google'
 import type { AppContext, AppProps } from 'next/app'
 import { default as NextApp } from 'next/app'
 import { ThemeProvider, useTheme } from 'next-themes'
@@ -17,7 +16,7 @@ import { FC, useEffect, useState } from 'react'
 import { HotkeysProvider } from 'react-hotkeys-hook'
 import ToastContextProvider from 'context/ToastContextProvider'
 import supportedChains from 'utils/chains'
-import { useMarketplaceChain } from 'hooks'
+import { useDefaultChain } from 'hooks'
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from 'graphql/apollo-client'
 import { SdkProvider } from 'context/SDKProvider'
@@ -66,7 +65,7 @@ function MyApp({
   globalReset()
 
   const { theme } = useTheme()
-  const marketplaceChain = useMarketplaceChain()
+  const defaultChain = useDefaultChain()
   const provider = useProvider()
   const { data: signer } = useSigner<Signer>()
   
@@ -113,7 +112,7 @@ function MyApp({
               >
                 <ToastContextProvider>
                   <SdkProvider options={{
-                    chainId: marketplaceChain.id,
+                    chainId: defaultChain.id,
                     networkId: process.env.NEXT_PUBLIC_NETWORK_ID as SupportedNetworkId,
                     provider,
                     signer

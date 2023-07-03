@@ -5,7 +5,7 @@ import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { CSS } from '@stitches/react'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
-import { useMarketplaceChain } from 'hooks'
+import { useDefaultChain, useIsInTheWrongNetwork } from 'hooks'
 import { QueryResult } from '@apollo/client'
 import { Collection } from '__generated__/graphql'
 import { BidModal } from 'components/@reservoir0x/components/Modal/Bid/BidModal'
@@ -24,27 +24,26 @@ const CollectionOffer: FC<Props> = ({
   buttonCss,
   buttonProps = {},
 }) => {
-  const marketplaceChain = useMarketplaceChain()
+  const defaultChain = useDefaultChain()
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
   const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
+    chainId: defaultChain.id,
   })
-  const isInTheWrongNetwork = Boolean(
-    signer && activeChain?.id !== marketplaceChain.id
-  )
+  const isInTheWrongNetwork = useIsInTheWrongNetwork()
+
   if (isDisconnected || isInTheWrongNetwork) {
     return (
       <Button
         css={buttonCss}
-        disabled={isInTheWrongNetwork && !switchNetworkAsync}
+        disabled={!!isInTheWrongNetwork && !switchNetworkAsync}
         onClick={async () => {
           if (isInTheWrongNetwork && switchNetworkAsync) {
-            const chain = await switchNetworkAsync(marketplaceChain.id)
-            if (chain.id !== marketplaceChain.id) {
+            const chain = await switchNetworkAsync(defaultChain.id)
+            if (chain.id !== defaultChain.id) {
               return false
             }
           }

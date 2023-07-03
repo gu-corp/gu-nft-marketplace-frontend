@@ -9,8 +9,6 @@ import {
 } from '../../context/CartProvider'
 import { Currency } from 'types/currency'
 import useCart from 'components/@reservoir0x/hooks/useCart'
-import { useMarketplaceChain } from 'hooks'
-import { parseUnits } from 'ethers/lib/utils.js'
 
 type ChildrenProps = {
   loading: boolean
@@ -38,7 +36,7 @@ type Props = {
 }
 
 export const CartPopoverRenderer: FC<Props> = ({ open, children }) => {
-  const marketplaceChain = useMarketplaceChain()
+  const { chain } = useNetwork()
 
   const [hasEnoughCurrency, setHasEnoughCurrency] = useState(true)
   const { data, clear, clearTransaction, validate, remove, add, checkout } =
@@ -51,14 +49,11 @@ export const CartPopoverRenderer: FC<Props> = ({ open, children }) => {
     transaction,
     referrerFee,
   } = data
-  // const usdPrice = useCoinConversion(
-  //   open ? 'USD' : undefined,
-  //   currency?.symbol || currency?.name
-  // )
+
   const usdPrice = 0
 
   const blockExplorerBaseUrl =
-    marketplaceChain?.blockExplorers?.default?.url || 'https://etherscan.io'
+  chain?.blockExplorers?.default?.url || 'https://etherscan.io'
   
   useEffect(() => {
     if (open) {

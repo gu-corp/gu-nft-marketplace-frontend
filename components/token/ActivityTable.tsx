@@ -11,7 +11,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import LoadingSpinner from 'components/common/LoadingSpinner'
 import { constants } from 'ethers'
-import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
+import { useENSResolver, useTimeSince } from 'hooks'
 import Link from 'next/link'
 import { FC, useEffect, useRef } from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -28,6 +28,7 @@ import {
 import { QueryResult, useQuery } from '@apollo/client'
 import { Activity, ActivityType, Activity_FilterArgs, Exact, GetActivitiesQuery, InputMaybe } from '__generated__/graphql'
 import { GET_ACTIVITIES } from 'graphql/queries/activities'
+import { useNetwork } from 'wagmi'
 
 type Props = {
   query: QueryResult<GetActivitiesQuery, Exact<{
@@ -168,9 +169,9 @@ const activityTypeToDesciption = (activityType: string) => {
 
 const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 700 })
-  const marketplaceChain = useMarketplaceChain()
+  const { chain } = useNetwork()
   const blockExplorerBaseUrl =
-    marketplaceChain?.blockExplorers?.default?.url || 'https://etherscan.io'
+    chain?.blockExplorers?.default?.url || 'https://etherscan.io'
 
   if (!activity) {
     return null

@@ -12,7 +12,7 @@ import {
 import { useIntersectionObserver } from 'usehooks-ts'
 import Link from 'next/link'
 import Image from 'next/image'
-import { useENSResolver, useMarketplaceChain, useTimeSince } from 'hooks'
+import { useENSResolver, useTimeSince } from 'hooks'
 import { constants } from 'ethers'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -30,6 +30,7 @@ import Img from 'components/primitives/Img'
 import { QueryResult, useQuery } from '@apollo/client'
 import { Activity, ActivityType, Activity_FilterArgs, Exact, GetActivitiesQuery, InputMaybe } from '__generated__/graphql'
 import { GET_TOKEN } from 'graphql/queries/tokens'
+import { useNetwork } from 'wagmi'
 
 type Props = {
   query: QueryResult<GetActivitiesQuery, Exact<{
@@ -129,9 +130,9 @@ const activityTypeToDesciption = (activityType: string) => {
 
 const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 700 })
-  const marketplaceChain = useMarketplaceChain()
+  const { chain } = useNetwork()
   const blockExplorerBaseUrl =
-    marketplaceChain?.blockExplorers?.default?.url || 'https://etherscan.io'
+  chain?.blockExplorers?.default?.url || 'https://etherscan.io'
   const href = activity?.tokenId
     ? `/collection/${activity?.collection}/${activity?.tokenId}`
     : `/collection/${activity?.collection}`

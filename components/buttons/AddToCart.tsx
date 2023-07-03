@@ -3,7 +3,6 @@ import { useAccount } from 'wagmi'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
-import { useMarketplaceChain } from 'hooks'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faMinus, faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { ToastContext } from 'context/ToastContextProvider'
@@ -22,7 +21,6 @@ const AddToCart: FC<Props> = ({ token, buttonCss, buttonProps }) => {
   const { data: items, add, remove, clear } = useCart((cart) => cart.items)
   const { isConnected } = useAccount()
   const { openConnectModal } = useConnectModal()
-  const marketplaceChain = useMarketplaceChain()
   const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false)
 
   if (

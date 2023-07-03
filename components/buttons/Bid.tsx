@@ -5,7 +5,7 @@ import { SWRResponse } from 'swr'
 import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { ToastContext } from 'context/ToastContextProvider'
-import { useMarketplaceChain } from 'hooks'
+import { useDefaultChain, useIsInTheWrongNetwork } from 'hooks'
 import { BidModal } from 'components/@reservoir0x/components/Modal/Bid/BidModal'
 import { BidStep } from 'components/@reservoir0x/components/Modal/Bid/BidModalRenderer'
 
@@ -31,17 +31,15 @@ const Bid: FC<Props> = ({
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
-  const marketplaceChain = useMarketplaceChain()
+  const defaultChain = useDefaultChain()
   const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
+    chainId: defaultChain.id,
   })
 
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
 
-  const isInTheWrongNetwork = Boolean(
-    signer && marketplaceChain.id !== activeChain?.id
-  )
+  const isInTheWrongNetwork = useIsInTheWrongNetwork()
 
   const trigger = (
     <Button css={buttonCss} disabled={disabled} {...buttonProps} color="gray4">
@@ -53,8 +51,8 @@ const Bid: FC<Props> = ({
     return cloneElement(trigger, {
       onClick: async () => {
         if (switchNetworkAsync && activeChain) {
-          const chain = await switchNetworkAsync(marketplaceChain.id)
-          if (chain.id !== marketplaceChain.id) {
+          const chain = await switchNetworkAsync(defaultChain.id)
+          if (chain.id !== defaultChain.id) {
             return false
           }
         }

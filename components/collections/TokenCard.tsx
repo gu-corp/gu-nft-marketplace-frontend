@@ -17,10 +17,8 @@ import {
 import { ToastContext } from 'context/ToastContextProvider'
 import { BigNumber } from 'ethers'
 import { GET_LISTED } from 'graphql/queries/orders'
-import { useMarketplaceChain } from 'hooks'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
-import { formatNumber } from 'utils/numbers'
 import { Address } from 'wagmi'
 
 type TokenCardProps = {

@@ -1,23 +1,21 @@
-import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import {
   faEllipsis,
-  faGlobe,
   faRefresh,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { styled } from '../../stitches.config'
 import { Box, Flex } from 'components/primitives'
 import { ComponentPropsWithoutRef, FC, useContext, useState } from 'react'
-import { useMarketplaceChain, useMounted } from 'hooks'
+import { useMounted } from 'hooks'
 import { useTheme } from 'next-themes'
 import { Dropdown } from 'components/primitives/Dropdown'
 import { useMediaQuery } from 'react-responsive'
 import { ToastContext } from 'context/ToastContextProvider'
 import { spin } from 'components/common/LoadingSpinner'
-import { DATE_REGEX, timeTill } from 'utils/till'
 import { Collection } from '__generated__/graphql'
 import { useMutation } from '@apollo/client'
 import { REFRESH_COLLECTION_METADATA } from 'graphql/queries/collections'
+import { useNetwork } from 'wagmi'
 
 type CollectionActionsProps = {
   collection: Collection
@@ -54,7 +52,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const { addToast } = useContext(ToastContext)
   const isMounted = useMounted()
   const isMobile = useMediaQuery({ maxWidth: 600 }) && isMounted
-  const marketplaceChain = useMarketplaceChain()
+  const { chain } = useNetwork()
   const { theme } = useTheme()
   const [refreshCollectionMetadata, { loading: isRefreshing }] = useMutation(REFRESH_COLLECTION_METADATA);
   const etherscanImage = (
@@ -64,7 +62,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
           ? '/icons/etherscan-logo-light-circle.svg'
           : '/icons/etherscan-logo-circle.svg'
       }
-      alt={marketplaceChain.blockExplorers?.default.name || 'Etherscan'}
+      alt={chain?.blockExplorers?.default.name || 'Etherscan'}
       style={{
         height: 16,
         width: 16,
@@ -73,11 +71,8 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   )
 
   const blockExplorerUrl = `${
-    marketplaceChain?.blockExplorers?.default.url || 'https://etherscan.io'
+    chain?.blockExplorers?.default.url || 'https://etherscan.io'
   }/address/${collection?.id}`
-  // const twitterLink = collection?.twitterUsername
-  //   ? `https://twitter.com/${collection?.twitterUsername}`
-  //   : null
 
   const containerCss: ComponentPropsWithoutRef<typeof Flex>['css'] = {
     borderRadius: 8,
@@ -161,38 +156,6 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
                 Etherscan
               </CollectionActionDropdownItem>
             </a>
-            {/* {collection?.externalUrl && (
-              <a
-                href={collection.externalUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <CollectionActionDropdownItem>
-                  <FontAwesomeIcon icon={faGlobe} width={16} height={16} />
-                  Website
-                </CollectionActionDropdownItem>
-              </a>
-            )}
-            {collection?.discordUrl && (
-              <a
-                href={collection.discordUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <CollectionActionDropdownItem>
-                  <FontAwesomeIcon icon={faDiscord} width={16} height={16} />{' '}
-                  Discord
-                </CollectionActionDropdownItem>
-              </a>
-            )} */}
-            {/* {twitterLink && (
-              <a href={twitterLink} target="_blank" rel="noopener noreferrer">
-                <CollectionActionDropdownItem>
-                  <FontAwesomeIcon icon={faTwitter} width={16} height={16} />{' '}
-                  Twitter
-                </CollectionActionDropdownItem>
-              </a>
-            )} */}
             {refreshMetadataItem}
           </Flex>
         </Dropdown>
@@ -205,35 +168,6 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
       <a href={blockExplorerUrl} target="_blank" rel="noopener noreferrer">
         <CollectionAction>{etherscanImage}</CollectionAction>
       </a>
-      {/* {twitterLink && (
-        <a href={twitterLink} target="_blank" rel="noopener noreferrer">
-          <CollectionAction>
-            <FontAwesomeIcon icon={faTwitter} width={16} height={16} />
-          </CollectionAction>
-        </a>
-      )}
-      {collection?.discordUrl && (
-        <a
-          href={collection.discordUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <CollectionAction>
-            <FontAwesomeIcon icon={faDiscord} width={16} height={16} />
-          </CollectionAction>
-        </a>
-      )}
-      {collection?.externalUrl && (
-        <a
-          href={collection.externalUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <CollectionAction>
-            <FontAwesomeIcon icon={faGlobe} width={16} height={16} />
-          </CollectionAction>
-        </a>
-      )} */}
       <Dropdown
         trigger={collectionActionOverflowTrigger}
         contentProps={dropdownContentProps}

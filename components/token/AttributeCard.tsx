@@ -1,7 +1,6 @@
 import { Flex, FormatCryptoCurrency, Text } from 'components/primitives'
 import { formatNumber } from 'utils/numbers'
 import Link from 'next/link'
-import { useMarketplaceChain } from '../../hooks'
 import { TokenAttribute } from '__generated__/graphql'
 
 type Props = {
@@ -11,7 +10,6 @@ type Props = {
 }
 
 export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
-  const { routePrefix } = useMarketplaceChain()
   const attributeTokenCount = attribute?.tokenCount || 0
   const totalTokens = collectionTokenCount ? Number(collectionTokenCount) : 0
   const attributeRarity = formatNumber(

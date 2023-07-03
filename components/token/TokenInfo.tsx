@@ -1,20 +1,18 @@
 import { Anchor, Button, Flex, Text, Tooltip } from 'components/primitives'
 import { ComponentPropsWithoutRef, FC, useRef, useState } from 'react'
-import { faDiscord, faTwitter } from '@fortawesome/free-brands-svg-icons'
 import {
   faExternalLink,
-  faGlobe,
   faInfoCircle,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { styled } from '../../stitches.config'
 import { useTheme } from 'next-themes'
-import { useMarketplaceChain, useMounted } from 'hooks'
+import { useMounted } from 'hooks'
 import { truncateAddress } from 'utils/truncate'
 import ReactMarkdown from 'react-markdown'
-import { OpenSeaVerified } from 'components/common/OpenSeaVerified'
 import { useRouter } from 'next/router'
 import { Token, Collection } from '__generated__/graphql'
+import { useNetwork } from 'wagmi'
 
 
 type Props = {
@@ -23,14 +21,12 @@ type Props = {
 }
 
 export const TokenInfo: FC<Props> = ({ token, collection }) => {
-  const marketplaceChain = useMarketplaceChain()
+  const { chain } = useNetwork()
   const { theme } = useTheme()
   const [isExpanded, setIsExpanded] = useState(false)
   const descriptionRef = useRef<HTMLParagraphElement | null>(null)
   const isMounted = useMounted()
   const router = useRouter()
-
-  let chain = "G.U Sandbox chain"
 
   const CollectionAction = styled(Flex, {
     px: '$4',
@@ -54,7 +50,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
           : '/icons/etherscan-logo-circle.svg'
       }
       alt={`${
-        marketplaceChain.blockExplorers?.default.name || 'Ethereum'
+        chain?.blockExplorers?.default.name || 'Ethereum'
       } Icon`}
       height={16}
       width={16}
@@ -62,11 +58,8 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
   )
 
   const blockExplorerUrl = `${
-    marketplaceChain?.blockExplorers?.default.url || 'https://etherscan.io'
+    chain?.blockExplorers?.default.url || 'https://etherscan.io'
   }/token/${token?.collection}?a=${token?.tokenId}`
-  // const twitterLink = collection?.twitterUsername
-  //   ? `https://twitter.com/${collection?.twitterUsername}`
-  //   : null
 
   const expandedCss: ComponentPropsWithoutRef<typeof Flex>['css'] = {
     maxWidth: '100%',
@@ -151,35 +144,6 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
           <a href={blockExplorerUrl} target="_blank" rel="noopener noreferrer">
             <CollectionAction>{etherscanImage}</CollectionAction>
           </a>
-          {/* {twitterLink && (
-            <a href={twitterLink} target="_blank" rel="noopener noreferrer">
-              <CollectionAction>
-                <FontAwesomeIcon icon={faTwitter} width={16} height={16} />
-              </CollectionAction>
-            </a>
-          )} */}
-          {/* {collection?.discordUrl && (
-            <a
-              href={collection.discordUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <CollectionAction>
-                <FontAwesomeIcon icon={faDiscord} width={16} height={16} />
-              </CollectionAction>
-            </a>
-          )} */}
-          {/* {collection?.externalUrl && (
-            <a
-              href={collection.externalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <CollectionAction>
-                <FontAwesomeIcon icon={faGlobe} width={16} height={16} />
-              </CollectionAction>
-            </a>
-          )} */}
         </Flex>
         <Flex direction="column" css={{ width: '100%', gap: '$2' }}>
           <Flex justify="between" css={{ width: '100%' }}>
@@ -209,7 +173,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
             >
               Chain
             </Text>
-            <Text style="subtitle1">{chain}</Text>
+            <Text style="subtitle1">G.U Sandbox chain</Text>
           </Flex>
           <Flex justify="between" css={{ width: '100%' }}>
             <Text
@@ -260,9 +224,6 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               </Tooltip>
             </Flex>
             <Text style="subtitle1">
-              {/* {collection?.royalties?.bps
-                ? collection?.royalties?.bps * 0.01
-                : 0} */}
               0%
             </Text>
           </Flex>

@@ -505,7 +505,6 @@ export const getStaticProps: GetStaticProps<{
   ssr: { collection: Collection }
   id: string | undefined
 }> = async ({ params }) => {
-  console.log(params)
   const id = params?.contract?.toString()
 
   const apolloClient = initializeApollo()

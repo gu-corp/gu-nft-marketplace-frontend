@@ -1,11 +1,10 @@
 import React, { ComponentProps, FC } from 'react'
-import { SWRResponse } from 'swr'
-import { useNetwork, useSigner } from 'wagmi'
+import { useSigner } from 'wagmi'
 import { useSwitchNetwork } from 'wagmi'
 import { Button } from 'components/primitives'
 import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { CSS } from '@stitches/react'
-import { useMarketplaceChain } from 'hooks'
+import { useDefaultChain, useIsInTheWrongNetwork } from 'hooks'
 import { BuyStep } from 'components/@reservoir0x/components/Modal/Buy/BuyModalRenderer'
 import { BuyModal } from 'components/@reservoir0x/components/Modal/Buy/BuyModal'
 import { Token } from '__generated__/graphql'
@@ -21,14 +20,11 @@ type Props = {
 const BuyNow: FC<Props> = ({ token, orderId, mutate, buttonCss, buttonProps = {} }) => {
   const { data: signer } = useSigner()
   const { openConnectModal } = useConnectModal()
-  const { chain: activeChain } = useNetwork()
-  const marketplaceChain = useMarketplaceChain()
+  const defaultChain = useDefaultChain()
   const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
+    chainId: defaultChain.id,
   })
-  const isInTheWrongNetwork = Boolean(
-    signer && activeChain?.id !== marketplaceChain.id
-  )
+  const isInTheWrongNetwork = useIsInTheWrongNetwork()
 
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
@@ -48,8 +44,8 @@ const BuyNow: FC<Props> = ({ token, orderId, mutate, buttonCss, buttonProps = {}
       color="primary"
       onClick={async () => {
         if (isInTheWrongNetwork && switchNetworkAsync) {
-          const chain = await switchNetworkAsync(marketplaceChain.id)
-          if (chain.id !== marketplaceChain.id) {
+          const chain = await switchNetworkAsync(defaultChain.id)
+          if (chain.id !== defaultChain.id) {
             return false
           }
         }

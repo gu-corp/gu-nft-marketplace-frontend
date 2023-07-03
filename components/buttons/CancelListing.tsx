@@ -2,7 +2,7 @@ import { useConnectModal } from '@rainbow-me/rainbowkit'
 import { FC, ReactElement, useContext, cloneElement } from 'react'
 import { useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { ToastContext } from '../../context/ToastContextProvider'
-import { useMarketplaceChain } from 'hooks'
+import { useDefaultChain, useIsInTheWrongNetwork } from 'hooks'
 import { CancelListingModal } from 'components/@reservoir0x/components/Modal/CancelListing/CancelListingModal'
 import { CancelStep } from 'components/@reservoir0x/components/Modal/CancelListing/CancelListingModalRenderer'
 
@@ -21,24 +21,22 @@ const CancelListing: FC<Props> = ({
 }) => {
   const { addToast } = useContext(ToastContext)
   const { openConnectModal } = useConnectModal()
-  const marketplaceChain = useMarketplaceChain()
+  const defaultChain = useDefaultChain()
   const { switchNetworkAsync } = useSwitchNetwork({
-    chainId: marketplaceChain.id,
+    chainId: defaultChain.id,
   })
 
   const { data: signer } = useSigner()
   const { chain: activeChain } = useNetwork()
 
-  const isInTheWrongNetwork = Boolean(
-    signer && activeChain && activeChain.id !== marketplaceChain.id
-  )
+  const isInTheWrongNetwork = useIsInTheWrongNetwork()
 
   if (isInTheWrongNetwork) {
     return cloneElement(trigger, {
       onClick: async () => {
         if (switchNetworkAsync && activeChain) {
-          const chain = await switchNetworkAsync(marketplaceChain.id)
-          if (chain.id !== marketplaceChain.id) {
+          const chain = await switchNetworkAsync(defaultChain.id)
+          if (chain.id !== defaultChain.id) {
             return false
           }
         }
