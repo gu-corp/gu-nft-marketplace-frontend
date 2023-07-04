@@ -16,6 +16,7 @@ import { Collection } from '__generated__/graphql'
 import { useMutation } from '@apollo/client'
 import { REFRESH_COLLECTION_METADATA } from 'graphql/queries/collections'
 import { useNetwork } from 'wagmi'
+import Image from 'next/image'
 
 type CollectionActionsProps = {
   collection: Collection
@@ -56,7 +57,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
   const { theme } = useTheme()
   const [refreshCollectionMetadata, { loading: isRefreshing }] = useMutation(REFRESH_COLLECTION_METADATA);
   const etherscanImage = (
-    <img
+    <Image
       src={
         isMounted && theme === 'dark'
           ? '/icons/etherscan-logo-light-circle.svg'

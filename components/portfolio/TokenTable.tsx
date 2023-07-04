@@ -67,7 +67,7 @@ export const TokenTable: FC<Props> = ({
     if (isVisible) {
       fetchMore({ variables: { skip: tokens.length }})
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [fetchMore, loadMoreObserver?.isIntersecting, tokens.length])
 
   return (
     <>

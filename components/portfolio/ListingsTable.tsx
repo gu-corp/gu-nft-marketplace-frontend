@@ -63,11 +63,11 @@ export const ListingsTable: FC<Props> = ({ address }) => {
         }
       })
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [fetchMore, listings.length, loadMoreObserver?.isIntersecting])
 
   useEffect(() => {
     mutate()
-  }, [])
+  }, [mutate])
 
   return (
     <>

@@ -23,6 +23,7 @@ const StyledInput = styled('input', {
   '&:focus': { boxShadow: '0 0 0 2px $$focusColor' },
 })
 
+
 const Input = forwardRef<
   ElementRef<typeof StyledInput>,
   ComponentPropsWithoutRef<typeof StyledInput> & {

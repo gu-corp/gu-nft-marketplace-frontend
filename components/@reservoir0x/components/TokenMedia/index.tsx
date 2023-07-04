@@ -17,6 +17,7 @@ import { useMeasure } from '@react-hookz/web'
 import TokenFallback from './TokenFallback'
 import { Box } from 'components/primitives'
 import { Token } from '__generated__/graphql'
+import Image from 'next/image'
 
 type MediaType =
   | 'mp4'
@@ -137,7 +138,7 @@ const TokenMedia: FC<Props> = ({
 
   if (preview || !media) {
     return (
-      <img
+      <Image
         alt="Token Image"
         src={tokenPreview}
         style={{
@@ -180,7 +181,7 @@ const TokenMedia: FC<Props> = ({
     return (
       <Box className={className} style={computedStyle} ref={containerRef}>
         {!isContainerLarge && <MediaPlayButton mediaRef={mediaRef} />}
-        <img
+        <Image
           alt="Audio Poster"
           src={tokenPreview}
           style={{
@@ -241,7 +242,7 @@ const TokenMedia: FC<Props> = ({
     mediaType === 'gif'
   ) {
     return (
-      <img
+      <Image
         alt="Token Image"
         src={media}
         className={className}
@@ -275,7 +276,7 @@ const TokenMedia: FC<Props> = ({
   }
 
   return (
-    <img
+    <Image
       alt="Token Image"
       src={tokenPreview}
       style={{

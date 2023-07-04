@@ -55,7 +55,7 @@ export const ActivityTable: FC<Props> = ({ query }) => {
         }
       })
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [activities.length, loadMoreObserver?.isIntersecting, query])
 
   return (
     <>
@@ -63,7 +63,7 @@ export const ActivityTable: FC<Props> = ({ query }) => {
       activities &&
       activities.length === 0 ? (
         <Flex direction="column" align="center" css={{ py: '$6', gap: '$4' }}>
-          <img src="/icons/activity-icon.svg" width={40} height={40} />
+          <Image alt='' src="/icons/activity-icon.svg" width={40} height={40} />
           <Text>No activity yet</Text>
         </Flex>
       ) : (
@@ -129,6 +129,7 @@ const activityTypeToDesciption = (activityType: string) => {
 }
 
 const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
+  const timeSince = useTimeSince(activity?.timestamp as number)
   const isSmallDevice = useMediaQuery({ maxWidth: 700 })
   const { chain } = useNetwork()
   const blockExplorerBaseUrl =
@@ -136,10 +137,6 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   const href = activity?.tokenId
     ? `/collection/${activity?.collection}/${activity?.tokenId}`
     : `/collection/${activity?.collection}`
-
-  if (!activity) {
-    return null
-  }
 
   const { data: tokenData } = useQuery(GET_TOKEN, {
     variables: {
@@ -171,6 +168,11 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   const { displayName: toDisplayName } = useENSResolver(activity?.to as string)
   const { displayName: fromDisplayName } = useENSResolver(activity?.from as string)
 
+
+  if (!activity) {
+    return null
+  }
+
   if (isSmallDevice) {
     return (
       <TableRow key={activity.txHash} css={{ gridTemplateColumns: '1fr' }}>
@@ -197,7 +199,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
                   style="subtitle3"
                   css={{ fontSize: '12px', color: '$gray11' }}
                 >
-                  {useTimeSince(activity?.timestamp as number)}
+                  {timeSince}
                 </Text>
 
                 {activity.txHash && (
@@ -467,7 +469,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       <TableCell css={{ minWidth: 0 }}>
         <Flex align="center" justify="end" css={{ gap: '$3' }}>
           <Text style="subtitle3" color="subtle" ellipsify>
-            {useTimeSince(activity?.timestamp as number)}
+            {timeSince}
           </Text>
 
           {activity.txHash && (

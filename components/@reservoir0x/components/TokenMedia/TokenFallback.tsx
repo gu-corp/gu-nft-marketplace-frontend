@@ -3,6 +3,7 @@ import TokenMedia from './index'
 import { Button, Flex, Text } from 'components/primitives'
 import { useMutation } from '@apollo/client'
 import { REFRESH_TOKEN_METADATA } from 'graphql/queries/tokens'
+import Image from 'next/image'
 
 type TokenFallbackProps = {
   style?: CSSProperties
@@ -31,9 +32,10 @@ const TokenFallback: FC<TokenFallbackProps> = ({
       className={className}
     >
       {img && (
-        <img
+        <Image
           style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 8 }}
           src={img}
+          alt=''
         />
       )}
       <Text style="body2" css={{ textAlign: 'center' }}>

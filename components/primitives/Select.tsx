@@ -61,6 +61,7 @@ const StyledItemText = styled(Select.ItemText, textCss)
 
 const StyledValue = styled(Select.Value, textCss)
 
+
 const SelectDownIcon = forwardRef<
   ElementRef<typeof Select.Icon>,
   ComponentPropsWithoutRef<typeof Select.Icon>

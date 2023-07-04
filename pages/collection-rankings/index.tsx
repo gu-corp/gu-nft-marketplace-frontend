@@ -48,9 +48,9 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   useEffect(() => {
     let isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      fetchMore({ variables: { skip: data?.collections.length || 0 }})
+      fetchMore({ variables: { skip: data?.collections?.length || 0 }})
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [data?.collections?.length, fetchMore, loadMoreObserver?.isIntersecting])
 
   let volumeKey: ComponentPropsWithoutRef<
     typeof CollectionRankingsTable

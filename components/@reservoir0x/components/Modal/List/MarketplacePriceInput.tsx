@@ -13,6 +13,7 @@ import {
 import { Currency } from 'types/currency'
 import { Collection } from '__generated__/graphql'
 import { marketplaceInfo } from 'constants/common'
+import Image from 'next/image'
 
 type MarketPlaceInputProps = {
   price: string,
@@ -44,7 +45,8 @@ const MarketplacePriceInput = ({
   return (
     <Flex {...props} align="center">
       <Box css={{ mr: '$2' }}>
-        <img
+        <Image
+          alt=''
           src={marketplaceInfo.imageUrl}
           style={{ height: 32, width: 32, borderRadius: 4 }}
         />

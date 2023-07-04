@@ -64,13 +64,13 @@ export const OffersTable: FC<Props> = ({ address }) => {
         }
       })
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [fetchMore, loadMoreObserver?.isIntersecting, offers.length])
 
   useEffect(() => {
     if (address) {
       refetch()
     }
-  }, [])
+  }, [address, refetch])
 
   return (
     <>

@@ -35,6 +35,7 @@ import { useLazyQuery } from '@apollo/client';
 import { ethers } from 'ethers'
 import { GET_COLLECTIONS } from 'graphql/queries/collections'
 import { Collection } from '__generated__/graphql'
+import Image from 'next/image'
 
 type Props = {
   collection: Collection
@@ -141,7 +142,8 @@ const WalletItem: FC<WalletItemProps> = ({ wallet }) => {
         align="center"
       >
         {wallet.avatar ? (
-          <img
+          <Image
+            alt=''
             src={wallet.avatar as string}
             style={{ width: 32, height: 32, borderRadius: 4 }}
           />
@@ -218,7 +220,7 @@ const GlobalSearch = forwardRef<
     } else {
       setResults([])
     }
-  }, [debouncedSearch])
+  }, [debouncedSearch, triggerSearch])
 
   useEffect(() => {
     const hideBox = () => setShowSearchBox(false)
@@ -379,7 +381,7 @@ const GlobalSearch = forwardRef<
                 .slice(0, 8)
                 .map((result) => (
                   <SearchResult
-                    // TO-DO: return only collection from now
+                    key={result.id}
                     result={{ type: 'collection', data: result }} 
                     handleSelectResult={handleSelectResult}
                   />

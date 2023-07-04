@@ -26,12 +26,7 @@ import useCopyToClipboard from '../../../hooks/useCopyToClipboard'
 import ProgressBar from '../ProgressBar'
 import TokenLineItem from '../TokenLineItem'
 import Progress from '../Progress'
-
-type PurchaseData = {
-  tokenId?: string
-  collectionId?: string
-  maker?: string
-}
+import Image from 'next/image'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -101,12 +96,15 @@ export function BuyModal({
         ethBalance
       }) => {
         const title = titleForStep(buyStep)
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (buyStep === BuyStep.Complete && onPurchaseComplete) {
             onPurchaseComplete()
           }
         }, [buyStep])
-
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (transactionError && onPurchaseError) {
             onPurchaseError(transactionError)
@@ -301,9 +299,10 @@ export function BuyModal({
                   <Text style="h5" css={{ mb: 24 }}>
                     Congratulations!
                   </Text>
-                  <img
+                  <Image
                     src={token?.image as string}
                     style={{ width: 100, height: 100 }}
+                    alt=''
                   />
                   <Flex
                     css={{ mb: 24, mt: '$2', maxWidth: '100%' }}
@@ -312,9 +311,10 @@ export function BuyModal({
                   >
                     {collection?.image && (
                       <Box css={{ mr: '$1' }}>
-                        <img
+                        <Image
                           src={collection?.image}
                           style={{ width: 24, height: 24, borderRadius: '50%' }}
+                          alt=''
                         />
                       </Box>
                     )}

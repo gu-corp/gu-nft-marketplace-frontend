@@ -19,6 +19,7 @@ const DropdownMenuContent = styled(DropdownMenuPrimitive.DropdownMenuContent, {
   boxShadow: '0 0 0 1px $$borderColor',
 })
 
+
 const AnimatedDropdownMenuContent = forwardRef<
   ElementRef<typeof DropdownMenuContent>,
   ComponentPropsWithoutRef<typeof DropdownMenuContent>
@@ -66,6 +67,7 @@ type Props = {
   trigger: ReactNode
   contentProps?: DropdownMenuPrimitive.DropdownMenuContentProps
 }
+
 
 const Dropdown = forwardRef<
   ElementRef<typeof DropdownMenuPrimitive.Root>,

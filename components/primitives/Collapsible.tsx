@@ -15,6 +15,7 @@ const CollapsibleContent = styled(CollapsiblePrimitive.CollapsibleContent, {
   borderRadius: 0,
 })
 
+
 const AnimatedCollapsibleContent = forwardRef<
   ElementRef<typeof CollapsibleContent>,
   ComponentPropsWithoutRef<typeof CollapsibleContent>

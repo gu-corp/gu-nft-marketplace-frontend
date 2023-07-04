@@ -19,6 +19,7 @@ const Overlay = styled(DialogPrimitive.Overlay, {
   zIndex: 1000,
 })
 
+
 const AnimatedOverlay = forwardRef<
   ElementRef<typeof DialogPrimitive.Overlay>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Overlay>
@@ -55,6 +56,7 @@ const Content = styled(DialogPrimitive.Content, {
     border: 0,
   },
 })
+
 
 const AnimatedContent = forwardRef<
   ElementRef<typeof DialogPrimitive.DialogContent>,
@@ -127,6 +129,7 @@ type Props = {
   size?: ModalSize
 }
 
+
 const DialogListing = forwardRef<
   ElementRef<typeof DialogPrimitive.Content>,
   ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & Props
@@ -144,7 +147,7 @@ const DialogListing = forwardRef<
           onOpenChange(open)
         }
       }
-    }, [open])
+    }, [dialogOpen, onOpenChange, open])
 
     return (
       <DialogPrimitive.Root

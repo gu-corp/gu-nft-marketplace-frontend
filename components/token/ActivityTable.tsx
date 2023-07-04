@@ -29,6 +29,7 @@ import { QueryResult, useQuery } from '@apollo/client'
 import { Activity, ActivityType, Activity_FilterArgs, Exact, GetActivitiesQuery, InputMaybe } from '__generated__/graphql'
 import { GET_ACTIVITIES } from 'graphql/queries/activities'
 import { useNetwork } from 'wagmi'
+import Image from 'next/image'
 
 type Props = {
   query: QueryResult<GetActivitiesQuery, Exact<{
@@ -63,7 +64,7 @@ export const TokenActivityTable: FC<TokenActivityTableProps> = ({
   })
   useEffect(() => {
     query.refetch()
-  }, [])
+  }, [query])
 
   return <ActivityTable query={query} />
 }
@@ -81,13 +82,18 @@ export const ActivityTable: FC<Props> = ({ query }) => {
         variables: { skip: activities.length }
       })
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [activities.length, loadMoreObserver?.isIntersecting, query])
 
   return (
     <>
       {!query.loading && activities.length === 0 ? (
         <Flex direction="column" align="center" css={{ py: '$6', gap: '$4' }}>
-          <img src="/icons/activity-icon.svg" width={40} height={40} />
+          <Image
+            src="/icons/activity-icon.svg"
+            width={40}
+            height={40}
+            alt=''
+          />
           <Text>No activity yet</Text>
         </Flex>
       ) : (
@@ -168,20 +174,21 @@ const activityTypeToDesciption = (activityType: string) => {
 }
 
 const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
+  const timeSince = useTimeSince(activity?.timestamp as number)
   const isSmallDevice = useMediaQuery({ maxWidth: 700 })
   const { chain } = useNetwork()
   const blockExplorerBaseUrl =
     chain?.blockExplorers?.default?.url || 'https://etherscan.io'
-
-  if (!activity) {
-    return null
-  }
 
   let activityDescription = activityTypeToDesciption(activity?.type || '')
 
   const { displayName: toDisplayName } = useENSResolver(activity?.to as string)
   const { displayName: fromDisplayName } = useENSResolver(activity?.from as string)
 
+  if (!activity) {
+    return null
+  }
+  
   if (isSmallDevice) {
     return (
       <TableRow
@@ -222,7 +229,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
             }}
           >
             <Text style="subtitle3" color="subtle">
-              {useTimeSince(activity?.timestamp as number)}
+              {timeSince}
             </Text>
             {activity.txHash && (
               <Anchor
@@ -329,7 +336,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
           }}
         >
           <Text style="subtitle3" color="subtle">
-            {useTimeSince(activity?.timestamp as number)}
+            {timeSince}
           </Text>
           {activity.txHash && (
             <Anchor

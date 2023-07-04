@@ -86,7 +86,7 @@ export function CartPopover({
       (popoverTrigger?.offsetTop || 0) +
       (popoverTrigger?.offsetHeight || 0) +
       CONTENT_OFFSET,
-    [trigger]
+    [popoverTrigger?.offsetHeight, popoverTrigger?.offsetTop]
   )
 
   return (
@@ -108,6 +108,8 @@ export function CartPopover({
         clear,
         checkout,
       }) => {
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (transaction?.status === CheckoutStatus.Complete) {
             setDisplayPendingTransaction(false)
@@ -434,22 +436,24 @@ export function CartPopover({
                   (transaction?.status === CheckoutStatus.Idle ||
                     !displayPendingTransaction) && (
                   <Button
-                      css={{ justifyContent: 'center' }}
-                      disabled={!hasEnoughCurrency && isConnected}
-                      onClick={async () => {
-                        if (!isConnected) {
-                          onConnectWallet?.()
-                        } else {
-                          checkout()
-                            .then(() => {
-                              setDisplayPendingTransaction(true)
-                            })
-                            .catch((e: any) => {
-                              console.error(e)
-                              setDisplayPendingTransaction(false)
-                            })
-                        }
-                      }}
+                    css={{ justifyContent: 'center' }}
+                    // TO-DO: Not support purchase many now
+                    // disabled={!hasEnoughCurrency && isConnected}
+                    disabled={true}
+                    onClick={async () => {
+                      if (!isConnected) {
+                        onConnectWallet?.()
+                      } else {
+                        checkout()
+                          .then(() => {
+                            setDisplayPendingTransaction(true)
+                          })
+                          .catch((e: any) => {
+                            console.error(e)
+                            setDisplayPendingTransaction(false)
+                          })
+                      }
+                    }}
                     >
                       {hasEnoughCurrency || !isConnected
                         ? 'Purchase'

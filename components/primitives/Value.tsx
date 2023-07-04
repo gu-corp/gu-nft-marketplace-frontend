@@ -1,11 +1,11 @@
-import { styled } from "../../stitches.config";
 import Flex from "./Flex";
-import Box from "./Box";
 import Text from "./Text";
+import Image from "next/image";
 
 const Value = ({ type, value, size = 11, fontSize = 16 }: any) => (
   <Flex align="center">
-    <img
+    <Image
+      alt=""
       style={{ width: size }}
       src={type == "weth" ? "/weth.png" : "/eth.png"}
     />

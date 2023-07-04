@@ -1,5 +1,6 @@
 import { FC } from 'react'
 import { Tooltip, Text } from 'components/primitives'
+import Image from 'next/image'
 
 type Props = {
   openseaVerificationStatus: string
@@ -16,7 +17,7 @@ export const OpenSeaVerified: FC<Props> = ({ openseaVerificationStatus }) => {
           </Text>
         }
       >
-        <img src="/icons/opensea-verified.svg" />
+        <Image src="/icons/opensea-verified.svg" alt={''} />
       </Tooltip>
     )
   else return null

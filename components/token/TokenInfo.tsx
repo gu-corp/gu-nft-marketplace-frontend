@@ -13,6 +13,7 @@ import ReactMarkdown from 'react-markdown'
 import { useRouter } from 'next/router'
 import { Token, Collection } from '__generated__/graphql'
 import { useNetwork } from 'wagmi'
+import Image from 'next/image'
 
 
 type Props = {
@@ -43,7 +44,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
   })
 
   const etherscanImage = (
-    <img
+    <Image
       src={
         isMounted && theme === 'dark'
           ? '/icons/etherscan-logo-light-circle.svg'
@@ -84,9 +85,10 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
     <>
       <Flex direction="column" css={{ gap: '$3', maxWidth: '100%' }}>
         <Flex css={{ gap: '$2', flex: 1 }} align="center">
-          <img
+          <Image
             src={collection?.image as string}
             style={{ width: 36, height: 36, borderRadius: 4 }}
+            alt=''
           />
           <Text style="h6" ellipsify>
             {collection?.name}

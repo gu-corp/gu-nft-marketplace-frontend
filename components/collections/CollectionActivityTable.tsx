@@ -26,7 +26,7 @@ export const CollectionActivityTable: FC<Props> = ({ id, activityTypes }) => {
     if (id) {
       query.refetch()
     }
-  }, [])
+  }, [id, query])
 
   return <ActivityTable query={query} />
 }

@@ -97,7 +97,7 @@ const IndexPage: NextPage<Props> = ({ address }) => {
     if (isVisible) {
       fetchMore({ variables: { skip: tokens.length }})
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [fetchMore, loadMoreObserver?.isIntersecting, tokens.length])
 
   if (!isMounted) {
     return null

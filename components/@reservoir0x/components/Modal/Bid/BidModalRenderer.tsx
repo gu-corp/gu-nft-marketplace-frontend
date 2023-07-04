@@ -3,10 +3,6 @@ import React, { FC, useEffect, useState, useCallback, ReactNode } from 'react'
 import {
   useAccount,
   useBalance,
-  useNetwork,
-  useSigner,
-  mainnet,
-  goerli,
   Address,
 } from 'wagmi'
 
@@ -76,7 +72,6 @@ export const BidModalRenderer: FC<Props> = ({
   collectionId,
   children,
 }) => {
-  const { data: signer } = useSigner()
   const [bidStep, setBidStep] = useState<BidStep>(BidStep.SetPrice)
   const [transactionError, setTransactionError] = useState<Error | null>()
   const [bidAmount, setBidAmount] = useState<string>('')
@@ -134,7 +129,7 @@ export const BidModalRenderer: FC<Props> = ({
     } else {
       setHasEnoughCurrency(true)
     }
-  }, [bidAmount, currencyBalance])
+  }, [bidAmount, currencyBalance, currencyOption?.decimals])
 
   useEffect(() => {
     if (!open) {
@@ -152,7 +147,7 @@ export const BidModalRenderer: FC<Props> = ({
     if (collectionId && tokenId) {
       refetchToken()
     }
-  }, [open])
+  }, [address, collectionId, open, refetchNonce, refetchToken, tokenId])
 
   useEffect(() => {
     setBidAmount('')
@@ -252,9 +247,11 @@ export const BidModalRenderer: FC<Props> = ({
     tokenId,
     collectionId,
     currencyOption,
-    signer,
     bidAmount,
     expirationOption,
+    createOrderMutation,
+    sdk,
+    nonce,
   ])
 
   return (

@@ -16,7 +16,7 @@ const Img = (props: ComponentPropsWithoutRef<typeof StyledImg>) => {
     if (collectionImageBroken) {
       setCollectionImageBroken(false)
     }
-  }, [props.src])
+  }, [collectionImageBroken, props.src])
 
   return collectionImageBroken || !props.src ? (
     props.alt === 'Collection Page Image' ? (
