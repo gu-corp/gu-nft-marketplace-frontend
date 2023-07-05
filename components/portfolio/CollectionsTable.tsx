@@ -80,7 +80,7 @@ export const CollectionsTable: FC<Props> = ({ address }) => {
     if (isVisible) {
       fetchMore({ variables: { skip: collections.length }})
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [collections.length, fetchMore, loadMoreObserver?.isIntersecting])
 
   return (
     <>

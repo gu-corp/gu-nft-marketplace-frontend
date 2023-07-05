@@ -94,8 +94,7 @@ export const ProfileDropdown: FC = () => {
   return (
     <Dropdown
       trigger={trigger}
-      children={children}
       contentProps={{ style: { width: '264px', marginTop: '8px' } }}
-    ></Dropdown>
+    >{children}</Dropdown>
   )
 }

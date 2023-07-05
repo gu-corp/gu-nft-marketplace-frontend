@@ -58,7 +58,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
   // prevent using cached values from collections page
   useEffect(() => {
     refetch()
-  }, [])
+  }, [refetch])
 
   return (
     <Layout>

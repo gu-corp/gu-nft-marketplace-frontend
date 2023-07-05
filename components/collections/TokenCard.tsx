@@ -1,5 +1,5 @@
 import { QueryResult, useQuery } from '@apollo/client'
-import { faCheck, faCircleExclamation } from '@fortawesome/free-solid-svg-icons'
+import { faCheck } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Collection, Token } from '__generated__/graphql'
 import TokenMedia from 'components/@reservoir0x/components/TokenMedia'
@@ -12,10 +12,8 @@ import {
   Flex,
   FormatCryptoCurrency,
   Text,
-  Tooltip,
 } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
-import { BigNumber } from 'ethers'
 import { GET_LISTED } from 'graphql/queries/orders'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
@@ -34,7 +32,7 @@ type TokenCardProps = {
   collection?: Collection
 }
 
-export default ({
+const TokenCard = ({
   token,
   address,
   rarityEnabled = true,
@@ -63,7 +61,7 @@ export default ({
   const tokenId = token.tokenId
 
 
-  const { data: listedData, refetch: refetchListed } = useQuery(GET_LISTED, {
+  const { data: listedData } = useQuery(GET_LISTED, {
     variables: {
       where: {
         collectionAddress: collectionId as string,
@@ -348,3 +346,5 @@ export default ({
     </Box>
   )
 }
+
+export default TokenCard;

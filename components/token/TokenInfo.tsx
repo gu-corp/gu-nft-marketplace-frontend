@@ -87,6 +87,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
           <img
             src={collection?.image as string}
             style={{ width: 36, height: 36, borderRadius: 4 }}
+            alt=''
           />
           <Text style="h6" ellipsify>
             {collection?.name}

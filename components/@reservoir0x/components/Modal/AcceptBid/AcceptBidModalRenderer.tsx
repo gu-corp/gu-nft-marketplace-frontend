@@ -61,6 +61,7 @@ export const AcceptBidModalRenderer: FC<Props> = ({
   collectionId,
   children,
 }) => {
+  const { address } = useAccount()
   const provider = useProvider()
   const [acceptBidStep, setAcceptBidStep] = useState<AcceptBidStep>(
     AcceptBidStep.Checkout
@@ -180,7 +181,9 @@ export const AcceptBidModalRenderer: FC<Props> = ({
     tokenId,
     collectionId,
     sdk,
-    bid
+    bid,
+    provider,
+    address
   ])
 
   useEffect(() => {
@@ -189,7 +192,6 @@ export const AcceptBidModalRenderer: FC<Props> = ({
     }
   }, [bid, bidLoading, token, tokenLoading])
 
-  const { address } = useAccount()
 
   useEffect(() => {
     if (!open) {

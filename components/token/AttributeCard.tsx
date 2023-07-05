@@ -9,7 +9,7 @@ type Props = {
   collectionId?: string
 }
 
-export default ({ attribute, collectionTokenCount, collectionId }: Props) => {
+export default function AttributeCard ({ attribute, collectionTokenCount, collectionId }: Props) {
   const attributeTokenCount = attribute?.tokenCount || 0
   const totalTokens = collectionTokenCount ? Number(collectionTokenCount) : 0
   const attributeRarity = formatNumber(

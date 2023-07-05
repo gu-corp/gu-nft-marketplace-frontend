@@ -115,6 +115,21 @@ export const ListModalRenderer: FC<Props> = ({
 
   const existListing = listedData?.listed;
 
+  const { data: tokenData, loading, refetch: refetchToken } = useQuery(GET_TOKEN, {
+    variables: { id: `${collectionId}-${tokenId}` },
+    skip: !collectionId || !tokenId
+  })
+  const { data: collectionData } = useQuery(GET_COLLECTION, {
+    variables: { id: collectionId as string },
+    skip: !collectionId
+  })
+
+  const token = tokenData?.token as Token
+  const collection = collectionData?.collection
+  
+  const protocolFee = useStrategyFee(strategy)
+  const royaltyFee = useRoyaltyFee(token?.collection as string, token?.tokenId as string)
+
   useEffect(() => {
     if (!open) {
       setListingStep(ListingStep.SelectMarkets)
@@ -136,7 +151,7 @@ export const ListModalRenderer: FC<Props> = ({
     if (collectionId && tokenId) {
       refetchToken()
     }
-  }, [open])
+  }, [account?.address, collectionId, open, refetchListed, refetchNonce, refetchToken, tokenId])
 
   const listToken = useCallback(async () => {
     try {
@@ -227,32 +242,7 @@ export const ListModalRenderer: FC<Props> = ({
       setTransactionError(error)
     }
   
-  }, [
-    collectionId,
-    tokenId,
-    expirationOption,
-    currencyOption,
-    price,
-    strategy,
-    nonce,
-    existListing
-  ])
-
-
-  const { data: tokenData, loading, refetch: refetchToken } = useQuery(GET_TOKEN, {
-    variables: { id: `${collectionId}-${tokenId}` },
-    skip: !collectionId || !tokenId
-  })
-  const { data: collectionData } = useQuery(GET_COLLECTION, {
-    variables: { id: collectionId as string },
-    skip: !collectionId
-  })
-
-  const token = tokenData?.token as Token
-  const collection = collectionData?.collection
-  
-  const protocolFee = useStrategyFee(strategy)
-  const royaltyFee = useRoyaltyFee(token?.collection as string, token?.tokenId as string)
+  }, [sdk, collectionId, tokenId, expirationOption, price, currencyOption, strategy, nonce, existListing, createOrderMutation])
 
   useEffect(() => {
     if (tokenId) {
@@ -264,7 +254,8 @@ export const ListModalRenderer: FC<Props> = ({
     if (collectionId && tokenId) {
       refetchToken()
     }
-  }, [transactionError])
+  }, [account?.address, collectionId, refetchListed, refetchNonce, refetchToken, tokenId, transactionError])
+  
   return <>{children({
     token,
     collection,

@@ -3,7 +3,6 @@ import React, {
   ReactElement,
   SetStateAction,
   useEffect,
-  useState,
 } from 'react'
 
 import {
@@ -14,7 +13,6 @@ import {
   Loader,
   Select,
   ErrorWell,
-  CryptoCurrencyIcon,
 } from 'components/primitives'
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -115,6 +113,8 @@ export function ListModal({
       }) => {
         const tokenImage = token?.image || collection?.image as string
 
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (transactionError && onListingError) {
             onListingError(transactionError)
@@ -158,6 +158,7 @@ export function ListModal({
                             borderRadius: 4,
                             visibility: 'visible'
                           }}
+                          alt=''
                         />
                       </Box>
                       <Box css={{ mr: '$2', flex: 1 }}>
@@ -439,6 +440,7 @@ export function ListModal({
                         <Image
                           css={{ width: 24 }}
                           src={marketplaceInfo.imageUrl}
+                          alt=''
                         />
                       </a>
                     </Flex>

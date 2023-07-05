@@ -16,7 +16,7 @@ export const OpenSeaVerified: FC<Props> = ({ openseaVerificationStatus }) => {
           </Text>
         }
       >
-        <img src="/icons/opensea-verified.svg" />
+        <img src="/icons/opensea-verified.svg" alt=''/>
       </Tooltip>
     )
   else return null

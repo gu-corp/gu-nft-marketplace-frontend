@@ -45,6 +45,7 @@ const MarketplacePriceInput = ({
     <Flex {...props} align="center">
       <Box css={{ mr: '$2' }}>
         <img
+          alt=''
           src={marketplaceInfo.imageUrl}
           style={{ height: 32, width: 32, borderRadius: 4 }}
         />
