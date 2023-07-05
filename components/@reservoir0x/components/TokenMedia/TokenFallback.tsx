@@ -34,6 +34,7 @@ const TokenFallback: FC<TokenFallbackProps> = ({
         <img
           style={{ width: 64, height: 64, objectFit: 'cover', borderRadius: 8 }}
           src={img}
+          alt=''
         />
       )}
       <Text style="body2" css={{ textAlign: 'center' }}>

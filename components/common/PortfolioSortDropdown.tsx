@@ -4,7 +4,7 @@ import {
   DropdownMenuContent,
 } from 'components/primitives/Dropdown'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useCallback, useEffect, useRef, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { useMediaQuery } from 'react-responsive'
@@ -40,7 +40,7 @@ const PortfolioSortDropdown: FC<Props> = ({ option, onOptionSelected }) => {
     buttonRef.current?.offsetWidth ?? '220px'
   )
 
-  const handleResize = () => {
+  const handleResize = useCallback(() => {
     if (isSmallDevice) {
       setSortWidth(
         buttonRef?.current?.offsetWidth
@@ -48,11 +48,11 @@ const PortfolioSortDropdown: FC<Props> = ({ option, onOptionSelected }) => {
           : '220px'
       )
     }
-  }
+  }, [isSmallDevice])
 
   useEffect(() => {
     window.addEventListener('resize', handleResize, false)
-  }, [])
+  }, [handleResize])
 
   return (
     <DropdownMenu.Root>

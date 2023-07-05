@@ -7,7 +7,7 @@ import React, {
   useMemo,
 } from 'react'
 
-import { useAccount, useBalance, useSigner, useNetwork, useProvider } from 'wagmi'
+import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi'
 
 import { BigNumber, ContractTransaction, utils } from 'ethers'
 import { Collection, Order, Token } from '__generated__/graphql'
@@ -180,12 +180,7 @@ export const BuyModalRenderer: FC<Props> = ({
       setTransactionError(error)
       setRequestUserStep("APPROVAL_ERC20")
     }
-  }, [
-    token,
-    collection,
-    mixedCurrencies,
-    sdk
-  ])
+  }, [sdk, token, collection, mixedCurrencies, listing, address, provider])
 
   useEffect(() => {
     if (listing) {
@@ -217,7 +212,7 @@ export const BuyModalRenderer: FC<Props> = ({
       setHasEnoughCurrency(true)
     }
     
-  }, [currencyBalance, currency, ethBalance])
+  }, [currencyBalance, currency, ethBalance, mixedCurrencies, listing?.price])
 
   useEffect(() => {
     if (!open) {

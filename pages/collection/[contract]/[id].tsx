@@ -145,7 +145,12 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
 
   useEffect(() => {
     let tab = tabValue
-    const hasAttributesTab = isMounted && isSmallDevice && hasAttributes
+    
+    const hasAttributesTab =
+      isMounted &&
+      isSmallDevice &&
+      hasAttributes
+    
     if (hasAttributesTab) {
       tab = 'attributes'
     } else {
@@ -174,12 +179,12 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
       }
     }
     setTabValue(tab)
-  }, [isSmallDevice])
+  }, [hasAttributes, isMounted, isSmallDevice, tabValue])
 
   useEffect(() => {
     router.query.tab = tabValue
     router.push(router, undefined, { shallow: true })
-  }, [tabValue])
+  }, [router, tabValue])
 
   const pageTitle = `${collection.symbol}-${token.tokenId}`
 

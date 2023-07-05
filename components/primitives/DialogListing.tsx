@@ -144,7 +144,7 @@ const DialogListing = forwardRef<
           onOpenChange(open)
         }
       }
-    }, [open])
+    }, [dialogOpen, onOpenChange, open])
 
     return (
       <DialogPrimitive.Root

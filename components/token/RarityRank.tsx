@@ -8,7 +8,7 @@ type Props = {
   // collectionAttributes?: ReturnType<typeof useAttributes>['data']
 }
 
-export default () => {
+export default function RarityRank () {
   // const rarityRank = token?.token?.rarityRank as number
   // const tokenCount = collection?.tokenCount as string
   // const rankPercentile = Math.floor((rarityRank / parseInt(tokenCount)) * 100)

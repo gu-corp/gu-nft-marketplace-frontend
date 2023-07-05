@@ -140,7 +140,8 @@ export function BidModal({
           : undefined
 
         const itemImage = token?.image || collection?.image as string
-
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (requestUserStep) {
             switch (requestUserStep) {
@@ -155,13 +156,15 @@ export function BidModal({
             }
           }
         }, [requestUserStep])
-
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (bidStep === BidStep.Complete && onBidComplete) {
             onBidComplete()
           }
         }, [bidStep])
-
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (transactionError && onBidError) {
             onBidError(transactionError)

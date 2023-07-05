@@ -142,17 +142,17 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
     if (isVisible) {
       fetchMore({ variables: { skip: tokens.length }})
     }
-  }, [loadMoreObserver?.isIntersecting])
+  }, [fetchMore, loadMoreObserver?.isIntersecting, tokens.length])
 
   useEffect(() => {
     if (isMounted && initialTokenFallbackData) {
       setInitialTokenFallbackData(false)
     }
-  }, [router.query])
+  }, [initialTokenFallbackData, isMounted, router.query])
 
   useEffect(() => {
     mutate()
-  }, [orderBy, orderDirection])
+  }, [mutate, orderBy, orderDirection])
   return (
     <Layout>
       <Head

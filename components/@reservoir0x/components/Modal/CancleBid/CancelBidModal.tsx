@@ -8,13 +8,13 @@ import {
   faCircleExclamation,
   faGasPump,
 } from '@fortawesome/free-solid-svg-icons'
-import useTimeSince from '../../../hooks/useTimeSince'
 import useFallbackState from '../../../hooks/useFallbackState'
 import { parseUnits } from '@ethersproject/units'
 import currencyOptions from '../../../lib/defaultCurrencyOptions'
 import TokenPrimitive from '../TokenPrimitive'
 import Progress from '../Progress'
 import { ethers } from 'ethers'
+import { useTimeSince } from 'hooks'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -58,16 +58,22 @@ export function CancelBidModal({
       }) => {
         const image = token?.image as string
 
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         const expires = useTimeSince(
           bid?.endTime ? Number(bid.endTime) : 0
         )
 
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (cancelStep === CancelStep.Complete && onCancelComplete) {
             onCancelComplete()
           }
         }, [cancelStep])
 
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (transactionError && onCancelError) {
             onCancelError(transactionError)

@@ -27,12 +27,6 @@ import ProgressBar from '../ProgressBar'
 import TokenLineItem from '../TokenLineItem'
 import Progress from '../Progress'
 
-type PurchaseData = {
-  tokenId?: string
-  collectionId?: string
-  maker?: string
-}
-
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
   tokenId?: string
@@ -101,12 +95,15 @@ export function BuyModal({
         ethBalance
       }) => {
         const title = titleForStep(buyStep)
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (buyStep === BuyStep.Complete && onPurchaseComplete) {
             onPurchaseComplete()
           }
         }, [buyStep])
-
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (transactionError && onPurchaseError) {
             onPurchaseError(transactionError)
@@ -304,6 +301,7 @@ export function BuyModal({
                   <img
                     src={token?.image as string}
                     style={{ width: 100, height: 100 }}
+                    alt=''
                   />
                   <Flex
                     css={{ mb: 24, mt: '$2', maxWidth: '100%' }}
@@ -315,6 +313,7 @@ export function BuyModal({
                         <img
                           src={collection?.image}
                           style={{ width: 24, height: 24, borderRadius: '50%' }}
+                          alt=''
                         />
                       </Box>
                     )}

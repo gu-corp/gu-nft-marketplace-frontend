@@ -22,6 +22,7 @@ const MediaPlayButton: FC<MediaPlayButtonProps> = ({ mediaRef }) => {
     return () => {
       if (mediaRef.current) {
         mediaRef.current.onplaying = null
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         mediaRef.current.onpause = null
       }
     }

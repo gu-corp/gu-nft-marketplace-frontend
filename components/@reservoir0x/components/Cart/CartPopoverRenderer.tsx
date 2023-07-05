@@ -1,7 +1,6 @@
 import React, { FC, ReactNode, useEffect, useMemo, useState } from 'react'
 import { Address, useAccount, useBalance, useNetwork } from 'wagmi'
-import { BigNumber, constants, utils } from 'ethers'
-import { toFixed } from '../../lib/numbers'
+import { BigNumber, constants } from 'ethers'
 import {
   Cart,
   CheckoutStatus,
@@ -64,7 +63,7 @@ export const CartPopoverRenderer: FC<Props> = ({ open, children }) => {
     ) {
       clearTransaction()
     }
-  }, [open])
+  }, [clearTransaction, open, transaction?.error, transaction?.status, validate])
 
   const unavailableItems = useMemo(
     () => items.filter((item) => !item.price),
@@ -103,7 +102,7 @@ export const CartPopoverRenderer: FC<Props> = ({ open, children }) => {
     ) {
       setHasEnoughCurrency(false)
     }
-  }, [transaction])
+  }, [hasEnoughCurrency, transaction])
 
   return (
     <>

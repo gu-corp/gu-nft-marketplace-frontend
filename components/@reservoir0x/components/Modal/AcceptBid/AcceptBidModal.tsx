@@ -26,10 +26,10 @@ import {
 import Fees from './Fees'
 import { useNetwork } from 'wagmi'
 import useFallbackState from '../../../hooks/useFallbackState'
-import useTimeSince from '../../../hooks/useTimeSince'
 import { formatUnits } from 'ethers/lib/utils.js'
 import TokenLineItem from '../TokenLineItem'
 import { BigNumber } from 'ethers'
+import { useTimeSince } from 'hooks'
 
 type BidData = {
   tokenId?: string
@@ -98,19 +98,24 @@ export function AcceptBidModal({
         currency,
       }) => {
         const title = titleForStep(acceptBidStep)
-
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (acceptBidStep === AcceptBidStep.Complete && onBidAccepted) {
             onBidAccepted()
           }
         }, [acceptBidStep])
 
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (transactionError && onBidAcceptError) {
             onBidAcceptError(transactionError)
           }
         }, [transactionError])
 
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
           if (onCurrentStepUpdate) {
             onCurrentStepUpdate()
@@ -131,6 +136,8 @@ export function AcceptBidModal({
 
         const tokenImage = token?.image || collection?.image as string
 
+        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
+        // eslint-disable-next-line react-hooks/rules-of-hooks
         const expires = useTimeSince(
           bid?.endTime ? Number(bid.endTime) : 0
         )
