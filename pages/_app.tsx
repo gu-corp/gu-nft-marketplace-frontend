@@ -5,7 +5,7 @@ import { darkTheme, globalReset, lightTheme } from 'stitches.config'
 import '@rainbow-me/rainbowkit/styles.css'
 import {
   RainbowKitProvider,
-  getDefaultWallets,
+  connectorsForWallets,
   darkTheme as rainbowDarkTheme,
   lightTheme as rainbowLightTheme,
 } from '@rainbow-me/rainbowkit'
@@ -22,15 +22,22 @@ import { useApollo } from 'graphql/apollo-client'
 import { SdkProvider } from 'context/SDKProvider'
 import { Signer, SupportedNetworkId } from "@gulabs/gu-nft-marketplace-sdk"
 import { CartProvider } from 'components/@reservoir0x/context/CartProvider'
+import {
+  metaMaskWallet,
+} from '@rainbow-me/rainbowkit/wallets';
 
 const { chains, provider } = configureChains(supportedChains, [
   publicProvider(),
 ])
 
-const { connectors } = getDefaultWallets({
-  appName: 'G.U.NFT Marketplace',
-  chains,
-})
+const connectors = connectorsForWallets([
+  {
+    groupName: 'Recommended',
+    wallets: [
+      metaMaskWallet({ chains }),
+    ],
+  }
+]);
 
 const wagmiClient = createClient({
   autoConnect: true,
