@@ -32,6 +32,7 @@ jobs:
           NEXT_PUBLIC_API_URL: 'https://api.dev.nft-marketplace.gu.net/graphql'
           NEXT_PUBLIC_BASE_URL: https://app.dev.nft-marketplace.gu.net'
           NEXT_PUBLIC_NETWORK_ID: 'gu-sandbox-dev'
+          NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID: 'df6eb751f9e6df7cf7874a3e9bc84f4e'
 
       - name: Setup Cloud SDK
         uses: google-github-actions/setup-gcloud@v0
