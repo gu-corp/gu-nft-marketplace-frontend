@@ -24,8 +24,10 @@ import { Signer, SupportedNetworkId } from "@gulabs/gu-nft-marketplace-sdk"
 import { CartProvider } from 'components/@reservoir0x/context/CartProvider'
 import {
   metaMaskWallet,
+  walletConnectWallet
 } from '@rainbow-me/rainbowkit/wallets';
 
+const WALLET_CONNECT_PROJECT_ID = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ""
 const { chains, provider } = configureChains(supportedChains, [
   publicProvider(),
 ])
@@ -34,7 +36,8 @@ const connectors = connectorsForWallets([
   {
     groupName: 'Recommended',
     wallets: [
-      metaMaskWallet({ chains }),
+      metaMaskWallet({ chains, projectId: WALLET_CONNECT_PROJECT_ID }),
+      walletConnectWallet({ chains, projectId: WALLET_CONNECT_PROJECT_ID })
     ],
   }
 ]);
