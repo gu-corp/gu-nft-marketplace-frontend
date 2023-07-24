@@ -1,5 +1,4 @@
 import { Button } from 'components/primitives'
-import { useRouter } from 'next/router'
 import { ComponentProps, FC, useContext, useEffect, useState } from 'react'
 import { useAccount, useNetwork, useSigner, useSwitchNetwork } from 'wagmi'
 import { CSS } from '@stitches/react'

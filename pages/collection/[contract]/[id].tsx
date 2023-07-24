@@ -179,7 +179,8 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
       }
     }
     setTabValue(tab)
-  }, [hasAttributes, isMounted, isSmallDevice, tabValue])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasAttributes, isMounted, isSmallDevice])
 
   useEffect(() => {
     router.query.tab = tabValue
