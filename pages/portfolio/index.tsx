@@ -116,7 +116,7 @@ const IndexPage: NextPage = () => {
                         maxWidth: '100%',
                       }}
                     >
-                      {isSmallDevice && (
+                      {/* {isSmallDevice && (
                         <Flex justify="center">
                           <PortfolioSortDropdown
                             option={sortByType}
@@ -125,7 +125,7 @@ const IndexPage: NextPage = () => {
                             }}
                           />
                         </Flex>
-                      )}
+                      )} */}
                       <Flex justify="between" css={{ marginBottom: '$4' }}>
                         {!isSmallDevice &&
                           !loading &&
@@ -135,14 +135,14 @@ const IndexPage: NextPage = () => {
                               setOpen={setTokenFiltersOpen}
                             />
                           )}
-                        {!isSmallDevice && !loading && (
+                        {/* {!isSmallDevice && !loading && (
                           <PortfolioSortDropdown
                             option={sortByType}
                             onOptionSelected={(option) => {
                               setSortByType(option)
                             }}
                           />
-                        )}
+                        )} */}
                       </Flex>
                       <TokenTable
                         isLoading={loading}
