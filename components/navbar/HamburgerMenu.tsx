@@ -24,6 +24,7 @@ import { FullscreenModal } from 'components/common/FullscreenModal'
 import { useENSResolver } from 'hooks'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
 import currencyOptions from 'components/@reservoir0x/lib/defaultCurrencyOptions'
+import { LanguageDropdown } from './LanguageDropdown'
 
 const HamburgerMenu = () => {
   const { address, isConnected } = useAccount()
@@ -282,6 +283,7 @@ const HamburgerMenu = () => {
               <FontAwesomeIcon icon={faTwitter} width={20} height={20} />
             </Button>
           </a>
+          <LanguageDropdown />
           <ThemeSwitcher />
         </Flex>
       </Flex>

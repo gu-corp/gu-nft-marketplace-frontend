@@ -16,6 +16,7 @@ import { useMounted } from '../../hooks'
 import { useAccount } from 'wagmi'
 import { ProfileDropdown } from './ProfileDropdown'
 import CartButton from './CartButton'
+import { LanguageDropdown } from './LanguageDropdown'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
@@ -34,7 +35,7 @@ const Navbar = () => {
       searchRef?.current?.focus()
     }
   })
-
+  
   if (!isMounted) {
     return null
   }
@@ -138,6 +139,7 @@ const Navbar = () => {
       </Box>
 
       <Flex css={{ gap: '$3' }} justify="end" align="center">
+        <LanguageDropdown />
         <ThemeSwitcher />
         <CartButton />
         {isConnected ? (
