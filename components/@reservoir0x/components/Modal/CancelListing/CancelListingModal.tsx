@@ -19,6 +19,7 @@ import TokenPrimitive from '../TokenPrimitive'
 import Progress from '../Progress'
 import { ethers } from 'ethers'
 import { useTimeSince } from 'hooks'
+import useTrans from 'hooks/useTrans'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -41,7 +42,7 @@ export function CancelListingModal({
     openState
   )
   const { chain: activeChain } = useNetwork()
-
+  const trans = useTrans()
   return (
     <CancelListingModalRenderer
       listingId={listingId}
@@ -90,7 +91,7 @@ export function CancelListingModal({
         return (
           <Modal
             trigger={trigger}
-            title="Cancel Listing"
+            title={trans.token.cancel_listing}
             open={open}
             onOpenChange={(open) => {
               if (!open && onClose) {
@@ -150,11 +151,11 @@ export function CancelListingModal({
                   color="subtle"
                   css={{ mt: '$3', mr: '$3', ml: '$3', textAlign: 'center' }}
                 >
-                  This action will cancel your listing. You will be prompted to confirm this cancellation from your wallet. A gas fee is required.
+                  {trans.token.this_action_will_cancel_your_listing_you_will_be_prompted_to_confirm_this_cancellation_from_your_wallet_a_gas_fee_is_required}
                 </Text>
                 <Button onClick={cancelOrder} css={{ m: '$4', justifyContent: 'center' }}>
                   <FontAwesomeIcon icon={faGasPump} width="16" height="16" />
-                  Continue to Cancel
+                  {trans.token.continue_to_cancel}
                 </Button>
               </Flex>
             )}
@@ -178,8 +179,8 @@ export function CancelListingModal({
                     <Progress
                       title={
                         txHash
-                          ? 'Finalizing on blockchain'
-                          : 'Confirm cancelation in your wallet'
+                          ? trans.token.finalizing_on_blockchain
+                          : trans.token.confirm_cancelation_in_your_wallet
                       }
                       txHash={txHash}
                       blockExplorerBaseUrl={`${blockExplorerBaseUrl}/tx/${txHash}`}
@@ -189,8 +190,8 @@ export function CancelListingModal({
                 <Button disabled={true} css={{ m: '$4', justifyContent: "center" }}>
                   <Loader />
                   {txHash
-                    ? 'Waiting for transaction to be validated'
-                    : 'Waiting for approval...'}
+                    ? trans.token.waiting_for_transaction_to_be_validated
+                    : trans.token.waiting_for_approval}
                 </Button>
               </Flex>
             )}
@@ -206,17 +207,17 @@ export function CancelListingModal({
                   }}
                 >
                   <Text style="h5" css={{ mb: '$2' }}>
-                    Listing Canceled!
+                    {trans.token.listing_canceled}
                   </Text>
                   <Text style="body2" color="subtle" css={{ mb: 24 }}>
                     <>
-                      Your{' '}
-                      listing for{' '}
+                      {trans.token.your}{' '}
+                      {trans.token.listing_for}{' '}
                       <Text style="body2" color="accent">
                         {collection?.name}{' '}
                       </Text>
-                      at {ethers.utils.formatEther(listing?.price as string)}{' '}
-                      {currency?.symbol} has been canceled.
+                      {trans.token.at} {ethers.utils.formatEther(listing?.price as string)}{' '}
+                      {currency?.symbol} {trans.token.has_been_canceled}
                     </>
                   </Text>
 
@@ -227,7 +228,7 @@ export function CancelListingModal({
                     href={`${blockExplorerBaseUrl}/tx/${txHash}`}
                     target="_blank"
                   >
-                    View on{' '}
+                    {trans.token.view_on}{' '}
                     {activeChain?.blockExplorers?.default.name || 'Etherscan'}
                   </Anchor>
                 </Flex>
@@ -237,7 +238,7 @@ export function CancelListingModal({
                   }}
                   css={{ m: '$4', justifyContent: 'center' }}
                 >
-                  Close
+                  {trans.token.close}
                 </Button>
               </Flex>
             )}

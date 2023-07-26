@@ -9,9 +9,11 @@ import {
 import { faGlobe } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useRouter } from 'next/router'
+import useTrans from 'hooks/useTrans'
 
 export const LanguageDropdown: FC = () => {
   const router = useRouter()
+  const trans = useTrans()
 
   const changeLang = (lang: "en" | "ja") => {
     router.push('/', '/', { locale: lang })
@@ -33,10 +35,10 @@ export const LanguageDropdown: FC = () => {
   const children = (
     <>
       <DropdownMenuItem onClick={() => changeLang("ja")}>
-        <Text style="body1">Japanese</Text>
+        <Text style="body1">{trans.nav.japanese}</Text>
       </DropdownMenuItem>
       <DropdownMenuItem onClick={() => changeLang("en")}>
-        <Text style="body1">English</Text>
+        <Text style="body1">{trans.nav.english}</Text>
       </DropdownMenuItem>
     </>
   )

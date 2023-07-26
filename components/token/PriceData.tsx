@@ -1,7 +1,6 @@
-import { useQuery } from '@apollo/client'
 import { Order, Token } from '__generated__/graphql'
 import { Flex, FormatCryptoCurrency, Text } from 'components/primitives'
-import { GET_HIGHEST_BID, GET_LISTED } from 'graphql/queries/orders'
+import useTrans from 'hooks/useTrans'
 import { FC } from 'react'
 
 type Props = {
@@ -10,10 +9,11 @@ type Props = {
 }
 
 export const PriceData: FC<Props> = ({ ask, highestBid }) => {
+  const trans = useTrans()
   return (
     <Flex css={{ gap: '$6', pt: '$4', pb: '$5' }}>
       <Flex direction="column" align="start" css={{ gap: '$1' }}>
-        <Text style="subtitle2">Price</Text>
+        <Text style="subtitle2">{trans.token.price}</Text>
         <Flex
           align="center"
           css={{
@@ -31,7 +31,7 @@ export const PriceData: FC<Props> = ({ ask, highestBid }) => {
         </Flex>
       </Flex>
       <Flex direction="column" align="start" css={{ gap: '$1' }}>
-        <Text style="subtitle2">Top Offer</Text>
+        <Text style="subtitle2">{trans.token.top_offer}</Text>
         <Flex
           align="center"
           css={{

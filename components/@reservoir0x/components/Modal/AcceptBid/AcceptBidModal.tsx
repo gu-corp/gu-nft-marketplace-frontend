@@ -30,6 +30,7 @@ import { formatUnits } from 'ethers/lib/utils.js'
 import TokenLineItem from '../TokenLineItem'
 import { BigNumber } from 'ethers'
 import { useTimeSince } from 'hooks'
+import useTrans from 'hooks/useTrans'
 
 type BidData = {
   tokenId?: string
@@ -51,14 +52,7 @@ type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   onCurrentStepUpdate?: () => void
 }
 
-function titleForStep(step: AcceptBidStep) {
-  switch (step) {
-    case AcceptBidStep.Unavailable:
-      return 'Selected item is no longer available'
-    default:
-      return 'Accept Offer'
-  }
-}
+
 
 export function AcceptBidModal({
   openState,
@@ -71,7 +65,17 @@ export function AcceptBidModal({
   onBidAcceptError,
   onCurrentStepUpdate,
 }: Props): ReactElement {
+  const trans = useTrans()
   const { chain: activeChain } = useNetwork()
+
+  function titleForStep(step: AcceptBidStep) {
+    switch (step) {
+      case AcceptBidStep.Unavailable:
+        return trans.token.selected_item_is_no_longer_available
+      default:
+        return trans.token.accept_offer
+    }
+  }
 
   const [open, setOpen] = useFallbackState(
     openState ? openState[0] : false,
@@ -166,10 +170,10 @@ export function AcceptBidModal({
                   warning={warning}
                   currency={currency}
                   expires={expires}
-                  priceSubtitle="Offer"
+                  priceSubtitle={trans.token.offer}
                 />
                 <Button onClick={() => setOpen(false)} css={{ m: '$4', justifyContent: 'center' }}>
-                  Close
+                  {trans.token.close}
                 </Button>
               </Flex>
             )}
@@ -205,7 +209,7 @@ export function AcceptBidModal({
                   warning={warning}
                   currency={currency}
                   expires={expires}
-                  priceSubtitle="Offer"
+                  priceSubtitle={trans.token.offer}
                 />
                 <Fees fees={fees} />
 
@@ -214,7 +218,7 @@ export function AcceptBidModal({
                   justify="between"
                   css={{ px: '$4', mt: '$4' }}
                 >
-                  <Text style="h6">You Get</Text>
+                  <Text style="h6">{trans.portfolio.you_get}</Text>
                   <FormatCryptoCurrency
                     textStyle="h6"
                     amount={bid?.price}
@@ -242,7 +246,7 @@ export function AcceptBidModal({
                   color="primary"
                   onClick={acceptBid}
                 >
-                  Accept
+                  {trans.token.accept}
                 </Button>
               </Flex>
             )}
@@ -261,7 +265,7 @@ export function AcceptBidModal({
                   warning={warning}
                   currency={currency}
                   expires={expires}
-                  priceSubtitle="Offer"
+                  priceSubtitle={trans.token.offer}
                 />
                   <Progress
                     acceptBidStep={acceptBidStep}

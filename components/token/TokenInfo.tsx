@@ -13,6 +13,7 @@ import ReactMarkdown from 'react-markdown'
 import { useRouter } from 'next/router'
 import { Token, Collection } from '__generated__/graphql'
 import { useNetwork } from 'wagmi'
+import useTrans from 'hooks/useTrans'
 
 
 type Props = {
@@ -21,6 +22,7 @@ type Props = {
 }
 
 export const TokenInfo: FC<Props> = ({ token, collection }) => {
+  const trans = useTrans()
   const { chain } = useNetwork()
   const { theme } = useTheme()
   const [isExpanded, setIsExpanded] = useState(false)
@@ -152,7 +154,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               style="subtitle1"
               css={{ color: '$gray11', fontWeight: 'normal' }}
             >
-              Contract Address
+              {trans.token.contract_address}
             </Text>
             <Anchor
               href={blockExplorerUrl}
@@ -172,7 +174,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               style="subtitle1"
               css={{ color: '$gray11', fontWeight: 'normal' }}
             >
-              Chain
+              {trans.token.chain}
             </Text>
             <Text style="subtitle1">G.U Sandbox chain</Text>
           </Flex>
@@ -186,7 +188,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
                 mr: '$2',
               }}
             >
-              Token ID
+              {trans.token.token_id}
             </Text>
             <Text style="subtitle1" ellipsify css={{ maxWidth: '100%' }}>
               {token?.tokenId}
@@ -197,7 +199,7 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
               style="subtitle1"
               css={{ color: '$gray11', fontWeight: 'normal' }}
             >
-              Token Standard
+              {trans.token.token_standard}
             </Text>
             <Text style="subtitle1" css={{ textTransform: 'uppercase' }}>
               ERC721
@@ -209,12 +211,12 @@ export const TokenInfo: FC<Props> = ({ token, collection }) => {
                 style="subtitle1"
                 css={{ color: '$gray11', fontWeight: 'normal' }}
               >
-                Creator Royalties
+                {trans.token.creator_royalties}
               </Text>
               <Tooltip
                 content={
                   <Text style="body2" as="p">
-                    A fee on every order that goes to the collection creator.
+                    {trans.token.a_fee_on_every_order_that_goes_to_the_collection_creator}.
                   </Text>
                 }
                 style={{ maxWidth: '210px' }}

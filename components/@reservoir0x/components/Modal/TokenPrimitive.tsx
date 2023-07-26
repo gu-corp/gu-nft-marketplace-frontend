@@ -9,6 +9,7 @@ import {
 } from 'components/primitives'
 import InfoTooltip from 'components/primitives/InfoTooltip'
 import { styled } from 'stitches.config'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   img?: string
@@ -49,6 +50,7 @@ const TokenPrimitive: FC<Props> = ({
 }) => {
   const royaltyPercent = royaltiesBps ? royaltiesBps / 100 : royaltiesBps
 
+  const trans = useTrans()
   return (
     <Box>
       <Flex css={{ justifyContent: 'space-between', alignItems: 'center' }}>
@@ -57,7 +59,7 @@ const TokenPrimitive: FC<Props> = ({
           color="subtle"
           css={{ mb: 10, display: 'block' }}
         >
-          {name ? 'Item' : 'Collection'}
+          {name ? trans.token.item : trans.token.collection}
         </Text>
         {priceSubtitle && (
           <Text

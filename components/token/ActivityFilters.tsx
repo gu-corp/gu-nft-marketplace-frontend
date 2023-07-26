@@ -13,6 +13,7 @@ import {
   faBan
 } from '@fortawesome/free-solid-svg-icons'
 import { ActivityType } from '__generated__/graphql'
+import useTrans from 'hooks/useTrans'
 
 type ActivityTypes = ActivityType[]
 
@@ -36,40 +37,41 @@ export const ActivityFilters: FC<Props> = ({
   activityTypes,
   setActivityTypes,
 }) => {
+  const trans = useTrans()
   const filters: Filters = [
     {
       type: ActivityType.ListingEvent,
-      name: 'Listings',
+      name: trans.token.listings,
       icon: faCartPlus,
     },
     {
       type: ActivityType.MintEvent,
-      name: 'Mints',
+      name: trans.token.mints,
       icon: faStar,
     },
     {
       type: ActivityType.NftTransferEvent,
-      name: 'Transfers',
+      name: trans.token.transfers,
       icon: faRightLeft,
     },
     {
       type: ActivityType.SaleEvent,
-      name: 'Sales',
+      name: trans.token.sales,
       icon: faShoppingCart,
     },
     {
       type: ActivityType.OfferEvent,
-      name: 'Offers',
+      name: trans.token.offers,
       icon: faHand,
     },
     {
       type: ActivityType.CancelListingEvent,
-      name: 'Canceled Listings',
+      name: trans.token.canceled_listings,
       icon: faBan,
     },
     {
       type: ActivityType.CancelOfferEvent,
-      name: 'Cancel Offers',
+      name: trans.token.cancel_offers,
       icon: faBan,
     },
   ]

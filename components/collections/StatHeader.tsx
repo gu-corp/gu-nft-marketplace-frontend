@@ -7,6 +7,7 @@ import { formatNumber } from 'utils/numbers'
 import * as _ from "lodash"
 import { Order } from '__generated__/graphql'
 import { BigNumber } from 'ethers'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   label: string
@@ -34,6 +35,7 @@ type StatHeaderProps = {
 }
 
 const StatHeader: FC<StatHeaderProps> = ({ collection, tokens }) => {
+  const trans = useTrans()
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 600 }) && isMounted
 
@@ -63,7 +65,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection, tokens }) => {
         },
       }}
     >
-      <StatBox label="Floor">
+      <StatBox label={trans.collection.floor}>
         <FormatCryptoCurrency
           amount={collection?.floor?.floorPrice}
           logoHeight={18}
@@ -72,7 +74,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection, tokens }) => {
         />
       </StatBox>
 
-      <StatBox label="Top Offer">
+      <StatBox label={trans.collection.top_offer}>
         <FormatCryptoCurrency
           amount={topBid?.price}
           logoHeight={18}
@@ -82,12 +84,12 @@ const StatHeader: FC<StatHeaderProps> = ({ collection, tokens }) => {
       </StatBox>
 
       {!isSmallDevice && (
-        <StatBox label="Listed">
+        <StatBox label={trans.collection.listed}>
           <Text style="h6">{formatNumber(listedPercentage)}%</Text>
         </StatBox>
       )}
 
-      <StatBox label="Total Volume">
+      <StatBox label={trans.collection.total_volume}>
         <FormatCryptoCurrency
           amount={collection.volume?.totalVolume}
           logoHeight={18}
@@ -96,7 +98,7 @@ const StatHeader: FC<StatHeaderProps> = ({ collection, tokens }) => {
         />
       </StatBox>
 
-      <StatBox label="Count">
+      <StatBox label={trans.collection.count}>
         <Text style="h6">{formatNumber(collection?.totalTokens)}</Text>
       </StatBox>
     </Grid>

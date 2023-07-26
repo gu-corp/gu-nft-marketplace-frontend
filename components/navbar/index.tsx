@@ -17,11 +17,13 @@ import { useAccount } from 'wagmi'
 import { ProfileDropdown } from './ProfileDropdown'
 import CartButton from './CartButton'
 import { LanguageDropdown } from './LanguageDropdown'
+import useTrans from 'hooks/useTrans'
 
 export const NAVBAR_HEIGHT = 81
 export const NAVBAR_HEIGHT_MOBILE = 77
 
 const Navbar = () => {
+  const trans = useTrans()
   const { theme } = useTheme()
   const { isConnected } = useAccount()
   const isMobile = useMediaQuery({ query: '(max-width: 960px)' })
@@ -120,7 +122,7 @@ const Navbar = () => {
           <Box css={{ flex: 1, px: '$5', maxWidth: 460 }}>
             <GlobalSearch
               ref={searchRef}
-              placeholder="Search collections and addresses"
+              placeholder={trans.nav.search_collections_and_addresses}
               containerCss={{ width: '100%' }}
               key={router.asPath}
             />
@@ -128,11 +130,11 @@ const Navbar = () => {
           <Flex align="center" css={{ gap: '$5', mr: '$5' }}>
             <Link href="/collection-rankings">
               <NavItem active={router.pathname == '/collection-rankings'}>
-                Collections
+                {trans.nav.collections}
               </NavItem>
             </Link>
             <Link href="/portfolio">
-              <NavItem active={router.pathname == '/portfolio'}>Sell</NavItem>
+                <NavItem active={router.pathname == '/portfolio'}>{trans.nav.sell}</NavItem>
             </Link>
           </Flex>
         </Flex>

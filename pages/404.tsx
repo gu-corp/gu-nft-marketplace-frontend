@@ -3,8 +3,10 @@ import { Text, Flex, Box } from 'components/primitives'
 import Layout from 'components/Layout'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons'
+import useTrans from 'hooks/useTrans'
 
 const IndexPage: NextPage = () => {
+  const trans = useTrans()
   return (
     <Layout>
       <Flex
@@ -16,10 +18,10 @@ const IndexPage: NextPage = () => {
           <FontAwesomeIcon icon={faFolderOpen} size="2xl" />
         </Box>
         <Text style="body1" color="subtle" css={{ mb: '$1' }}>
-          404 Error.
+          {trans._404._404_error}.
         </Text>
         <Text style="body1" color="subtle">
-          The requested URL was not found on the server.
+          {trans._404.the_requested_url_was_not_found_on_the_server}.
         </Text>
       </Flex>
     </Layout>

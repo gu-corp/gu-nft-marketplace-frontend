@@ -33,12 +33,14 @@ import { GET_USER_RELATIVE_COLLECTIONS } from 'graphql/queries/collections'
 import { useQuery } from '@apollo/client'
 import { ActivityType, Token } from '__generated__/graphql'
 import { GET_TOKENS } from 'graphql/queries/tokens'
+import useTrans from 'hooks/useTrans'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 type ActivityTypes = ActivityType[]
 
 const IndexPage: NextPage<Props> = ({ address }) => {
+  const trans = useTrans()
   const {
     avatar: ensAvatar,
     name: resolvedEnsName,
@@ -152,8 +154,8 @@ const IndexPage: NextPage<Props> = ({ address }) => {
         </Flex>
         <Tabs.Root defaultValue="items">
           <TabsList>
-            <TabsTrigger value="items">Items</TabsTrigger>
-            <TabsTrigger value="activity">Activity</TabsTrigger>
+            <TabsTrigger value="items">{trans.profile.items}</TabsTrigger>
+            <TabsTrigger value="activity">{trans.profile.activity}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="items">

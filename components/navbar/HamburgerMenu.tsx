@@ -25,8 +25,10 @@ import { useENSResolver } from 'hooks'
 import ThemeSwitcher from 'components/navbar/ThemeSwitcher'
 import currencyOptions from 'components/@reservoir0x/lib/defaultCurrencyOptions'
 import { LanguageDropdown } from './LanguageDropdown'
+import useTrans from 'hooks/useTrans'
 
 const HamburgerMenu = () => {
+  const trans = useTrans()
   const { address, isConnected } = useAccount()
   const { data: balance } = useBalance({ address, token: currencyOptions[0].contract as Address })
   const {
@@ -140,7 +142,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Collections
+                {trans.nav.collections}
               </Text>
             </Link>
             <Link href="/portfolio" legacyBehavior>
@@ -153,7 +155,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Portfolio
+                {trans.nav.portfolio}
               </Text>
             </Link>
             <Flex
@@ -169,7 +171,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Balance
+                {trans.nav.balance}
               </Text>
               <FormatCryptoCurrency
                 amount={balance?.value}
@@ -194,7 +196,7 @@ const HamburgerMenu = () => {
                   pt: '24px',
                 }}
               >
-                Logout
+                {trans.nav.logout}
               </Text>
               <Box css={{ color: '$gray10' }}>
                 <FontAwesomeIcon
@@ -241,7 +243,7 @@ const HamburgerMenu = () => {
                     width: '100%',
                   }}
                 >
-                  Portfolio
+                  {trans.nav.portfolio}
                 </Text>
               </Link>
               <Anchor

@@ -11,13 +11,14 @@ import {
   Text,
 } from 'components/primitives'
 import Link from 'next/link'
-import { faCopy, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useENSResolver } from 'hooks'
-import CopyText from 'components/common/CopyText'
 import currencyOptions from 'components/@reservoir0x/lib/defaultCurrencyOptions'
+import useTrans from 'hooks/useTrans'
 
 export const ProfileDropdown: FC = () => {
+  const trans = useTrans()
   const { address } = useAccount()
   const { data: balance } = useBalance({ address, token: currencyOptions[0].contract as Address, })
   const { disconnect } = useDisconnect()
@@ -61,11 +62,11 @@ export const ProfileDropdown: FC = () => {
         </Link>
       </DropdownMenuItem>
       <Link href={`/portfolio`}>
-        <DropdownMenuItem>Portfolio</DropdownMenuItem>
+        <DropdownMenuItem>{trans.nav.portfolio}</DropdownMenuItem>
       </Link>
       <DropdownMenuItem css={{ cursor: 'text' }}>
         <Flex justify="between">
-          Balance
+          {trans.nav.balance}
           <FormatCryptoCurrency
             amount={balance?.value}
             decimals={balance?.decimals}
@@ -82,7 +83,7 @@ export const ProfileDropdown: FC = () => {
             cursor: 'pointer',
           }}
         >
-          <Text style="body1">Logout</Text>
+          <Text style="body1">{trans.nav.logout}</Text>
           <Box css={{ color: '$gray10' }}>
             <FontAwesomeIcon icon={faRightFromBracket} width={16} height={16} />
           </Box>

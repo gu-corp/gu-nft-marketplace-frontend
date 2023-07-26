@@ -31,6 +31,7 @@ import { QueryResult, useQuery } from '@apollo/client'
 import { Activity, ActivityType, Activity_FilterArgs, Exact, GetActivitiesQuery, InputMaybe } from '__generated__/graphql'
 import { GET_TOKEN } from 'graphql/queries/tokens'
 import { useNetwork } from 'wagmi'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   query: QueryResult<GetActivitiesQuery, Exact<{
@@ -114,21 +115,9 @@ type ActivityDescription = {
   [key: string]: string
 }
 
-const activityTypeToDesciptionMap: ActivityDescription = {
-  [ActivityType.CancelListingEvent]: 'Listing Canceled',
-  [ActivityType.CancelOfferEvent]: 'Offer Canceled',
-  [ActivityType.MintEvent]: 'Mint',
-  [ActivityType.ListingEvent]: 'List',
-  [ActivityType.OfferEvent]: 'Offer',
-  [ActivityType.NftTransferEvent]: 'Transfer',
-  [ActivityType.SaleEvent]: 'Sale',
-}
-
-const activityTypeToDesciption = (activityType: string) => {
-  return activityTypeToDesciptionMap[activityType] || activityType
-}
 
 const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
+  const trans = useTrans()
   const timeSince = useTimeSince(activity?.timestamp as number)
   const isSmallDevice = useMediaQuery({ maxWidth: 700 })
   const { chain } = useNetwork()
@@ -146,6 +135,21 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
   })
   const imageSrc = tokenData?.token?.image as string
   
+  const activityTypeToDesciptionMap: ActivityDescription = {
+    [ActivityType.CancelListingEvent]: trans.profile.listing_canceled,
+    [ActivityType.CancelOfferEvent]: trans.profile.offer_canceled,
+    [ActivityType.MintEvent]: trans.profile.mint,
+    [ActivityType.ListingEvent]: trans.profile.list,
+    [ActivityType.OfferEvent]: trans.profile.offer,
+    [ActivityType.NftTransferEvent]: trans.profile.transfer,
+    [ActivityType.SaleEvent]: trans.profile.sale,
+  }
+
+  const activityTypeToDesciption = (activityType: string) => {
+    return activityTypeToDesciptionMap[activityType] || activityType
+  }
+  
+
   let activityDescription = activityTypeToDesciption(activity?.type || '')
   let attributeDescription = ''
 
@@ -392,7 +396,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
       <TableCell>
         <Flex direction="column" align="start">
           <Text style="subtitle3" color="subtle">
-            Quantity
+            {trans.profile.quantity}
           </Text>
           <Text style="subtitle3">1</Text>
         </Flex>
@@ -402,7 +406,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         activity.from !== constants.AddressZero ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" color="subtle">
-              From
+              {trans.profile.from}
             </Text>
             <Link
               href={`/profile/${activity.from}`}
@@ -436,7 +440,7 @@ const ActivityTableRow: FC<ActivityTableRowProps> = ({ activity }) => {
         {activity.to && activity.to !== constants.AddressZero ? (
           <Flex direction="column" align="start">
             <Text style="subtitle3" color="subtle">
-              To
+            {trans.profile.to}
             </Text>
             <Link
               href={`/profile/${activity.to}`}

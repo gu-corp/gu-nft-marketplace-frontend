@@ -2,6 +2,7 @@ import { Flex, FormatCryptoCurrency, Text } from 'components/primitives'
 import { formatNumber } from 'utils/numbers'
 import Link from 'next/link'
 import { TokenAttribute } from '__generated__/graphql'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   attribute: TokenAttribute
@@ -9,7 +10,8 @@ type Props = {
   collectionId?: string
 }
 
-export default function AttributeCard ({ attribute, collectionTokenCount, collectionId }: Props) {
+export default function AttributeCard({ attribute, collectionTokenCount, collectionId }: Props) {
+  const trans = useTrans()
   const attributeTokenCount = attribute?.tokenCount || 0
   const totalTokens = collectionTokenCount ? Number(collectionTokenCount) : 0
   const attributeRarity = formatNumber(
@@ -48,10 +50,10 @@ export default function AttributeCard ({ attribute, collectionTokenCount, collec
         </Flex>
         <Flex justify="between">
           <Text style="body2" css={{ color: '$gray11' }}>
-            {formatNumber(attribute.tokenCount)} ({attributeRarity}%) have this
+            {formatNumber(attribute.tokenCount)} ({attributeRarity}%) {trans.token.have_this}
           </Text>
           <Text style="body2" css={{ color: '$gray11' }}>
-            floor
+            {trans.token.floor}
           </Text>
         </Flex>
       </Flex>

@@ -1,6 +1,7 @@
 import { RelativeCollection_OrderBy } from '__generated__/graphql'
 import { ToggleGroup, ToggleGroupItem, Text } from '../primitives'
 import { FC } from 'react'
+import useTrans from 'hooks/useTrans'
 
 export type CollectionsTableSortingOption = typeof sortingOptions[number]
 
@@ -10,22 +11,6 @@ const sortingOptions = [
   RelativeCollection_OrderBy.Volume1m,
   RelativeCollection_OrderBy.VolumeMax
 ] as const
-
-const nameForSortingOption = (
-  option: CollectionsTableSortingOption,
-  compact: boolean
-) => {
-  switch (option) {
-    case RelativeCollection_OrderBy.Volume1d:
-      return compact ? '24h' : '24 hours'
-    case RelativeCollection_OrderBy.Volume7d:
-      return compact ? '7d' : '7 days'
-    case RelativeCollection_OrderBy.Volume1m:
-      return compact ? '30d' : '30 days'
-    case RelativeCollection_OrderBy.VolumeMax:
-      return compact ? 'All' : 'All Time'
-  }
-}
 
 type Props = {
   compact?: boolean
@@ -38,6 +23,22 @@ const CollectionsTableTimeToggle: FC<Props> = ({
   option,
   onOptionSelected,
 }) => {
+  const trans = useTrans()
+  const nameForSortingOption = (
+    option: CollectionsTableSortingOption,
+    compact: boolean
+  ) => {
+    switch (option) {
+      case RelativeCollection_OrderBy.Volume1d:
+        return compact ? '24h' : trans.home._24_hours
+      case RelativeCollection_OrderBy.Volume7d:
+        return compact ? '7d' : trans.home._7_days
+      case RelativeCollection_OrderBy.Volume1m:
+        return compact ? '30d' : trans.home._30_days
+      case RelativeCollection_OrderBy.VolumeMax:
+        return compact ? 'All' : trans.home.all_time
+    }
+  }
   return (
     <ToggleGroup
       type="single"

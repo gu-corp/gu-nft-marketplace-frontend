@@ -8,6 +8,7 @@ import { useCurrency } from 'hooks'
 import { Currency } from 'types/currency'
 import { GET_TOKEN } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
+import useTrans from 'hooks/useTrans'
 
 export enum CancelStep {
   Cancel,
@@ -41,6 +42,7 @@ export const CancelListingModalRenderer: FC<Props> = ({
   listingId,
   children,
 }) => {
+  const trans = useTrans()
   const [cancelStep, setCancelStep] = useState<CancelStep>(CancelStep.Cancel)
   const [transactionError, setTransactionError] = useState<Error | null>()
   const [txHash, setTxHash] = useState<string|null>(null)
@@ -94,7 +96,7 @@ export const CancelListingModalRenderer: FC<Props> = ({
       setCancelStep(CancelStep.Complete)
     } catch (error: any) {
         const errorStatus = (error)?.statusCode
-        let message = 'Oops, something went wrong. Please try again.'
+        let message = trans.token.oops_something_went_wrong_please_try_again
         if (errorStatus >= 400 && errorStatus < 500) {
           message = error.message
         }
@@ -106,7 +108,7 @@ export const CancelListingModalRenderer: FC<Props> = ({
         setCancelStep(CancelStep.Cancel)
         setTxHash(null);
     }
-  }, [listing, sdk])
+  }, [listing, sdk, trans])
 
   useEffect(() => {
     if (!open) {

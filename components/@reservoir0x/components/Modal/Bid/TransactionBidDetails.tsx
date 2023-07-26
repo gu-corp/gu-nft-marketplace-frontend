@@ -5,6 +5,7 @@ import { BidData } from './BidModalRenderer'
 import { formatEther } from 'ethers/lib/utils.js'
 import { Collection, Token } from '__generated__/graphql'
 import { useTimeSince } from 'hooks'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   token?: Token
@@ -13,6 +14,7 @@ type Props = {
 }
 
 const TransactionBidDetails: FC<Props> = ({ token, collection, bidData }) => {
+  const trans = useTrans()
   const [value, setValue] = useState('')
   const timeSince = useTimeSince(
     bidData?.endTime ? Number(bidData.endTime) : 0
@@ -53,7 +55,7 @@ const TransactionBidDetails: FC<Props> = ({ token, collection, bidData }) => {
           }}
         >
           <Flex justify="between">
-            <Text style="subtitle2">Offer Price</Text>
+            <Text style="subtitle2">{trans.token.offer_price}</Text>
             <FormatWrappedCurrency
               amount={+value}
               textStyle="subtitle2"
@@ -61,7 +63,7 @@ const TransactionBidDetails: FC<Props> = ({ token, collection, bidData }) => {
             />
           </Flex>
           <Text style="subtitle2" color="subtle" as="p" css={{ flex: 1 }}>
-            {bidData?.endTime ? `Expires ${timeSince}` : 'No Expiration'}
+            {bidData?.endTime ? `${trans.token.expires} ${timeSince}` : trans.token.no_expiration}
           </Text>
         </Flex>
       </Box>

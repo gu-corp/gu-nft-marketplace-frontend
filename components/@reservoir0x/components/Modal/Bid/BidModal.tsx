@@ -41,6 +41,7 @@ import useFallbackState from '../../../hooks/useFallbackState'
 import { Currency } from 'types/currency'
 import ProgressBar from '../ProgressBar'
 import TransactionProgress from '../TransactionProgress'
+import useTrans from 'hooks/useTrans'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -55,16 +56,7 @@ type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   onBidError?: (error: Error) => void
 }
 
-function titleForStep(step: BidStep) {
-  switch (step) {
-    case BidStep.SetPrice:
-      return 'Make an Offer'
-    case BidStep.Offering:
-      return 'Complete Offer'
-    case BidStep.Complete:
-      return 'Offer Submitted'
-  }
-}
+
 
 const ContentContainer = styled(Flex, {
   width: '100%',
@@ -99,14 +91,24 @@ export function BidModal({
   onBidComplete,
   onBidError,
 }: Props): ReactElement {
+  const trans = useTrans()
   const [open, setOpen] = useFallbackState(
     openState ? openState[0] : false,
     openState
   )
 
   const [stepTitle, setStepTitle] = useState('')
-  const [attributesSelectable, setAttributesSelectable] = useState(false)
-  const [attributeSelectorOpen, setAttributeSelectorOpen] = useState(false)
+
+  function titleForStep(step: BidStep) {
+    switch (step) {
+      case BidStep.SetPrice:
+        return trans.token.make_an_offer
+      case BidStep.Offering:
+        return trans.token.complete_offer
+      case BidStep.Complete:
+        return trans.token.offer_submitted
+    }
+  }
 
   return (
     <BidModalRenderer
@@ -135,10 +137,6 @@ export function BidModal({
         bidData,
         steps
       }) => {
-        const tokenCount = collection?.totalTokens
-          ? +collection.totalTokens
-          : undefined
-
         const itemImage = token?.image || collection?.image as string
         // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
         // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -146,11 +144,11 @@ export function BidModal({
           if (requestUserStep) {
             switch (requestUserStep) {
               case RequestUserStep.SIGN: {
-                setStepTitle('Confirm Offer')
+                setStepTitle(trans.token.confirm_offer)
                 break
               }
               default: {
-                setStepTitle('Approval')
+                setStepTitle(trans.token.approval)
                 break
               }
             }
@@ -196,14 +194,14 @@ export function BidModal({
                 />
                 <MainContainer css={{ p: '$4' }}>
                   <Flex justify="between">
-                    <Text style="tiny">Offer Amount</Text>
+                    <Text style="tiny">{trans.token.offer_amount}</Text>
                     <Text
                       as={Flex}
                       css={{ gap: '$1' }}
                       align="center"
                       style="tiny"
                     >
-                      Balance:{' '}
+                      {trans.token.balance}
                       <FormatCryptoCurrency
                         textStyle="tiny"
                         logoHeight={10}
@@ -233,7 +231,7 @@ export function BidModal({
                       onChange={(e: any) => {
                         setBidAmount(e.target.value)
                       }}
-                      placeholder="Enter price here"
+                      placeholder={trans.token.enter_price_here}
                       containerCss={{
                         width: '100%',
                       }}
@@ -255,7 +253,7 @@ export function BidModal({
                   />
 
                   <Text as={Box} css={{ mt: '$4', mb: '$2' }} style="tiny">
-                    Expiration Date
+                    {trans.token.expiration_date}
                   </Text>
                   <Flex css={{ gap: '$2', mb: '$4' }}>
                     <Select
@@ -291,7 +289,7 @@ export function BidModal({
                         style="subtitle2"
                         color="subtle"
                       >
-                        Currency
+                        {trans.token.currency}
                       </Text>
                       <Select
                         value={currencyOption?.symbol || ''}
@@ -315,12 +313,12 @@ export function BidModal({
                   <Box css={{ width: '100%', mt: 'auto' }}>
                     {bidAmount === '' && (
                       <Button disabled={true} css={{ width: '100%', justifyContent: 'center' }}>
-                        Enter a Price
+                        {trans.token.enter_a_price}
                       </Button>
                     )}
                     {bidAmount !== '' && hasEnoughCurrency && (
                       <Button onClick={placeBid} css={{ width: '100%', justifyContent: 'center' }}>
-                        Make an Offer
+                        {trans.token.make_an_offer}
                       </Button>
                     )}
                     {bidAmount !== '' && !hasEnoughCurrency && (
@@ -328,7 +326,7 @@ export function BidModal({
                         {!hasEnoughCurrency && (
                           <Flex css={{ gap: '$2', mt: 10 }} justify="center">
                             <Text style="body2" color="error">
-                              {currencyBalance?.symbol || 'ETH'} Balance
+                              {currencyBalance?.symbol || 'ETH'} {trans.token.balance}
                             </Text>
                             <FormatCryptoCurrency amount={currencyBalance?.value} />
                           </Flex>
@@ -389,13 +387,13 @@ export function BidModal({
                         color="subtle"
                         >
                         {requestUserStep === RequestUserStep.SIGN ?
-                          'A free off-chain signature to create the offer' :
-                          `We'll ask your approval for the exchange to access your token. This is a one-time only operation per exchange.`}
+                          trans.token.a_fee_on_every_order_that_goes_to_the_collection_creator :
+                          trans.token.we_ll_ask_your_approval_for_the_exchange_to_access_your_token}
                       </Text>
                   {!transactionError && (
                     <Button css={{ width: '100%', mt: 'auto', justifyContent: "center" }} disabled={true}>
                       <Loader />
-                      Waiting for Approval
+                      {trans.token.waiting_for_approval}
                     </Button>
                   )}
                   {transactionError && (
@@ -405,10 +403,10 @@ export function BidModal({
                         css={{ flex: 1 }}
                         onClick={() => setBidStep(BidStep.SetPrice)}
                       >
-                        Edit Offer
+                        {trans.token.edit_offer}
                       </Button>
                       <Button css={{ flex: 1 }} onClick={placeBid}>
-                        Retry
+                        {trans.token.retry}
                       </Button>
                     </Flex>
                   )}
@@ -425,7 +423,7 @@ export function BidModal({
                   />
                 </Box>
                 <Text style="h5" css={{ textAlign: 'center', mt: 36, mb: 80 }}>
-                  Offer Submitted!
+                  {trans.token.offer_submitted}
                 </Text>
                 {onViewOffers ? (
                   <Button
@@ -434,7 +432,7 @@ export function BidModal({
                       onViewOffers()
                     }}
                   >
-                    View Offers
+                    {trans.token.view_offers}
                   </Button>
                 ) : (
                   <Button
@@ -443,7 +441,7 @@ export function BidModal({
                       setOpen(false)
                     }}
                   >
-                    Close
+                    {trans.token.close}
                   </Button>
                 )}
               </Flex>

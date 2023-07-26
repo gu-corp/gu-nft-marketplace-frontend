@@ -9,6 +9,7 @@ import { QueryResult } from '@apollo/client'
 import { Collection } from '__generated__/graphql'
 import { BidModal } from 'components/@reservoir0x/components/Modal/Bid/BidModal'
 import { BidStep } from 'components/@reservoir0x/components/Modal/Bid/BidModalRenderer'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   collection: Collection
@@ -23,9 +24,9 @@ const CollectionOffer: FC<Props> = ({
   buttonCss,
   buttonProps = {},
 }) => {
+  const trans = useTrans()
   const defaultChain = useDefaultChain()
   const { data: signer } = useSigner()
-  const { chain: activeChain } = useNetwork()
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
@@ -53,7 +54,7 @@ const CollectionOffer: FC<Props> = ({
         }}
         {...buttonProps}
       >
-        Collection Offer
+        {trans.collection.collection_offer}
       </Button>
     )
   } else
@@ -63,7 +64,7 @@ const CollectionOffer: FC<Props> = ({
           collectionId={collection?.id}
           trigger={
             <Button css={buttonCss} {...buttonProps}>
-              Collection Offer
+              {trans.collection.collection_offer}
             </Button>
           }
           onClose={(currentStep) => {
