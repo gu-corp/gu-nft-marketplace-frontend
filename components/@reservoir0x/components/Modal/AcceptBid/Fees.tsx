@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { Flex, Text } from 'components/primitives'
 import InfoTooltip from 'components/primitives/InfoTooltip'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   fees: {
@@ -13,10 +14,9 @@ type Props = {
 }
 
 const Fees: FC<Props> = ({ fees: { feeBreakdown } }) => {
-  // Return null when there are no fees
-  if (!(feeBreakdown && feeBreakdown?.length > 0)) {
-    return null
-  }
+
+
+  const trans = useTrans()
 
   const parsedFeeBreakdown = feeBreakdown?.map(({ bps, kind }) => {
     const percentage = bps ? bps * 0.01 : 0
@@ -24,15 +24,15 @@ const Fees: FC<Props> = ({ fees: { feeBreakdown } }) => {
     let tooltipMessage: string | null = null
     switch (kind) {
       case 'royalty':
-        name = 'Creator Royalties'
+        name = trans.token.creator_royalties
         tooltipMessage =
-          'A fee on every order that goes to the collection creator.'
+          trans.token.a_fee_on_every_order_that_goes_to_the_collection_creator
         break
 
       case 'marketplace':
-        name = `Marketplace Fee`
+        name = trans.token.marketplace_fee;
         tooltipMessage =
-          'A fee included in the order from the marketplace in which it was created.'
+          trans.token.a_fee_included_in_the_order_from_the_marketplace_in_which_it_was_created
         break
 
       default:
@@ -47,6 +47,11 @@ const Fees: FC<Props> = ({ fees: { feeBreakdown } }) => {
     }
   })
 
+  // Return null when there are no fees
+  if (!(feeBreakdown && feeBreakdown?.length > 0)) {
+    return null
+  }
+
   return (
     <Flex
       css={{
@@ -56,7 +61,7 @@ const Fees: FC<Props> = ({ fees: { feeBreakdown } }) => {
       }}
     >
       <Text style="subtitle2" color="subtle" css={{ mb: '$2' }}>
-        Fees
+        {trans.token.fees}
       </Text>
       {parsedFeeBreakdown?.map(({ name, percentage, tooltipMessage }, i) => (
         <Flex key={i} css={{ justifyContent: 'space-between', mb: '$2' }}>

@@ -167,7 +167,16 @@ const ja = {
     view_on: "〜で見る",
     accept_offer: "オファーを受け入れる",
     selected_item_is_no_longer_available: "選択したアイテムはもう利用できません",
-    accept: "受け入れる"
+    accept: "受け入れる",
+    fees: "料金",
+    marketplace_fee: "マーケットプレイス手数料",
+    a_fee_on_every_order_that_goes_to_the_collection_creator: "コレクションの作成者に対して、すべての注文に対して手数料がかかります",
+    a_fee_included_in_the_order_from_the_marketplace_in_which_it_was_created: "オーダーに含まれる手数料は、そのマーケットプレイスによって設定されます",
+    approve_marketplace_to_access_item_in_your_wallet: "マーケットプレイスがウォレット内のアイテムにアクセスするのを承認します",
+    we_ll_ask_your_approval_for_the_marketplace_exchange_to_access_your_token_this_is_a_one_time_only_operation_per_collection: "マーケットプレイスがあなたのトークンにアクセスする際には、あなたの承認を求めます。これはコレクションごとに一度だけの操作です。",
+    confirm_transaction_in_your_wallet: "ウォレットでトランザクションを確認してください",
+    done: "終わりました",
+    bid_accepted: "入札が受け入れられました！"
   },
   profile: {
     items: "アイテム",

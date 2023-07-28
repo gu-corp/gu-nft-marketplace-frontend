@@ -275,8 +275,8 @@ export function AcceptBidModal({
                   <Button disabled={true} css={{ m: '$4', justifyContent: 'center' }}>
                     <Loader />
                     {acceptBidStep === AcceptBidStep.Confirming
-                      ? 'Waiting for approval...'
-                      : 'Waiting for transaction to be validated'}
+                      ? trans.token.waiting_for_approval
+                      : trans.token.waiting_for_transaction_to_be_validated}
                   </Button>
                 </Flex>
               )}
@@ -302,7 +302,7 @@ export function AcceptBidModal({
                     <FontAwesomeIcon icon={faCheckCircle} fontSize={32} />
                   </Box>
                   <Text style="h5" css={{ mb: 8 }}>
-                    Bid accepted!
+                    {trans.token.bid_accepted}
                   </Text>
                   <Flex
                     css={{ mb: 24, maxWidth: '100%' }}
@@ -334,7 +334,7 @@ export function AcceptBidModal({
                     href={`${etherscanBaseUrl}/tx/${txHash}`}
                     target="_blank"
                   >
-                    View on{' '}
+                    {trans.token.view_on}{' '}
                     {activeChain?.blockExplorers?.default.name || 'Etherscan'}
                   </Anchor>
                 </Flex>
@@ -354,7 +354,7 @@ export function AcceptBidModal({
                       setOpen(false)
                     }}
                   >
-                    Done
+                    {trans.token.done}
                   </Button>
                 </Flex>
               </Flex>

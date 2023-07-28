@@ -167,7 +167,16 @@ const en = {
     view_on: "View on",
     accept_offer: "Accept Offer",
     selected_item_is_no_longer_available: "Selected item is no longer available",
-    accept: "Accept"
+    accept: "Accept",
+    fees: "Fees",
+    marketplace_fee: "Marketplace Fee",
+    a_fee_on_every_order_that_goes_to_the_collection_creator: "A fee on every order that goes to the collection creator.",
+    a_fee_included_in_the_order_from_the_marketplace_in_which_it_was_created: "A fee included in the order from the marketplace in which it was created.",
+    approve_marketplace_to_access_item_in_your_wallet: "Approve marketplace to access item in your wallet",
+    we_ll_ask_your_approval_for_the_marketplace_exchange_to_access_your_token_this_is_a_one_time_only_operation_per_collection: "We’ll ask your approval for the marketplace exchange to access your token. This is a one-time only operation per collection.",
+    confirm_transaction_in_your_wallet: "Confirm transaction in your wallet",
+    done: "Done",
+    bid_accepted: "Bid accepted!"
   },
   profile: {
     items: "Items",

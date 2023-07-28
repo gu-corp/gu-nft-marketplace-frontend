@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCube, faWallet } from '@fortawesome/free-solid-svg-icons'
 import { useNetwork } from 'wagmi'
 import TransactionProgress from '../TransactionProgress'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   acceptBidStep: AcceptBidStep
@@ -18,6 +19,7 @@ export const Progress: FC<Props> = ({
   etherscanBaseUrl,
   tokenImage,
 }) => {
+  const trans = useTrans()
   const { chain: activeChain } = useNetwork()
 
   return (
@@ -33,7 +35,7 @@ export const Progress: FC<Props> = ({
       {acceptBidStep == AcceptBidStep.ApproveMarketplace && (
         <>
           <Text style="h6" css={{ mb: 28 }}>
-            Approve marketplace to access item in your wallet
+            {trans.token.approve_marketplace_to_access_item_in_your_wallet}
           </Text>
           <Flex
             css={{
@@ -48,14 +50,13 @@ export const Progress: FC<Props> = ({
             />
           </Flex>
           <Text style="subtitle2" css={{ mx: 56, textAlign: 'center' }}>
-            We’ll ask your approval for the marketplace exchange to
-            access your token. This is a one-time only operation per collection.
+            {trans.token.we_ll_ask_your_approval_for_the_marketplace_exchange_to_access_your_token_this_is_a_one_time_only_operation_per_collection}
           </Text>
         </>
       )}
       {acceptBidStep == AcceptBidStep.Confirming && (
         <>
-          <Text style="h6">Confirm transaction in your wallet</Text>
+          <Text style="h6">{trans.token.confirm_cancelation_in_your_wallet}</Text>
           <Box css={{ color: '$neutralText' }}>
             <FontAwesomeIcon
               icon={faWallet}
@@ -71,7 +72,7 @@ export const Progress: FC<Props> = ({
 
       {acceptBidStep == AcceptBidStep.Finalizing && (
         <>
-          <Text style="h6">Finalizing on blockchain</Text>
+          <Text style="h6">{trans.token.finalizing_on_blockchain}</Text>
           <Box css={{ color: '$neutralText' }}>
             <FontAwesomeIcon
               icon={faCube}
@@ -91,7 +92,7 @@ export const Progress: FC<Props> = ({
             href={etherscanBaseUrl}
             target="_blank"
           >
-            View on {activeChain?.blockExplorers?.default.name || 'Etherscan'}
+            {trans.token.view_on} {activeChain?.blockExplorers?.default.name || 'Etherscan'}
           </Anchor>
         </>
       )}
