@@ -61,9 +61,11 @@ export const TokenActivityTable: FC<TokenActivityTableProps> = ({
     },
     skip: !collection || !tokenId
   })
+  
   useEffect(() => {
     query.refetch()
-  }, [query])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return <ActivityTable query={query} />
 }
