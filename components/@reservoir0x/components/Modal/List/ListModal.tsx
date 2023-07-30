@@ -34,6 +34,7 @@ import MarketplacePriceInput from './MarketplacePriceInput'
 import { marketplaceInfo } from 'constants/common'
 import ProgressBar from '../ProgressBar'
 import TransactionProgress from '../TransactionProgress'
+import useTrans from 'hooks/useTrans'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -82,6 +83,7 @@ export function ListModal({
     openState ? openState[0] : false,
     openState
   )
+  const trans = useTrans()
 
   return (
     <ListModalRenderer
@@ -125,7 +127,7 @@ export function ListModal({
           <Modal
             trigger={trigger}
             size={ModalSize.LG}
-            title="List Item for sale"
+            title={trans.token.list_item_for_sale}
             open={open}
             onOpenChange={(open) => {
               if (!open && onClose) {
@@ -146,7 +148,7 @@ export function ListModal({
                 <MainContainer>
                   <Box css={{ p: '$4', flex: 1 }}>
                     <Text style="subtitle2" as="p" color="subtle">
-                      Default
+                      {trans.token.default}
                     </Text>
                     <Flex align="center" css={{ mb: '$4', mt: '$2' }}>
                       <Box css={{ mr: '$2' }}>
@@ -165,7 +167,7 @@ export function ListModal({
                         <Text style="body2">{marketplaceInfo.name}</Text>
                         <Flex css={{ alignItems: 'center', gap: 8 }}>
                           <Text style="body2" color="subtle" as="div">
-                            on Marketplace
+                            {trans.token.on_marketplace}
                           </Text>
                           <InfoTooltip
                             side="bottom"
@@ -177,7 +179,7 @@ export function ListModal({
                         </Flex>
                       </Box>
                       <Text style="subtitle2" color="subtle" css={{ mr: '$2' }}>
-                        Marketplace fee:{' '}
+                        {trans.token.marketplace_fee}:{' '}
                         {(protocolFee / 10000) * 100}%
                       </Text>
                     </Flex>
@@ -187,7 +189,7 @@ export function ListModal({
                       onClick={() => setListingStep(ListingStep.SetPrice)}
                       css={{ width: '100%', justifyContent: 'center'}}
                     >
-                      Set your price
+                      {trans.token.set_your_price}
                     </Button>
                   </Box>
                 </MainContainer>
@@ -217,16 +219,16 @@ export function ListModal({
                         />
                       </Button>
                       <Text style="subtitle1" as="h3">
-                        Set Your Price
+                        {trans.token.set_your_price}
                       </Text>
                     </Flex>
                     <Flex css={{ mb: '$2' }} justify="between">
                       <Text style="subtitle2" color="subtle" as="p">
-                        Price
+                        {trans.token.price}
                       </Text>
                       <Flex css={{ alignItems: 'center', gap: 8 }}>
                         <Text style="subtitle2" color="subtle" as="p">
-                          Profit
+                          {trans.token.profit}
                         </Text>
                         <InfoTooltip
                           side="left"
@@ -255,7 +257,7 @@ export function ListModal({
                         style="subtitle2"
                         color="subtle"
                       >
-                        Currency
+                        {trans.token.currency}
                       </Text>
                       <Select
                         value={currencyOption?.symbol || ''}
@@ -283,7 +285,7 @@ export function ListModal({
                         style="subtitle2"
                         color="subtle"
                       >
-                        Expiration Date
+                        {trans.token.expiration_date}
                       </Text>
                       <Select
                         value={expirationOption?.text || ''}
@@ -312,7 +314,7 @@ export function ListModal({
                       onClick={listToken}
                       css={{ width: '100%', display: "inline" }}
                     >
-                      List for sale
+                      {trans.token.list_for_sale}
                     </Button>
                   </Box>
                 </MainContainer>
@@ -337,9 +339,9 @@ export function ListModal({
                         css={{ textAlign: 'center', mt: 48, mb: 28 }}
                         style="subtitle1"
                       >
-                        {requestUserStep === RequestUserStep.APPROVAL && 'Approve access to items\nin your wallet'}
-                        {requestUserStep === RequestUserStep.CANCEL_LIST && 'Cancel exist listing in your wallet'}
-                        {requestUserStep === RequestUserStep.SIGN && 'Confirm listing in your wallet'}
+                        {requestUserStep === RequestUserStep.APPROVAL && trans.token.approve_access_to_items_in_your_wallet}
+                        {requestUserStep === RequestUserStep.CANCEL_LIST && trans.token.cancel_exist_listing_in_your_wallet}
+                        {requestUserStep === RequestUserStep.SIGN && trans.token.confirm_cancelation_in_your_wallet}
                       </Text>
                       <TransactionProgress
                         justify="center"
@@ -356,7 +358,7 @@ export function ListModal({
                         style="body2"
                         color="subtle"
                       >
-                        A free off-chain signature to create the listing
+                        {trans.token.a_free_off_chain_signature_to_create_the_offer}
                       </Text>
                     </>
                     <Flex
@@ -369,7 +371,7 @@ export function ListModal({
                   {!transactionError && (
                     <Button css={{ width: '100%', mt: 'auto', justifyContent: "center" }} disabled={true}>
                       <Loader />
-                      Waiting for Approval
+                      {trans.token.waiting_for_approval}
                     </Button>
                   )}
                   {transactionError && (
@@ -379,10 +381,10 @@ export function ListModal({
                         css={{ flex: 1, display: "inline" }}
                         onClick={() => setListingStep(ListingStep.SetPrice)}
                       >
-                        Edit Listing
+                        {trans.token.edit_listing}
                       </Button>
                       <Button css={{ flex: 1, display: "inline"  }} onClick={() => listToken()}>
-                        Retry
+                        {trans.token.retry}
                       </Button>
                     </Flex>
                   )}
@@ -412,7 +414,7 @@ export function ListModal({
                       <FontAwesomeIcon icon={faCheckCircle} size="3x" />
                     </Box>
                     <Text style="h5" css={{ mb: '$2' }} as="h5">
-                      Your item has been listed!
+                      {trans.token.your_item_has_been_listed}
                     </Text>
                     <Text
                       style="body2"
@@ -423,14 +425,14 @@ export function ListModal({
                       <Text color="subtle" ellipsify style="body2">
                         {`#${token?.tokenId}`}
                       </Text>{' '}
-                      from{' '}
+                      {trans.token.from}{' '}
                       <Span css={{ color: '$accentText' }}>
                         {collection?.name}
                       </Span>{' '}
-                      has been listed for sale
+                      {trans.token.has_been_listed_for_sale}
                     </Text>
                     <Text style="subtitle2" as="p" css={{ mb: '$3' }}>
-                      View Listing on
+                      {trans.token.view_listing_on}
                     </Text>
                     <Flex css={{ gap: '$3' }}>
                       <a
@@ -462,7 +464,7 @@ export function ListModal({
                         style={{ flex: 1, justifyContent: 'center' }}
                         color="primary"
                       >
-                        Close
+                        {trans.token.close}
                       </Button>
                   </Flex>
                 </MainContainer>

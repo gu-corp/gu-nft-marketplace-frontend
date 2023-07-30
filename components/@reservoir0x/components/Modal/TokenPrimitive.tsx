@@ -120,7 +120,7 @@ const TokenPrimitive: FC<Props> = ({
                 {collection}
               </Text>
             )}
-            {!!expires && <Text style="tiny">Expires {expires}</Text>}
+            {!!expires && <Text style="tiny">{trans.token.expires} {expires}</Text>}
             {!expires && quantity && quantity > 1 ? (
               <Flex
                 css={{
@@ -141,7 +141,7 @@ const TokenPrimitive: FC<Props> = ({
                 color="subtle"
                 css={{ display: 'flex', gap: '$1' }}
               >
-                Creator Royalties: {royaltyPercent}%
+                {trans.token.creator_royalties}: {royaltyPercent}%
                 <InfoTooltip
                   side="right"
                   width={200}

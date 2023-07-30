@@ -26,6 +26,7 @@ import useCopyToClipboard from '../../../hooks/useCopyToClipboard'
 import ProgressBar from '../ProgressBar'
 import TokenLineItem from '../TokenLineItem'
 import Progress from '../Progress'
+import useTrans from 'hooks/useTrans'
 
 type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   openState?: [boolean, Dispatch<SetStateAction<boolean>>]
@@ -39,17 +40,6 @@ type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   ) => void
 }
 
-function titleForStep(step: BuyStep) {
-  switch (step) {
-    case BuyStep.AddFunds:
-      return 'Add Funds'
-    case BuyStep.Unavailable:
-      return 'Selected item is no longer Available'
-    default:
-      return 'Complete Checkout'
-  }
-}
-
 export function BuyModal({
   openState,
   trigger,
@@ -60,6 +50,18 @@ export function BuyModal({
   onPurchaseError,
   onClose,
 }: Props): ReactElement {
+  const trans = useTrans()
+  function titleForStep(step: BuyStep) {
+    switch (step) {
+      case BuyStep.AddFunds:
+        return trans.token.add_funds
+      case BuyStep.Unavailable:
+        return trans.token.selected_item_is_no_longer_available
+      default:
+        return trans.token.complete_checkout
+    }
+  }
+
   const [open, setOpen] = useFallbackState(
     openState ? openState[0] : false,
     openState
@@ -190,7 +192,7 @@ export function BuyModal({
                   justify="between"
                   css={{ pt: '$4', px: '$4' }}
                 >
-                  <Text style="h6">Total</Text>
+                  <Text style="h6">{trans.token.total}</Text>
                   <FormatCryptoCurrency
                     textStyle="h6"
                     amount={listing?.price}
@@ -206,7 +208,7 @@ export function BuyModal({
                   />
                 </Flex>
                 <Flex justify="end" css={{ mr: '$4' }}>
-                  <Text style="body2" css={{ mr: '$4' }}>Your balance</Text>
+                  <Text style="body2" css={{ mr: '$4' }}>{trans.token.your_balance}</Text>
                   <FormatCryptoCurrency
                     address={currency?.contract}
                     amount={currencyBalance?.value}
@@ -222,13 +224,13 @@ export function BuyModal({
                       css={{ width: '100%', justifyContent: 'center' }}
                       color="primary"
                     >
-                      Checkout
+                      {trans.token.checkout}
                     </Button>
                   ) : (
                     <Flex direction="column" align="center">
                       <Flex align="center" css={{ mb: '$3' }}>
                         <Text css={{ mr: '$3' }} color="error" style="body2">
-                          Insufficient Balance
+                          {trans.token.insufficient_balance}
                         </Text>
 
                         <FormatCryptoCurrency
@@ -245,7 +247,7 @@ export function BuyModal({
                         }}
                         css={{ width: '100%', justifyContent: 'center' }}
                       >
-                        Add Funds
+                        {trans.token.add_funds}
                       </Button>
                     </Flex>
                   )}

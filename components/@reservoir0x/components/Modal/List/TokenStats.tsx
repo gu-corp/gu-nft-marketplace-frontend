@@ -4,6 +4,7 @@ import Token from './Token'
 import InfoTooltip from 'components/primitives/InfoTooltip'
 import { Token as TokenType, Collection as CollectionType } from '__generated__/graphql'
 import Stat from '../Stat'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   token?: TokenType
@@ -12,6 +13,7 @@ type Props = {
 }
 
 const TokenStats: FC<Props> = ({ token, collection, royaltyFee = 0 }) => {
+  const trans = useTrans()
   // let attributeFloor = token?.attributes
   //   ? Math.max(
   //       ...token.attributes.map((attr: any) =>
@@ -56,7 +58,7 @@ const TokenStats: FC<Props> = ({ token, collection, royaltyFee = 0 }) => {
                   css={{ minWidth: '0' }}
                   ellipsify
                 >
-                  Creator Royalties
+                  {trans.token.creator_royalties}
                 </Text>
                 <InfoTooltip
                   side="right"
