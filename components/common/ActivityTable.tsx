@@ -43,19 +43,20 @@ type Props = {
 export const ActivityTable: FC<Props> = ({ query }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
+  const { fetchMore } = query;
 
   const activities = query.data?.activities || []
 
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      query.fetchMore({
+      fetchMore({
         variables: {
           skip: activities.length
         }
       })
     }
-  }, [activities.length, loadMoreObserver?.isIntersecting, query])
+  }, [activities.length, loadMoreObserver?.isIntersecting, fetchMore])
 
   return (
     <>
