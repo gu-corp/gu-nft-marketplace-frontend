@@ -13,7 +13,6 @@ import {
   faGasPump,
 } from '@fortawesome/free-solid-svg-icons'
 import useFallbackState from '../../../hooks/useFallbackState'
-import currencyOptions from '../../../lib/defaultCurrencyOptions'
 import { parseUnits } from '@ethersproject/units'
 import TokenPrimitive from '../TokenPrimitive'
 import Progress from '../Progress'

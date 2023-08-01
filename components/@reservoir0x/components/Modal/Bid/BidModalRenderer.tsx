@@ -6,12 +6,10 @@ import {
   Address,
 } from 'wagmi'
 
-import { BigNumber, constants } from 'ethers'
 import defaultExpirationOptions from '../../../lib/defaultExpirationOptions'
 import { parseUnits } from 'ethers/lib/utils.js'
 import dayjs from 'dayjs'
 import { ExpirationOption } from 'types/ExpirationOption'
-import { formatBN } from 'utils/numbers'
 import { Currency } from 'types/currency'
 import { useSdk } from 'context/SDKProvider'
 import { GET_TOKEN } from 'graphql/queries/tokens'
@@ -140,6 +138,8 @@ export const BidModalRenderer: FC<Props> = ({
       setTransactionError(null)
     }
 
+    setRequestUserStep(RequestUserStep.APPROVAL)
+
     if (address) {
       refetchNonce()
     }
@@ -215,6 +215,7 @@ export const BidModalRenderer: FC<Props> = ({
       }
 
       if (!isCurrencyApproved) {
+        setRequestUserStep(RequestUserStep.APPROVAL)
         const tx = await sdk.approveErc20(maker.currency)
         await tx.wait()
       }

@@ -26,7 +26,8 @@ export const CollectionActivityTable: FC<Props> = ({ id, activityTypes }) => {
     if (id) {
       query.refetch()
     }
-  }, [id, query])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   return <ActivityTable query={query} />
 }

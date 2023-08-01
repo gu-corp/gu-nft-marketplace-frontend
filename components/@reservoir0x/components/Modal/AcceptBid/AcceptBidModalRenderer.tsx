@@ -7,7 +7,7 @@ import React, {
   ComponentProps,
 } from 'react'
 
-import { useAccount, useSigner, useNetwork, useProvider, Address } from 'wagmi'
+import { useAccount, useNetwork, useProvider, Address } from 'wagmi'
 import Fees from './Fees'
 import { useQuery } from '@apollo/client'
 import { Collection, Order, Token } from '__generated__/graphql'
@@ -175,7 +175,18 @@ export const AcceptBidModalRenderer: FC<Props> = ({
   
       setAcceptBidStep(AcceptBidStep.Complete) 
     } catch (error: any) {
-      setTransactionError(error)
+      const errorStatus = (error)?.statusCode
+      let message = 'Oops, something went wrong. Please try again.'
+      if (errorStatus >= 400 && errorStatus < 500) {
+        message = error.message
+      }
+      //@ts-ignore: Should be fixed in an update to typescript
+      const transactionError = new Error(message, {
+        cause: error,
+      })
+      setTransactionError(transactionError)
+      setAcceptBidStep(AcceptBidStep.Checkout)
+      setTxHash(null);
     }
   }, [
     tokenId,

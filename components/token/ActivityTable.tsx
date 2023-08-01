@@ -62,9 +62,11 @@ export const TokenActivityTable: FC<TokenActivityTableProps> = ({
     },
     skip: !collection || !tokenId
   })
+  
   useEffect(() => {
     query.refetch()
-  }, [query])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return <ActivityTable query={query} />
 }
@@ -72,17 +74,17 @@ export const TokenActivityTable: FC<TokenActivityTableProps> = ({
 export const ActivityTable: FC<Props> = ({ query }) => {
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
-
+  const { fetchMore } = query;
   const activities = query.data?.activities || []
-
+  
   useEffect(() => {
     const isVisible = !!loadMoreObserver?.isIntersecting
     if (isVisible) {
-      query.fetchMore({
+      fetchMore({
         variables: { skip: activities.length }
       })
     }
-  }, [activities.length, loadMoreObserver?.isIntersecting, query])
+  }, [activities.length, loadMoreObserver?.isIntersecting, fetchMore])
 
   return (
     <>

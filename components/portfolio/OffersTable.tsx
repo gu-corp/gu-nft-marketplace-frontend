@@ -92,6 +92,7 @@ export const OffersTable: FC<Props> = ({ address }) => {
           {offers.map((offer, i) => {
             return (
               <OfferTableRow
+                mutate={refetch}
                 key={`${offer.hash}-${i}`}
                 offer={offer as Order}
               />

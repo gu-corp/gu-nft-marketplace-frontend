@@ -44,7 +44,6 @@ type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   tokenId?: string
   collectionId?: string
   bidId?: string
-  onBidAccepted?: () => void
   onClose?: (
     currentStep: AcceptBidStep
   ) => void
@@ -60,7 +59,6 @@ export function AcceptBidModal({
   tokenId,
   collectionId,
   bidId,
-  onBidAccepted,
   onClose,
   onBidAcceptError,
   onCurrentStepUpdate,
@@ -102,13 +100,6 @@ export function AcceptBidModal({
         currency,
       }) => {
         const title = titleForStep(acceptBidStep)
-        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
-          if (acceptBidStep === AcceptBidStep.Complete && onBidAccepted) {
-            onBidAccepted()
-          }
-        }, [acceptBidStep])
 
         // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
         // eslint-disable-next-line react-hooks/rules-of-hooks
