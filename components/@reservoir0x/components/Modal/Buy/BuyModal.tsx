@@ -32,7 +32,6 @@ type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   tokenId?: string
   collectionId?: string
   orderId?: string
-  onPurchaseComplete?: () => void
   onPurchaseError?: (error: Error) => void
   onClose?: (
     currentStep: BuyStep
@@ -56,7 +55,6 @@ export function BuyModal({
   tokenId,
   collectionId,
   orderId,
-  onPurchaseComplete,
   onPurchaseError,
   onClose,
 }: Props): ReactElement {
@@ -95,13 +93,6 @@ export function BuyModal({
         ethBalance
       }) => {
         const title = titleForStep(buyStep)
-        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
-          if (buyStep === BuyStep.Complete && onPurchaseComplete) {
-            onPurchaseComplete()
-          }
-        }, [buyStep])
         // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {

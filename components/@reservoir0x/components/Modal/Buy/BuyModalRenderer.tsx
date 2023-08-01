@@ -177,8 +177,19 @@ export const BuyModalRenderer: FC<Props> = ({
   
       setBuyStep(BuyStep.Complete)
     } catch (error: any) {
-      setTransactionError(error)
+      const errorStatus = (error)?.statusCode
+      let message = 'Oops, something went wrong. Please try again.'
+      if (errorStatus >= 400 && errorStatus < 500) {
+        message = error.message
+      }
+      //@ts-ignore: Should be fixed in an update to typescript
+      const transactionError = new Error(message, {
+        cause: error,
+      })
+      setTransactionError(transactionError)
+      setBuyStep(BuyStep.Checkout)
       setRequestUserStep("APPROVAL_ERC20")
+      setTxHash(undefined);
     }
   }, [sdk, token, collection, mixedCurrencies, listing, address, provider])
 
