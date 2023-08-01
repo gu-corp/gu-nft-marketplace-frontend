@@ -19,7 +19,7 @@ import {
   faExchange,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { BuyModalRenderer, BuyStep } from './BuyModalRenderer'
+import { BuyModalRenderer, BuyStep, RequestUserStep } from './BuyModalRenderer'
 import { useNetwork } from 'wagmi'
 import useFallbackState from '../../../hooks/useFallbackState'
 import useCopyToClipboard from '../../../hooks/useCopyToClipboard'
@@ -90,7 +90,7 @@ export function BuyModal({
         requestUserStep,
         txHash,
         currencyBalance,
-        ethBalance
+        steps
       }) => {
         const title = titleForStep(buyStep)
         // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
@@ -256,13 +256,12 @@ export function BuyModal({
                   quantity={quantity}
                 />
                 <ProgressBar
-                  css={{ px: '$4', mt: '$3' }}
-                  value={requestUserStep === "APPROVAL_ERC20" ? 1: 2}
-                  max={2}
+                  value={steps.findIndex(step => step === requestUserStep) + 1}
+                  max={steps.length}
                 />
                 {!txHash && <Loader css={{ height: 206 }} />}
                 <Progress
-                  title={requestUserStep === "APPROVAL_ERC20" ? "Waiting for approval allowance currency..." : "Waiting for buying..."}
+                  title={requestUserStep === RequestUserStep.APPROVAL_ERC20 ? "Waiting for approval allowance currency..." : "Waiting for buying..."}
                   txHash={txHash}
                   blockExplorerBaseUrl={`${blockExplorerBaseUrl}/tx/${txHash}`}
                 />

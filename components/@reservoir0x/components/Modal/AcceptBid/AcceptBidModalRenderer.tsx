@@ -7,7 +7,7 @@ import React, {
   ComponentProps,
 } from 'react'
 
-import { useAccount, useSigner, useNetwork, useProvider, Address } from 'wagmi'
+import { useAccount, useNetwork, useProvider, Address } from 'wagmi'
 import Fees from './Fees'
 import { useQuery } from '@apollo/client'
 import { Collection, Order, Token } from '__generated__/graphql'

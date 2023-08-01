@@ -4,7 +4,6 @@ import React, {
   useState,
   useCallback,
   ReactNode,
-  useMemo,
 } from 'react'
 
 import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi'
@@ -44,10 +43,16 @@ type ChildrenProps = {
   quantity: number
   setBuyStep: React.Dispatch<React.SetStateAction<BuyStep>>
   buyToken: () => void
-  requestUserStep: "APPROVAL_ERC20" | "BUY"
+  requestUserStep: RequestUserStep
   txHash?: string
   ethBalance?: ReturnType<typeof useBalance>['data']
   currencyBalance?: ReturnType<typeof useBalance>['data']
+  steps: RequestUserStep[]
+}
+
+export enum RequestUserStep {
+  APPROVAL_ERC20,
+  BUY
 }
 
 type Props = {
@@ -73,11 +78,12 @@ export const BuyModalRenderer: FC<Props> = ({
   const [hasEnoughCurrency, setHasEnoughCurrency] = useState(true)
   // able to buy mixed ETH + WETH
   const [mixedCurrencies, setMixedCurrencies] = useState(false)
-  const [requestUserStep, setRequestUserStep] = useState<"APPROVAL_ERC20" | "BUY">("APPROVAL_ERC20")
+  const [requestUserStep, setRequestUserStep] = useState<RequestUserStep>(RequestUserStep.APPROVAL_ERC20)
   const { chain: activeChain } = useNetwork()
   const blockExplorerBaseUrl =
     activeChain?.blockExplorers?.default?.url || 'https://etherscan.io'
   const [txHash, setTxHash] = useState<string | undefined>(undefined)
+  const [steps, setSteps] = useState<RequestUserStep[]>([])
 
   const { data: tokenData } = useQuery(GET_TOKEN, {
     variables: { id: `${collectionId}-${tokenId}` },
@@ -139,12 +145,16 @@ export const BuyModalRenderer: FC<Props> = ({
         )
         
         if (BigNumber.from(listing.price).gt(erc20Allowance.toString())) {
+          setSteps([RequestUserStep.APPROVAL_ERC20, RequestUserStep.BUY])
+          setRequestUserStep(RequestUserStep.APPROVAL_ERC20)
           const tx = await sdk.approveErc20(listing.currencyAddress)
           await tx.wait() 
+        } else {
+          setSteps([RequestUserStep.BUY])
         }
       }
       
-      setRequestUserStep("BUY")
+      setRequestUserStep(RequestUserStep.BUY)
   
       const maker: MakerOrder = {
         isOrderAsk: listing.isOrderAsk,
@@ -188,7 +198,7 @@ export const BuyModalRenderer: FC<Props> = ({
       })
       setTransactionError(transactionError)
       setBuyStep(BuyStep.Checkout)
-      setRequestUserStep("APPROVAL_ERC20")
+      setRequestUserStep(RequestUserStep.APPROVAL_ERC20)
       setTxHash(undefined);
     }
   }, [sdk, token, collection, mixedCurrencies, listing, address, provider])
@@ -253,7 +263,8 @@ export const BuyModalRenderer: FC<Props> = ({
         requestUserStep,
         txHash,
         ethBalance,
-        currencyBalance
+        currencyBalance,
+        steps
       })}
     </>
   )
