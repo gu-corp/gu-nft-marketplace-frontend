@@ -51,7 +51,6 @@ type Props = Pick<Parameters<typeof Modal>['0'], 'trigger'> & {
   onClose?: (
     currentStep: BidStep
   ) => void
-  onBidComplete?: () => void
   onBidError?: (error: Error) => void
 }
 
@@ -96,17 +95,12 @@ export function BidModal({
   collectionId,
   onViewOffers,
   onClose,
-  onBidComplete,
   onBidError,
 }: Props): ReactElement {
   const [open, setOpen] = useFallbackState(
     openState ? openState[0] : false,
     openState
   )
-
-  const [stepTitle, setStepTitle] = useState('')
-  const [attributesSelectable, setAttributesSelectable] = useState(false)
-  const [attributeSelectorOpen, setAttributeSelectorOpen] = useState(false)
 
   return (
     <BidModalRenderer
@@ -135,34 +129,7 @@ export function BidModal({
         bidData,
         steps
       }) => {
-        const tokenCount = collection?.totalTokens
-          ? +collection.totalTokens
-          : undefined
-
         const itemImage = token?.image || collection?.image as string
-        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
-          if (requestUserStep) {
-            switch (requestUserStep) {
-              case RequestUserStep.SIGN: {
-                setStepTitle('Confirm Offer')
-                break
-              }
-              default: {
-                setStepTitle('Approval')
-                break
-              }
-            }
-          }
-        }, [requestUserStep])
-        // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
-        // eslint-disable-next-line react-hooks/rules-of-hooks
-        useEffect(() => {
-          if (bidStep === BidStep.Complete && onBidComplete) {
-            onBidComplete()
-          }
-        }, [bidStep])
         // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffect(() => {
@@ -357,7 +324,8 @@ export function BidModal({
                     css={{ textAlign: 'center', mt: 48, mb: 28 }}
                     style="subtitle1"
                   >
-                    {stepTitle}
+                    {requestUserStep === RequestUserStep.APPROVAL && 'Approve enough balance in your wallet'}
+                    {requestUserStep === RequestUserStep.SIGN && 'Confirm your offer in your wallet'}
                   </Text>
                     {requestUserStep === RequestUserStep.SIGN && (
                       <TransactionProgress

@@ -140,6 +140,8 @@ export const BidModalRenderer: FC<Props> = ({
       setTransactionError(null)
     }
 
+    setRequestUserStep(RequestUserStep.APPROVAL)
+
     if (address) {
       refetchNonce()
     }
@@ -215,6 +217,7 @@ export const BidModalRenderer: FC<Props> = ({
       }
 
       if (!isCurrencyApproved) {
+        setRequestUserStep(RequestUserStep.APPROVAL)
         const tx = await sdk.approveErc20(maker.currency)
         await tx.wait()
       }
