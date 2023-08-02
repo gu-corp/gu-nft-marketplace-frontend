@@ -20,7 +20,7 @@ import {
   faMagnifyingGlass,
 } from '@fortawesome/free-solid-svg-icons'
 import Link from 'next/link'
-import { Address } from 'wagmi'
+import { Address, useAccount } from 'wagmi'
 import { NAVBAR_HEIGHT } from 'components/navbar'
 import { PortfolioSortingOption } from 'components/common/PortfolioSortDropdown'
 import { QueryResult, useQuery } from '@apollo/client'
@@ -114,6 +114,7 @@ type TokenTableRowProps = {
 
 const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const account = useAccount()
 
   const { data } = useQuery(GET_COLLECTION, {
     variables: {
@@ -126,7 +127,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
 
   let imageSrc = token?.image || collection?.image as string
 
-  const { data: listedData, refetch } = useQuery(GET_LISTED, {
+  const { data: listedData } = useQuery(GET_LISTED, {
     variables: {
       where: {
         collectionAddress: token.collection ,
@@ -149,6 +150,8 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   })
   
   const highestBid = highestBidData?.highestBid
+  const isOwner = account.address?.toLowerCase() === token?.owner?.toLowerCase()
+  const shouldAvailableToSell = highestBid && !isOwner
 
   if (isSmallDevice) {
     return (
@@ -237,7 +240,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               textStyle="subtitle2"
               logoHeight={14}
             />
-            {highestBid && (
+            {shouldAvailableToSell && (
               <AcceptBid
                 bidId={highestBid.hash} 
                 token={token}
@@ -357,7 +360,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
       </TableCell>
       <TableCell>
         <Flex justify="end" css={{ gap: '$3' }}>
-          {highestBid && (
+          {shouldAvailableToSell && (
             <AcceptBid
               bidId={highestBid.hash}
               token={token}
