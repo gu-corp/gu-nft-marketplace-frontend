@@ -1,5 +1,5 @@
-import currencyOptions from "components/@reservoir0x/lib/defaultCurrencyOptions"
+import { ETH, WETH } from "./useCurrencyOptions"
 
 export default (address?: string) => {
-  return currencyOptions.find(currency => currency.contract === address) || currencyOptions[0]
+  return [WETH, ETH].find(currency => currency.contract === address) || WETH
 }

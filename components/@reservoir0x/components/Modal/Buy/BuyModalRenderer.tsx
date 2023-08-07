@@ -4,21 +4,23 @@ import React, {
   useState,
   useCallback,
   ReactNode,
+  SetStateAction,
+  Dispatch,
 } from 'react'
 
 import { useAccount, useBalance, useNetwork, useProvider } from 'wagmi'
 
-import { BigNumber, ContractTransaction, utils } from 'ethers'
+import { BigNumber, ContractTransaction, constants, utils } from 'ethers'
 import { Collection, Order, Token } from '__generated__/graphql'
 import { Currency } from 'types/currency'
 import { Address } from 'wagmi'
 import { useQuery } from '@apollo/client'
 import { GET_ORDER_BY_HASH } from 'graphql/queries/orders'
-import currencyOptions from '../../../lib/defaultCurrencyOptions'
 import { useSdk } from 'context/SDKProvider'
 import { MakerOrder, allowance } from '@gulabs/gu-nft-marketplace-sdk'
 import { GET_TOKEN } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
+import useCurrencyOptions from 'hooks/useCurrencyOptions'
 
 export enum BuyStep {
   Checkout,
@@ -34,7 +36,6 @@ type ChildrenProps = {
   collection?: Collection
   listing?: Order
   currency?: Currency
-  mixedCurrencies: boolean
   buyStep: BuyStep
   transactionError?: Error | null
   hasEnoughCurrency: boolean
@@ -47,7 +48,9 @@ type ChildrenProps = {
   txHash?: string
   ethBalance?: ReturnType<typeof useBalance>['data']
   currencyBalance?: ReturnType<typeof useBalance>['data']
-  steps: RequestUserStep[]
+  steps: RequestUserStep[],
+  currencyOptions: Currency[],
+  setCurrency: Dispatch<SetStateAction<Currency | undefined>>
 }
 
 export enum RequestUserStep {
@@ -76,8 +79,6 @@ export const BuyModalRenderer: FC<Props> = ({
   const [buyStep, setBuyStep] = useState<BuyStep>(BuyStep.Checkout)
   const [transactionError, setTransactionError] = useState<Error | null>()
   const [hasEnoughCurrency, setHasEnoughCurrency] = useState(true)
-  // able to buy mixed ETH + WETH
-  const [mixedCurrencies, setMixedCurrencies] = useState(false)
   const [requestUserStep, setRequestUserStep] = useState<RequestUserStep>(RequestUserStep.APPROVAL_ERC20)
   const { chain: activeChain } = useNetwork()
   const blockExplorerBaseUrl =
@@ -106,7 +107,7 @@ export const BuyModalRenderer: FC<Props> = ({
 
   const { data: currencyBalance } = useBalance({
     address: address,
-    token: currency?.contract as Address,
+    token: currency?.contract !==  constants.AddressZero ? currency?.contract as Address : undefined,
     watch: open,
     formatUnits: currency?.decimals,
   })
@@ -120,6 +121,8 @@ export const BuyModalRenderer: FC<Props> = ({
   })
 
   const listing = data?.order as Order
+
+  const currencyOptions = useCurrencyOptions(listing)
 
   const buyToken = useCallback(async () => {
     try {
@@ -136,7 +139,7 @@ export const BuyModalRenderer: FC<Props> = ({
       }
 
       setBuyStep(BuyStep.Approving)
-      if (!mixedCurrencies) {
+      if (currency?.contract !== constants.AddressZero) {
         const erc20Allowance = await allowance(
           provider, 
           listing.currencyAddress,
@@ -153,7 +156,7 @@ export const BuyModalRenderer: FC<Props> = ({
           setSteps([RequestUserStep.BUY])
         }
       }
-      
+
       setRequestUserStep(RequestUserStep.BUY)
   
       const maker: MakerOrder = {
@@ -177,7 +180,7 @@ export const BuyModalRenderer: FC<Props> = ({
       })
   
       let tx: ContractTransaction | null = null;
-      if (mixedCurrencies) {
+      if (currency?.contract === constants.AddressZero) {
         tx = await sdk.executeOrder(maker, taker, listing.signature, { value: listing.price }).call()
       } else {
         tx = await sdk.executeOrder(maker, taker, listing.signature).call()
@@ -200,30 +203,32 @@ export const BuyModalRenderer: FC<Props> = ({
       setBuyStep(BuyStep.Checkout)
       setRequestUserStep(RequestUserStep.APPROVAL_ERC20)
       setTxHash(undefined);
+      console.log(error)
     }
-  }, [sdk, token, collection, mixedCurrencies, listing, address, provider])
+  }, [sdk, token, collection, listing, address, provider, currency])
 
   useEffect(() => {
-    if (listing) {
-      const currency = currencyOptions.find(currency => currency.contract === listing.currencyAddress)
-
-      setCurrency(currency)
-      // TO-DO: support WETH later
-      // setMixedCurrencies(listing.currencyAddress === wethOpt.contract)
-
-    } else if (!listing && !loading && token) {
+    if (!listing && !loading && token) {
       setBuyStep(BuyStep.Unavailable)
       setCurrency(undefined)
-      setMixedCurrencies(false)
     }
   }, [
     listing,
     loading,
     token,
+    currencyOptions
   ])
 
   useEffect(() => {
-    const totalBalance = mixedCurrencies ? currencyBalance?.value.add(ethBalance?.value || 0) : currencyBalance?.value
+    if (listing) {
+      const currency = currencyOptions.find(currency => currency.contract === listing.currencyAddress)
+      setCurrency(currency)
+    } 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listing])
+
+  useEffect(() => {
+    const totalBalance = currencyBalance?.value
 
     if (!totalBalance) {
       setHasEnoughCurrency(false)
@@ -233,7 +238,7 @@ export const BuyModalRenderer: FC<Props> = ({
       setHasEnoughCurrency(true)
     }
     
-  }, [currencyBalance, currency, ethBalance, mixedCurrencies, listing?.price])
+  }, [currencyBalance, currency, ethBalance, listing?.price])
 
   useEffect(() => {
     if (!open) {
@@ -251,7 +256,6 @@ export const BuyModalRenderer: FC<Props> = ({
         collection,
         listing,
         currency,
-        mixedCurrencies,
         buyStep,
         transactionError,
         hasEnoughCurrency,
@@ -264,7 +268,9 @@ export const BuyModalRenderer: FC<Props> = ({
         txHash,
         ethBalance,
         currencyBalance,
-        steps
+        steps,
+        currencyOptions,
+        setCurrency
       })}
     </>
   )
