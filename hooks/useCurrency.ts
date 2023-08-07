@@ -1,5 +1,7 @@
 import { ETH, WETH } from "./useCurrencyOptions"
 
-export default (address?: string) => {
-  return [WETH, ETH].find(currency => currency.contract === address) || WETH
+const useCurrency = (address?: string) => {
+  return [WETH, ETH].find(currency => currency.contract.toLowerCase() === address?.toLowerCase()) || WETH
 }
+
+export default useCurrency
