@@ -5,6 +5,7 @@ import { Currency } from 'types/currency'
 import { useTimeSince } from 'hooks'
 import { ListingData } from './ListModalRenderer'
 import { marketplaceInfo } from 'constants/common'
+import useTrans from 'hooks/useTrans'
 
 const Img = styled('img', {
   width: 16,
@@ -17,6 +18,7 @@ type Props = {
 }
 
 const ListingStat: FC<Props> = ({ listing, currency, ...props }) => {
+  const trans = useTrans()
   const timeSince = useTimeSince(
     listing?.endTime ? Number(listing.endTime) : 0
   )
@@ -43,7 +45,7 @@ const ListingStat: FC<Props> = ({ listing, currency, ...props }) => {
         <Img src={marketplaceInfo.imageUrl} />
       </Flex>
       <Text style="subtitle2" color="subtle" as="p" css={{ flex: 1 }}>
-        {listing?.endTime ? `Expires ${timeSince}` : 'No Expiration'}
+        {listing?.endTime ? `${trans.token.expires} ${timeSince}` : trans.token.no_expiration}
       </Text>
     </Flex>
   )

@@ -36,6 +36,7 @@ import {
 import { useAccount } from 'wagmi'
 import useFallbackState from 'components/@reservoir0x/hooks/useFallbackState'
 import { styled, keyframes } from 'stitches.config'
+import useTrans from 'hooks/useTrans'
 
 const scaleUp = keyframes({
   '0%': { opacity: 0, transform: 'scale(0.9) translateY(-10px)' },
@@ -63,6 +64,7 @@ export function CartPopover({
   openState,
   onConnectWallet,
 }: Props): ReactElement {
+  const trans = useTrans()
   const [popoverTrigger, setPopoverTrigger] =
     useState<HTMLButtonElement | null>(null)
   const [open, setOpen] = useFallbackState(
@@ -170,7 +172,7 @@ export function CartPopover({
                 />
               )}
               <Flex align="center" css={{ mb: '$4' }}>
-                <Text style="h6">Cart</Text>
+                <Text style="h6">{trans.nav.cart}</Text>
                 {!isCartEmpty && (
                   <Flex
                     align="center"
@@ -197,7 +199,7 @@ export function CartPopover({
                     }}
                     onClick={clear}
                   >
-                    Clear All
+                    {trans.nav.clear_all}
                   </Text>
                 )}
                 <Button
@@ -321,11 +323,12 @@ export function CartPopover({
                       style={{ height: 30 }}
                     />
                     <Text style="body2" color="subtle">
-                      No items in your cart
+                      {trans.nav.no_items_in_your_cart}
                     </Text>
                   </Flex>
                 )}
-              {displayPendingTransaction &&
+              {/* TO-DO: purchase bulk not available now  */}
+              {/* {displayPendingTransaction &&
                 transaction?.status === CheckoutStatus.Finalizing && (
                   <Flex
                     direction="column"
@@ -388,14 +391,14 @@ export function CartPopover({
                         decimals={currency?.decimals}
                         logoHeight={18}
                       />
-                      {/* {usdPrice && (
+                      {usdPrice && (
                         <FormatCurrency
                           amount={usdPrice * totalPrice}
                           style="subtitle2"
                           color="subtle"
                           css={{ textAlign: 'end' }}
                         />
-                      )} */}
+                      )}
                     </Flex>
                   </Flex>
                 )}
@@ -485,7 +488,8 @@ export function CartPopover({
                       Waiting to be Validated...
                     </Button>
                   )}
-              </Flex>
+              </Flex> */}
+              
             </Popover.Content>
             {open && (
               <Box

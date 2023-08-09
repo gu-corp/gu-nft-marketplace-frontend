@@ -12,6 +12,7 @@ import {
   Text,
 } from 'components/primitives'
 import Img from 'components/primitives/Img'
+import useTrans from 'hooks/useTrans'
 import Link from 'next/link'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { useMediaQuery } from 'react-responsive'
@@ -29,6 +30,7 @@ export const CollectionRankingsTable: FC<Props> = ({
   loading,
   volumeKey,
 }) => {
+  const trans = useTrans()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
 
   return (
@@ -42,7 +44,7 @@ export const CollectionRankingsTable: FC<Props> = ({
           <Text css={{ color: '$gray11' }}>
             <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
           </Text>
-          <Text css={{ color: '$gray11' }}>No collections found</Text>
+          <Text css={{ color: '$gray11' }}>{trans.home.no_collections_found}</Text>
         </Flex>
       ) : (
         <Flex direction="column" css={{ width: '100%', pb: '$2' }}>
@@ -52,10 +54,10 @@ export const CollectionRankingsTable: FC<Props> = ({
               css={{ mb: '$4', '@md': { display: 'none' } }}
             >
               <Text style="subtitle3" color="subtle">
-                Collection
+                {trans.home.collection}
               </Text>
               <Text style="subtitle3" color="subtle">
-                Volume
+                {trans.home.volume}
               </Text>
             </Flex>
           ) : (
@@ -93,6 +95,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
   volumeKey,
 }) => {
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
+  const trans = useTrans()
 
   if (isSmallDevice) {
     return (
@@ -127,7 +130,7 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
             </Flex>
             <Flex align="center">
               <Text css={{ mr: '$1', color: '$gray11' }} style="body2">
-                Floor
+                {trans.home.floor}
               </Text>
               <FormatCryptoCurrency
                 amount={collection?.floor?.floorPrice}
@@ -246,9 +249,12 @@ const RankingsTableRow: FC<RankingsTableRowProps> = ({
   }
 }
 
-const headings = ['Collection', '', 'Volume', 'Floor Price']
 
-const TableHeading = () => (
+const TableHeading = () => {
+  const trans = useTrans()
+  const headings = [trans.home.collection, '', trans.home.volume, trans.home.floor_price]
+
+  return (
   <HeaderRow
     css={{
       display: 'none',
@@ -268,4 +274,4 @@ const TableHeading = () => (
       </TableCell>
     ))}
   </HeaderRow>
-)
+)}

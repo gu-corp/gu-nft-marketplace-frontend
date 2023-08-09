@@ -8,6 +8,7 @@ import { useDefaultChain, useIsInTheWrongNetwork } from 'hooks'
 import { BuyStep } from 'components/@reservoir0x/components/Modal/Buy/BuyModalRenderer'
 import { BuyModal } from 'components/@reservoir0x/components/Modal/Buy/BuyModal'
 import { Token } from '__generated__/graphql'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   token?: Token
@@ -18,6 +19,7 @@ type Props = {
 }
 
 const BuyNow: FC<Props> = ({ token, orderId, mutate, buttonCss, buttonProps = {} }) => {
+  const trans = useTrans()
   const { data: signer } = useSigner()
   const { openConnectModal } = useConnectModal()
   const defaultChain = useDefaultChain()
@@ -28,7 +30,7 @@ const BuyNow: FC<Props> = ({ token, orderId, mutate, buttonCss, buttonProps = {}
 
   const trigger = (
     <Button css={buttonCss} color="primary" {...buttonProps}>
-      Buy Now
+      {trans.collection.buy_now}
     </Button>
   )
   const canBuy =
@@ -56,7 +58,7 @@ const BuyNow: FC<Props> = ({ token, orderId, mutate, buttonCss, buttonProps = {}
       }}
       {...buttonProps}
     >
-      Buy Now
+      {trans.collection.buy_now}
     </Button>
   ) : (
     <BuyModal

@@ -21,10 +21,12 @@ import { useQuery } from '@apollo/client'
 import { GET_COLLECTIONS } from 'graphql/queries/collections'
 import { Collection, Collection_OrderBy, OrderDirection } from '__generated__/graphql'
 import { initializeApollo } from 'graphql/apollo-client'
+import useTrans from 'hooks/useTrans'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const IndexPage: NextPage<Props> = ({ ssr }) => {
+  const trans = useTrans()
   const isSSR = typeof window === 'undefined'
   const isMounted = useMounted()
   const compactToggleNames = useMediaQuery({ query: '(max-width: 800px)' })
@@ -97,7 +99,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             }}
           >
             <Text style="h4" as="h4">
-              Collection Rankings
+              {trans.home.collection_rankings}
             </Text>
             <Flex align="center" css={{ gap: '$4' }}>
               <CollectionsTimeDropdown

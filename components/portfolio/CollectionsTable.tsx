@@ -25,6 +25,7 @@ import { NAVBAR_HEIGHT } from 'components/navbar'
 import { useQuery } from '@apollo/client'
 import { Collection, OrderDirection, RelativeCollection_OrderBy } from '__generated__/graphql'
 import { GET_USER_RELATIVE_COLLECTIONS } from 'graphql/queries/collections'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   address: Address | undefined
@@ -286,47 +287,50 @@ const CollectionTableRow: FC<CollectionTableRowProps> = ({
   )
 }
 
-const TableHeading = () => (
-  <HeaderRow
-    css={{
-      gridTemplateColumns: mobileTemplateColumns,
-      '@md': {
-        display: 'grid',
-        gridTemplateColumns: desktopTemplateColumns,
-        position: 'sticky',
-        top: NAVBAR_HEIGHT,
-        backgroundColor: '$neutralBg',
-      },
-    }}
-  >
-    <TableCell>
-      <Text
-        style="subtitle3"
-        css={{ display: 'none', '@md': { display: 'block' } }}
-        color="subtle"
-      >
-        Collection
-      </Text>
-    </TableCell>
-    <TableCell>
-      <Text style="subtitle3" color="subtle">
-        Volume
-      </Text>
-    </TableCell>
-    <TableCell css={{ display: 'none', '@md': { display: 'grid' } }}>
-      <Text style="subtitle3" color="subtle">
-        Top Offer
-      </Text>
-    </TableCell>
-    <TableCell>
-      <Text style="subtitle3" color="subtle">
-        Floor Price
-      </Text>
-    </TableCell>
-    <TableCell css={{ display: 'none', '@md': { display: 'grid' } }}>
-      <Text style="subtitle3" color="subtle">
-        Owned
-      </Text>
-    </TableCell>
-  </HeaderRow>
-)
+const TableHeading = () => {
+  const trans = useTrans()
+  return (
+    <HeaderRow
+      css={{
+        gridTemplateColumns: mobileTemplateColumns,
+        '@md': {
+          display: 'grid',
+          gridTemplateColumns: desktopTemplateColumns,
+          position: 'sticky',
+          top: NAVBAR_HEIGHT,
+          backgroundColor: '$neutralBg',
+        },
+      }}
+    >
+      <TableCell>
+        <Text
+          style="subtitle3"
+          css={{ display: 'none', '@md': { display: 'block' } }}
+          color="subtle"
+        >
+          {trans.portfolio.collection}
+        </Text>
+      </TableCell>
+      <TableCell>
+        <Text style="subtitle3" color="subtle">
+          {trans.portfolio.volume}
+        </Text>
+      </TableCell>
+      <TableCell css={{ display: 'none', '@md': { display: 'grid' } }}>
+        <Text style="subtitle3" color="subtle">
+          {trans.portfolio.top_offer}
+        </Text>
+      </TableCell>
+      <TableCell>
+        <Text style="subtitle3" color="subtle">
+          {trans.portfolio.floor_price}
+        </Text>
+      </TableCell>
+      <TableCell css={{ display: 'none', '@md': { display: 'grid' } }}>
+        <Text style="subtitle3" color="subtle">
+          {trans.portfolio.owned}
+        </Text>
+      </TableCell>
+    </HeaderRow>
+  )
+}

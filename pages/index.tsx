@@ -88,7 +88,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
             }}
           >
             <Text style="h4" as="h4">
-              {trans.home.popularCollections}
+              {trans.home.popular_collections}
             </Text>
             <Flex align="center" css={{ gap: '$4' }}>
               <CollectionsTimeDropdown
@@ -116,7 +116,7 @@ const IndexPage: NextPage<Props> = ({ ssr }) => {
                 }}
                 size="large"
               >
-                View All
+                {trans.home.view_all}
               </Button>
             </Link>
           </Box>

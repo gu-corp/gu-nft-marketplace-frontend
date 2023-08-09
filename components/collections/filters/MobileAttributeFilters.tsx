@@ -9,6 +9,7 @@ import { clearAllAttributes } from 'utils/router'
 import { FullscreenModal } from 'components/common/FullscreenModal'
 import { NAVBAR_HEIGHT_MOBILE } from 'components/navbar'
 import { Attribute, AttributeKind } from '__generated__/graphql'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   attributes: Attribute[]
@@ -19,6 +20,7 @@ export const MobileAttributeFilters: FC<Props> = ({
   attributes,
   scrollToTop,
 }) => {
+  const trans = useTrans()
   const router = useRouter()
   const [filtersLength, setFiltersLength] = useState(0)
 
@@ -74,7 +76,7 @@ export const MobileAttributeFilters: FC<Props> = ({
         corners="pill"
         color="gray3"
       >
-        <Text style="h6">Filter</Text>
+        <Text style="h6">{trans.profile.filter}</Text>
         {filtersEnabled && (
           <Flex
             justify="center"
@@ -126,7 +128,7 @@ export const MobileAttributeFilters: FC<Props> = ({
         >
           <Flex align="center">
             <Text style="h5" css={{ mr: '$3' }}>
-              Filter
+              {trans.profile.filter}
             </Text>
             {filtersEnabled && (
               <Flex
@@ -149,7 +151,7 @@ export const MobileAttributeFilters: FC<Props> = ({
                 size="small"
                 css={{ color: '$primary11', fontWeight: 400 }}
               >
-                Clear all
+                {trans.profile.clear_all}
               </Button>
             )}
           </Flex>

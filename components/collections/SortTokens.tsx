@@ -11,6 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useMounted } from 'hooks'
 import { useMediaQuery } from 'react-responsive'
 import { OrderDirection, Token_OrderBy } from '__generated__/graphql'
+import useTrans from 'hooks/useTrans'
 
 type Options =
   | 'Price low to high'
@@ -33,6 +34,7 @@ export const SortTokens: FC = () => {
   const isMounted = useMounted()
   const isSmallDevice = useMediaQuery({ maxWidth: 905 }) && isMounted
 
+  const trans = useTrans()
   useEffect(() => {
     const orderBy = router?.query['orderBy']?.toString()
     const orderDirection = router?.query['orderDirection']?.toString()
@@ -71,7 +73,7 @@ export const SortTokens: FC = () => {
             <FontAwesomeIcon icon={faSort} width={16} height={16} />
           ) : (
             <>
-              <span>{sortSelection}</span>
+              <span>{sortSelection === "Price high to low" ? trans.collection.price_high_to_low : trans.collection.price_low_to_high}</span>
               <Box
                 css={{
                   transition: 'transform',
@@ -106,7 +108,7 @@ export const SortTokens: FC = () => {
             }}
             aria-label={`Sort by ${key}`}
           >
-            {key}
+            {key === "Price high to low" ? trans.collection.price_high_to_low : trans.collection.price_low_to_high}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

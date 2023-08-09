@@ -8,6 +8,7 @@ import { ToastContext } from 'context/ToastContextProvider'
 import { useDefaultChain, useIsInTheWrongNetwork } from 'hooks'
 import { BidModal } from 'components/@reservoir0x/components/Modal/Bid/BidModal'
 import { BidStep } from 'components/@reservoir0x/components/Modal/Bid/BidModalRenderer'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   tokenId?: string | undefined
@@ -28,6 +29,7 @@ const Bid: FC<Props> = ({
   buttonProps,
   mutate,
 }) => {
+  const trans = useTrans()
   const { isDisconnected } = useAccount()
   const { openConnectModal } = useConnectModal()
   const { addToast } = useContext(ToastContext)
@@ -43,7 +45,7 @@ const Bid: FC<Props> = ({
 
   const trigger = (
     <Button css={buttonCss} disabled={disabled} {...buttonProps} color="gray4">
-      Make Offer
+      {trans.token.make_offer}
     </Button>
   )
 

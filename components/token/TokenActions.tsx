@@ -8,6 +8,7 @@ import CancelBid from 'components/buttons/CancelBid'
 import CancelListing from 'components/buttons/CancelListing'
 import { Button, Flex, Grid, Tooltip, Text } from 'components/primitives'
 import { GET_LISTED } from 'graphql/queries/orders'
+import useTrans from 'hooks/useTrans'
 import { useRouter } from 'next/router'
 import { ComponentPropsWithoutRef, FC, useState } from 'react'
 import { useAccount } from 'wagmi'
@@ -27,6 +28,7 @@ export const TokenActions: FC<Props> = ({
   mutate,
   account,
 }) => {
+  const trans = useTrans()
   const router = useRouter()
   const bidOpenState = useState(true)
 
@@ -93,7 +95,7 @@ export const TokenActions: FC<Props> = ({
         width: '100%',
         '@sm': {
           gridTemplateColumns: 'repeat(2,minmax(0,1fr))',
-          maxWidth: 500,
+          maxWidth: 600,
         },
       }}
     >
@@ -104,8 +106,8 @@ export const TokenActions: FC<Props> = ({
           buttonCss={buttonCss}
           buttonChildren={
             isListed
-              ? 'Create New Listing'
-              : 'List for Sale'
+              ? trans.token.create_new_listing
+              : trans.token.list_for_sale
           }
         />
       )}
@@ -143,7 +145,7 @@ export const TokenActions: FC<Props> = ({
           }
           mutate={mutate}
           buttonCss={buttonCss}
-          buttonChildren="Accept Offer"
+          buttonChildren={trans.token.accept_offer}
         />
       )}
       {showBid && (
@@ -164,7 +166,7 @@ export const TokenActions: FC<Props> = ({
                 <Tooltip
                   content={
                     <Text style="body2" as="p">
-                      Cancelling this order requires gas.
+                      {trans.token.cancelling_this_order_requires_gas}
                     </Text>
                   }
                 >
@@ -187,7 +189,7 @@ export const TokenActions: FC<Props> = ({
                       width="16"
                       height="16"
                     />
-                    Cancel Offer
+                    {trans.token.cancel_offer}
                   </Button>
                 </Tooltip>
               )}
@@ -203,7 +205,7 @@ export const TokenActions: FC<Props> = ({
              <Tooltip
                   content={
                     <Text style="body2" as="p">
-                      Cancelling this order requires gas.
+                      {trans.token.cancelling_this_order_requires_gas}
                     </Text>
                   }
                 >
@@ -221,7 +223,7 @@ export const TokenActions: FC<Props> = ({
                       width="16"
                       height="16"
                     />
-                    Cancel Listing
+                    {trans.token.cancel_listing}
                   </Button>
                 </Tooltip>
             </Flex>

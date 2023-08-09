@@ -8,6 +8,7 @@ import { FC } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import { Collection_OrderBy } from '__generated__/graphql'
+import useTrans from 'hooks/useTrans'
 
 export type CollectionsSortingOption = Collection_OrderBy
 
@@ -17,22 +18,6 @@ const sortingOptions: CollectionsSortingOption[] = [
   Collection_OrderBy.Volume1m,
   Collection_OrderBy.VolumeMax
 ]
-
-const nameForSortingOption = (
-  option: CollectionsSortingOption,
-  compact: boolean
-) => {
-  switch (option) {
-    case Collection_OrderBy.Volume1d:
-      return compact ? '24h' : '24 hours'
-    case Collection_OrderBy.Volume7d:
-      return compact ? '7d' : '7 days'
-    case Collection_OrderBy.Volume1m:
-      return compact ? '30d' : '30 days'
-    case Collection_OrderBy.VolumeMax:
-      return compact ? 'All' : 'All Time'
-  }
-}
 
 type Props = {
   compact?: boolean
@@ -45,6 +30,23 @@ const CollectionsTimeDropdown: FC<Props> = ({
   option,
   onOptionSelected,
 }) => {
+  const trans = useTrans()
+  const nameForSortingOption = (
+    option: CollectionsSortingOption,
+    compact: boolean
+  ) => {
+    switch (option) {
+      case Collection_OrderBy.Volume1d:
+        return compact ? '24h' : trans.home._24_hours
+      case Collection_OrderBy.Volume7d:
+        return compact ? '7d' : trans.home._7_days
+      case Collection_OrderBy.Volume1m:
+        return compact ? '30d' : trans.home._30_days
+      case Collection_OrderBy.VolumeMax:
+        return compact ? 'All' : trans.home.all_time
+    }
+  }
+
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>

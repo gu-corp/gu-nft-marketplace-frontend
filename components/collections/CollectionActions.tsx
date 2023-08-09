@@ -16,6 +16,7 @@ import { Collection } from '__generated__/graphql'
 import { useMutation } from '@apollo/client'
 import { REFRESH_COLLECTION_METADATA } from 'graphql/queries/collections'
 import { useNetwork } from 'wagmi'
+import useTrans from 'hooks/useTrans'
 
 type CollectionActionsProps = {
   collection: Collection
@@ -49,6 +50,7 @@ const CollectionActionDropdownItem = styled(Flex, {
 })
 
 const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
+  const trans = useTrans()
   const { addToast } = useContext(ToastContext)
   const isMounted = useMounted()
   const isMobile = useMediaQuery({ maxWidth: 600 }) && isMounted
@@ -134,7 +136,7 @@ const CollectionActions: FC<CollectionActionsProps> = ({ collection }) => {
       >
         <FontAwesomeIcon icon={faRefresh} width={16} height={16} />
       </Box>
-      Refresh Metadata
+      {trans.collection.refresh_metadata}
     </CollectionActionDropdownItem>
   )
 

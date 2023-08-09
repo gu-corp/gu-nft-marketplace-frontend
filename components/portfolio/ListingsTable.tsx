@@ -27,6 +27,7 @@ import { GET_ORDERS } from 'graphql/queries/orders'
 import { Order, OrderDirection, Order_OrderBy } from '__generated__/graphql'
 import { GET_TOKEN } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   address: Address | undefined
@@ -112,6 +113,7 @@ type ListingTableRowProps = {
 }
 
 const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
+  const trans = useTrans()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const expiration = useTimeSince(listing?.endTime ? Number(listing.endTime) : 0)
 
@@ -201,7 +203,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                 <Tooltip
                     content={
                       <Text style="body2" as="p">
-                        Cancelling this order requires gas.
+                        {trans.portfolio.cancelling_this_order_requires_gas}.
                       </Text>
                     }
                   >
@@ -220,7 +222,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                         width="16"
                         height="16"
                       />
-                      Cancel
+                      {trans.portfolio.cancel}
                     </Button>
                   </Tooltip>
               </Flex>
@@ -293,7 +295,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                 <Tooltip
                     content={
                       <Text style="body2" as="p">
-                        Cancelling this order requires gas.
+                        {trans.portfolio.cancelling_this_order_requires_gas}.
                       </Text>
                     }
                   >
@@ -312,7 +314,7 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
                         width="16"
                         height="16"
                       />
-                      Cancel
+                      {trans.portfolio.cancel}
                     </Button>
                   </Tooltip>
               </Flex>
@@ -324,9 +326,12 @@ const ListingTableRow: FC<ListingTableRowProps> = ({ listing, mutate }) => {
   )
 }
 
-const headings = ['Items', 'Listed Price', 'Expiration', '']
 
-const TableHeading = () => (
+const TableHeading = () => {
+  const trans = useTrans()
+  const headings = [trans.portfolio.items, trans.portfolio.listed_price, trans.portfolio.expiration, '']
+
+  return (
   <HeaderRow
     css={{
       display: 'none',
@@ -345,4 +350,4 @@ const TableHeading = () => (
       </TableCell>
     ))}
   </HeaderRow>
-)
+)}

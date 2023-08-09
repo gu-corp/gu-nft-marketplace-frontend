@@ -28,7 +28,7 @@ import { ActivityFilters } from 'components/common/ActivityFilters'
 import { MobileAttributeFilters } from 'components/collections/filters/MobileAttributeFilters'
 import { MobileActivityFilters } from 'components/common/MobileActivityFilters'
 import LoadingCard from 'components/common/LoadingCard'
-import { useMounted } from 'hooks'
+import { useMounted, useRoyaltyFee } from 'hooks'
 import { faCopy, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Head } from 'components/Head'
@@ -42,12 +42,14 @@ import { ActivityType, AttributeKind, Collection, OrderDirection, Order_OrderBy,
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { GET_TOKENS } from 'graphql/queries/tokens'
 import { GET_ATTRIBUTES } from 'graphql/queries/attributes'
+import useTrans from 'hooks/useTrans'
 
 type ActivityTypes = ActivityType[]
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
+  const trans = useTrans()
   const router = useRouter()
   const { address } = useAccount()
   const [attributeFiltersOpen, setAttributeFiltersOpen] = useState(false)
@@ -204,7 +206,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                         <Flex css={{ gap: '$2', width: 'max-content' }}>
                           {!isSmallDevice && (
                             <Text style="body1" color="subtle">
-                              Collection
+                              {trans.collection.collection}
                             </Text>
                           )}
                           <Text
@@ -225,14 +227,13 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       </CopyText>
                       <Box>
                         <Text style="body1" color="subtle">
-                          Token Standard{' '}
+                          {trans.collection.collection}
                         </Text>
-                        {/* TO-DO: support ERC1155 later */}
                         <Text style="body1">ERC721</Text>
                       </Box>
                       <Box>
                         <Text style="body1" color="subtle">
-                          Chain{' '}
+                          {trans.collection.token_standard}
                         </Text>
                         <Link
                           href={`/collection-rankings`}
@@ -242,9 +243,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
                       </Box>
                       <Box>
                         <Text style="body1" color="subtle">
-                          Creator Earnings
+                          {trans.collection.creator_earnings}
                         </Text>
-                        {/* TO-DO: query royalty fee */}
                         <Text style="body1"> 0%</Text>
                       </Box>
                     </Flex>
@@ -269,7 +269,7 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               >
                 <Flex css={{ width: 'max-content' }} direction="column">
                   <Text style="body1" color="subtle">
-                    Collection
+                    {trans.collection.collection}
                   </Text>
                   <Flex css={{ gap: '$2' }}>
                     <Text style="body1" as="p">
@@ -283,22 +283,20 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
               </CopyText>
               <Flex direction="column">
                 <Text style="body1" color="subtle">
-                  Token Standard{' '}
+                  {trans.collection.token_standard}
                 </Text>
-                {/* TO-DO: support ERC1155 later */}
                 <Text style="body1">ERC721</Text>
               </Flex>
               <Flex direction="column">
                 <Text style="body1" color="subtle">
-                  Chain{' '}
+                  {trans.collection.chain}
                 </Text>
                 <Text style="body1">G.U Sandbox Chain</Text>
               </Flex>
               <Flex direction="column">
                 <Text style="body1" color="subtle">
-                  Creator Earnings
+                  {trans.collection.creator_earnings}
                 </Text>
-                  {/* TO-DO: query royalty fee */}
                 <Text style="body1"> 0%</Text>
               </Flex>
             </Grid>
@@ -313,8 +311,8 @@ const CollectionPage: NextPage<Props> = ({ id, ssr }) => {
             }}
           >
             <TabsList>
-              <TabsTrigger value="items">Items</TabsTrigger>
-              <TabsTrigger value="activity">Activity</TabsTrigger>
+              <TabsTrigger value="items">{trans.collection.items}</TabsTrigger>
+              <TabsTrigger value="activity">{trans.collection.activity}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="items">

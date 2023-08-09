@@ -15,6 +15,7 @@ import {
 } from 'components/primitives'
 import { ToastContext } from 'context/ToastContextProvider'
 import { GET_LISTED } from 'graphql/queries/orders'
+import useTrans from 'hooks/useTrans'
 import Link from 'next/link'
 import { SyntheticEvent, useContext } from 'react'
 import { Address } from 'wagmi'
@@ -42,6 +43,7 @@ const TokenCard = ({
   tokenCount,
   collection
 }: TokenCardProps) => {
+  const trans = useTrans()
   const { addToast } = useContext(ToastContext)
   // TO-DO: later
   const mediaType = undefined
@@ -295,7 +297,7 @@ const TokenCard = ({
           {lastSale ? (
             <Flex css={{ gap: '$2', marginTop: 'auto' }}>
               <Text css={{ color: '$gray11' }} style="subtitle3">
-                Last Sale
+                {trans.collection.last_sale}
               </Text>
               <FormatCryptoCurrency
                 logoHeight={12}

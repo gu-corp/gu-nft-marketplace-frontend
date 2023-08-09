@@ -29,6 +29,7 @@ import { GET_TOKENS } from 'graphql/queries/tokens'
 import { GET_COLLECTION } from 'graphql/queries/collections'
 import { BigNumber } from 'ethers'
 import { GET_HIGHEST_BID, GET_LISTED } from 'graphql/queries/orders'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   address: Address | undefined
@@ -45,6 +46,7 @@ export const TokenTable: FC<Props> = ({
   sortBy,
   filterCollection,
 }) => {
+  const trans = useTrans()
   const loadMoreRef = useRef<HTMLDivElement>(null)
   const loadMoreObserver = useIntersectionObserver(loadMoreRef, {})
 
@@ -80,7 +82,7 @@ export const TokenTable: FC<Props> = ({
           <Text css={{ color: '$gray11' }}>
             <FontAwesomeIcon icon={faMagnifyingGlass} size="2xl" />
           </Text>
-          <Text css={{ color: '$gray11' }}>No items found</Text>
+          <Text css={{ color: '$gray11' }}>{trans.portfolio.no_items_found}</Text>
         </Flex>
       ) : isLoading || loading ? (
         <Flex align="center" justify="center" css={{ py: '$6' }}>
@@ -113,6 +115,7 @@ type TokenTableRowProps = {
 }
 
 const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
+  const trans = useTrans()
   const isSmallDevice = useMediaQuery({ maxWidth: 900 })
   const account = useAccount()
 
@@ -206,7 +209,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
         <Flex justify="between" css={{ width: '100%', gap: '$3' }}>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
             <Text style="subtitle3" color="subtle">
-              Net Floor
+              {trans.portfolio.net_floor}
             </Text>
             <FormatCryptoCurrency
               amount={collection?.floor?.floorPrice}
@@ -227,13 +230,13 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                   backgroundColor: '$gray4',
                 },
               }}
-              buttonChildren="List"
+              buttonChildren={trans.portfolio.list}
               mutate={mutate}
             />
           </Flex>
           <Flex direction="column" align="start" css={{ width: '100%' }}>
             <Text style="subtitle3" color="subtle">
-              You Get
+              {trans.portfolio.you_get}
             </Text>
             <FormatCryptoCurrency
               amount={highestBid?.price}
@@ -260,7 +263,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 buttonChildren={
                   <Flex align="center" css={{ gap: '$2' }}>
                     <FontAwesomeIcon icon={faBolt} />
-                    Sell
+                    {trans.portfolio.sell}
                   </Flex>
                 }
                 mutate={mutate}
@@ -376,7 +379,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
               buttonChildren={
                 <Flex align="center" css={{ gap: '$2' }}>
                   <FontAwesomeIcon icon={faBolt} />
-                  Sell
+                  {trans.portfolio.sell}
                 </Flex>
               }
               mutate={mutate}
@@ -392,7 +395,7 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
                 backgroundColor: '$gray4',
               },
             }}
-            buttonChildren="List"
+            buttonChildren={trans.portfolio.list}
           />
         </Flex>
       </TableCell>
@@ -400,7 +403,9 @@ const TokenTableRow: FC<TokenTableRowProps> = ({ token, mutate }) => {
   )
 }
 
-const TableHeading = () => (
+const TableHeading = () => {
+  const trans = useTrans()
+  return (
   <HeaderRow
     css={{
       display: 'none',
@@ -413,25 +418,24 @@ const TableHeading = () => (
   >
     <TableCell>
       <Text style="subtitle3" color="subtle">
-        Items
+        {trans.portfolio.items}
       </Text>
     </TableCell>
     <TableCell>
       <Text style="subtitle3" color="subtle">
-        Listed Price
+        {trans.portfolio.listed_price}
       </Text>
     </TableCell>
     <TableCell>
       <Flex align="center" css={{ gap: '$2' }}>
         <Text style="subtitle3" color="subtle">
-          Net Floor
+          {trans.portfolio.net_floor}
         </Text>
         <Tooltip
           content={
             <Flex>
               <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
-                The floor price with royalties and fees removed. This is the eth
-                you would receive if you listed at the floor.
+                {trans.portfolio.the_floor_price_with_royalties_and_fees_removed_this_is_the_eth_you_would_receive_if_you_listed_at_the_floor}.
               </Text>
             </Flex>
           }
@@ -445,13 +449,13 @@ const TableHeading = () => (
     <TableCell>
       <Flex align="center" css={{ gap: '$2' }}>
         <Text style="subtitle3" color="subtle">
-          You Get
+          {trans.portfolio.you_get}
         </Text>
         <Tooltip
           content={
             <Flex>
               <Text style="body2" css={{ mx: '$2', maxWidth: '200px' }}>
-                The eth you would receive if you sold instantly.
+                {trans.portfolio.the_eth_you_would_receive_if_you_sold_instantly}.
               </Text>
             </Flex>
           }
@@ -464,4 +468,4 @@ const TableHeading = () => (
     </TableCell>
     <TableCell></TableCell>
   </HeaderRow>
-)
+)}

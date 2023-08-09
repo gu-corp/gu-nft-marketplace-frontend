@@ -3,6 +3,7 @@ import { Box, Text } from 'components/primitives'
 import { styled } from 'stitches.config'
 import optimizeImage from '../../../lib/optimizeImage'
 import { Collection, Token } from '__generated__/graphql'
+import useTrans from 'hooks/useTrans'
 
 const Img = styled('img', {
   width: '100%',
@@ -19,6 +20,7 @@ type Props = {
 }
 
 const TokenStatsHeader: FC<Props> = ({ token, collection }) => {
+  const trans = useTrans()
   const img = optimizeImage(
     token?.image || collection.image as string,
     600
@@ -41,7 +43,7 @@ const TokenStatsHeader: FC<Props> = ({ token, collection }) => {
         color="subtle"
         css={{ mb: '$1', display: 'block' }}
       >
-        {token ? 'Item' : 'Collection'}
+        {token ? trans.token.item : trans.token.collection}
       </Text>
       <Img
         src={img}

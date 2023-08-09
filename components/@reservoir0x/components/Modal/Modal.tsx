@@ -12,6 +12,7 @@ import { Anchor, Button, Flex, Text, Loader, Box } from 'components/primitives'
 import { Dialog } from 'components/primitives/Dialog'
 import { styled } from 'stitches.config'
 import { DialogListing } from 'components/primitives/DialogListing'
+import useTrans from 'hooks/useTrans'
 
 const Title = styled(DialogPrimitive.Title, {
   margin: 0,
@@ -53,7 +54,7 @@ export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
     },
     forwardedRef
   ) => {
-
+    const trans = useTrans()
     return (
       <DialogListing
         ref={forwardedRef}
@@ -118,7 +119,7 @@ export const Modal = forwardRef<ElementRef<typeof Dialog>, Props>(
                 style="body2"
                 css={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}
               >
-                Powered by G.U.Technologies
+                {trans.token.powered_by} G.U.Technologies
               </Text>
             </Anchor>
           </Flex>

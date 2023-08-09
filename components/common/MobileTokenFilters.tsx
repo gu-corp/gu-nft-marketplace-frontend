@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 import { NAVBAR_HEIGHT_MOBILE } from 'components/navbar'
 import { Collection } from '__generated__/graphql'
+import useTrans from 'hooks/useTrans'
 
 type Props = {
   collections?: Collection[]
@@ -20,6 +21,7 @@ export const MobileTokenFilters: FC<Props> = ({
   setFilterCollection,
 }) => {
   const triggerRef = useRef<HTMLButtonElement>(null)
+  const trans = useTrans()
 
   const trigger = (
     <Flex
@@ -47,7 +49,7 @@ export const MobileTokenFilters: FC<Props> = ({
         corners="pill"
         color="gray3"
       >
-        <Text style="h6">Filter</Text>
+        <Text style="h6">{trans.portfolio.filter}</Text>
         {filterCollection && (
           <Flex
             justify="center"
@@ -95,7 +97,7 @@ export const MobileTokenFilters: FC<Props> = ({
         >
           <Flex align="center">
             <Text style="h5" css={{ mr: '$3' }}>
-              Filter
+              {trans.portfolio.filter}
             </Text>
           </Flex>
           <RadixDialog.Close>
@@ -127,7 +129,7 @@ export const MobileTokenFilters: FC<Props> = ({
           }}
         >
           <Text style="subtitle1" css={{ mb: '$2', pl: '$4' }}>
-            Collections
+            {trans.portfolio.collections}
           </Text>
           {collections?.map((collection) => {
             let selected = collection?.id == filterCollection

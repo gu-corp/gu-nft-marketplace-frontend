@@ -50,12 +50,14 @@ import { GET_COLLECTION } from 'graphql/queries/collections'
 import { useMutation, useQuery } from '@apollo/client'
 import { BigNumber } from 'ethers'
 import { GET_HIGHEST_BID, GET_LISTED } from 'graphql/queries/orders'
+import useTrans from 'hooks/useTrans'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 type ActivityTypes = ActivityType[]
 
-const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
+const IndexPage: NextPage<Props> = ({ id, collectionId, ssr }) => {
+  const trans = useTrans()
   const router = useRouter()
   const { addToast } = useContext(ToastContext)
   const account = useAccount()
@@ -134,7 +136,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
     >
       {isSmallDevice ? null : (
         <Text style="body1">
-          {activityTypes.map(titleCase).join(', ') || 'All Events'}
+          {activityTypes.map(titleCase).join(', ') || trans.token.all_events}
         </Text>
       )}
       <Text css={{ color: '$slate10' }}>
@@ -388,7 +390,7 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
               {!is1155 && (
                 <Flex align="center" css={{ mt: '$2' }}>
                   <Text style="subtitle3" color="subtle" css={{ mr: '$2' }}>
-                    Owner
+                    {trans.token.owner}
                   </Text>
                   <Jazzicon
                     diameter={16}
@@ -421,10 +423,10 @@ const IndexPage: NextPage<Props> = ({ id, collectionId, ssr  }) => {
               >
                 <TabsList>
                   {isMounted && isSmallDevice && hasAttributes && (
-                    <TabsTrigger value="attributes">Attributes</TabsTrigger>
+                    <TabsTrigger value="attributes">{trans.token.attributes}</TabsTrigger>
                   )}
-                  <TabsTrigger value="info">Info</TabsTrigger>
-                  <TabsTrigger value="activity">Activity</TabsTrigger>
+                  <TabsTrigger value="info">{trans.token.info}</TabsTrigger>
+                  <TabsTrigger value="activity">{trans.token.activity}</TabsTrigger>
                 </TabsList>
                 <TabsContent value="attributes">
                   {token?.attributes && (

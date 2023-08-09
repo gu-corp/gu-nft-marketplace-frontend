@@ -23,8 +23,10 @@ import PortfolioSortDropdown, {
 } from 'components/common/PortfolioSortDropdown'
 import { useQuery } from '@apollo/client'
 import { GET_USER_RELATIVE_COLLECTIONS } from 'graphql/queries/collections'
+import useTrans from 'hooks/useTrans'
 
 const IndexPage: NextPage = () => {
+  const trans = useTrans()
   const { address, isConnected } = useAccount()
   const [tokenFiltersOpen, setTokenFiltersOpen] = useState(true)
   const [filterCollection, setFilterCollection] = useState<string | undefined>(
@@ -68,7 +70,7 @@ const IndexPage: NextPage = () => {
             <>
               <Flex align="center" justify="between" css={{ gap: '$4' }}>
                 <Text style="h4" css={{}}>
-                  Portfolio
+                  {trans.nav.portfolio}
                 </Text>
               </Flex>
               <Tabs.Root defaultValue="items">
@@ -81,10 +83,10 @@ const IndexPage: NextPage = () => {
                       width: '100%',
                     }}
                   >
-                    <TabsTrigger value="items">Items</TabsTrigger>
-                    <TabsTrigger value="collections">Collections</TabsTrigger>
-                    <TabsTrigger value="listings">Listings</TabsTrigger>
-                    <TabsTrigger value="offers">Offers Made</TabsTrigger>
+                    <TabsTrigger value="items">{trans.portfolio.items}</TabsTrigger>
+                    <TabsTrigger value="collections">{trans.portfolio.collections}</TabsTrigger>
+                    <TabsTrigger value="listings">{trans.portfolio.listings}</TabsTrigger>
+                    <TabsTrigger value="offers">{trans.portfolio.offers_made}</TabsTrigger>
                   </TabsList>
                 </Flex>
                 <TabsContent value="items">
@@ -171,7 +173,7 @@ const IndexPage: NextPage = () => {
               css={{ mx: 'auto', py: '120px', maxWidth: '350px', gap: '$4' }}
             >
               <Text style="h4" css={{ mb: '$3' }}>
-                Sell your NFT instantly
+                {trans.portfolio.sell_your_nft_instantly}
               </Text>
               <Text css={{ color: '$gray11' }}>
                 <FontAwesomeIcon icon={faWallet} size="2xl" />
@@ -180,8 +182,7 @@ const IndexPage: NextPage = () => {
                 style="body1"
                 css={{ color: '$gray11', textAlign: 'center', mb: '$4' }}
               >
-                Connect wallet to instant sell your token across all major
-                marketplaces.
+                {trans.portfolio.connect_wallet_to_instant_sell_your_token_across_all_major_marketplaces}.
               </Text>
               <ConnectWalletButton />
             </Flex>
