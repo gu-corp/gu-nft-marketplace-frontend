@@ -9,6 +9,7 @@ import {
   FormatCurrency,
   FormatCryptoCurrency,
   Loader,
+  Select,
 } from 'components/primitives'
 import Popover from 'components/primitives/Popover'
 import { Modal } from '../Modal'
@@ -79,7 +80,6 @@ export function BuyModal({
         listing,
         quantity,
         currency,
-        mixedCurrencies,
         buyStep,
         transactionError,
         hasEnoughCurrency,
@@ -90,7 +90,9 @@ export function BuyModal({
         requestUserStep,
         txHash,
         currencyBalance,
-        steps
+        steps,
+        setCurrency,
+        currencyOptions
       }) => {
         const title = titleForStep(buyStep)
         // https://unsplash.com/blog/calling-react-hooks-conditionally-dynamically-using-render-props/#waitdoesntthisbreaktherulesofhooks
@@ -176,6 +178,35 @@ export function BuyModal({
                   priceSubtitle={quantity > 1 ? 'Average Price' : undefined}
                   showRoyalties={true}
                 />
+                                
+                <Box css={{ p: '$4', width: '100%' }}>
+                  <Text
+                    as="div"
+                    css={{ mb: '$2' }}
+                    style="subtitle2"
+                    color="subtle"
+                  >
+                    Currency
+                  </Text>
+                  <Select
+                    value={currency?.symbol || ''}
+                    onValueChange={(value: string) => {
+                      const option = currencyOptions.find(
+                        (option) => option.contract == value
+                      )
+                      if (option) {
+                        setCurrency(option)
+                      }
+                    }}
+                  >
+                    {currencyOptions.map((option) => (
+                      <Select.Item key={option.contract} value={option.contract}>
+                        <Select.ItemText>{option.symbol}</Select.ItemText>
+                      </Select.Item>
+                    ))}
+                  </Select>
+                </Box>
+                
                 <Flex
                   align="center"
                   justify="between"
